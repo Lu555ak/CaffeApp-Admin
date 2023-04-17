@@ -17,6 +17,7 @@ class AppIcon extends StatelessWidget {
       child: const Icon(
         Icons.coffee,
         size: 100,
+        color: Colors.brown,
       ),
     );
   }
@@ -43,12 +44,14 @@ class GetStartedButton extends StatelessWidget {
         ),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            primary: Colors.brown[500],
+            backgroundColor: Colors.brown[500],
             shadowColor: Colors.brown[800],
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(screenSize().width * 0.1,),
-                side: const BorderSide(color: Colors.black87),
+              borderRadius: BorderRadius.circular(
+                screenSize().width * 0.1,
+              ),
+              side: const BorderSide(color: Colors.black87),
             ),
           ),
           onPressed: () {
@@ -64,28 +67,50 @@ class GetStartedButton extends StatelessWidget {
   }
 }
 
+class Background extends StatelessWidget {
+  const Background({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("images/backgroundImage.jpg"),
+              scale: 2.5,
+              repeat: ImageRepeat.repeat),
+        ),
+      ),
+    );
+  }
+}
+
 class GetStartedPage extends StatelessWidget {
   const GetStartedPage({super.key});
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
-      backgroundColor: Colors.brown[300],
-      body: Center(
-        child: Flex(
-          direction: Axis.vertical,
-           children: const [
-            FittedBox(
-              fit: BoxFit.contain,
-              child: AppIcon(),
+    return Stack(
+      children: <Widget>[
+        Background(),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: Flex(
+              direction: Axis.vertical,
+              children: const [
+                FittedBox(
+                  fit: BoxFit.contain,
+                  child: AppIcon(),
+                ),
+                FittedBox(
+                  fit: BoxFit.contain,
+                  child: GetStartedButton(),
+                ),
+              ],
             ),
-            FittedBox(
-              fit: BoxFit.contain,
-              child: GetStartedButton(),
-            ),
-          ],
-        ),
-      ),
+          ),
+        )
+      ],
     );
   }
 }
