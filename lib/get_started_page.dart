@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'login_page.dart';
 import 'utility/utility_functions.dart';
 import 'utility/colors.dart';
+import 'custom/background.dart';
 
 class AppIcon extends StatelessWidget {
   const AppIcon({super.key});
@@ -25,7 +26,6 @@ class GetStartedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return SizedBox(
       width: screenSize(context).width,
       height: screenSize(context).height * 0.5,
@@ -38,12 +38,14 @@ class GetStartedButton extends StatelessWidget {
         ),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            primary: COLOR_BROWN,
+            backgroundColor: COLOR_BROWN,
             shadowColor: COLOR_BROWN,
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(screenSize(context).width * 0.1,),
-                side: const BorderSide(color: COLOR_BLACK),
+              borderRadius: BorderRadius.circular(
+                screenSize(context).width * 0.1,
+              ),
+              side: const BorderSide(color: COLOR_BLACK),
             ),
           ),
           onPressed: () {
@@ -63,24 +65,28 @@ class GetStartedPage extends StatelessWidget {
   const GetStartedPage({super.key});
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
-      backgroundColor: COLOR_BROWN,
-      body: Center(
-        child: Flex(
-          direction: Axis.vertical,
-           children: const [
-            FittedBox(
-              fit: BoxFit.contain,
-              child: AppIcon(),
+    return Stack(
+      children: [
+        const Background(),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: Flex(
+              direction: Axis.vertical,
+              children: const [
+                FittedBox(
+                  fit: BoxFit.contain,
+                  child: AppIcon(),
+                ),
+                FittedBox(
+                  fit: BoxFit.contain,
+                  child: GetStartedButton(),
+                ),
+              ],
             ),
-            FittedBox(
-              fit: BoxFit.contain,
-              child: GetStartedButton(),
-            ),
-          ],
-        ),
-      ),
+          ),
+        )
+      ],
     );
   }
 }
