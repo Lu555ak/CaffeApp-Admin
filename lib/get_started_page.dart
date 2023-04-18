@@ -5,22 +5,6 @@ import 'utility/utility_functions.dart';
 import 'utility/colors.dart';
 import 'custom/background.dart';
 
-class AppIcon extends StatelessWidget {
-  const AppIcon({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: screenSize(context).width * 0.5,
-      height: screenSize(context).height * 0.5,
-      child: const Icon(
-        Icons.coffee,
-        size: 100,
-      ),
-    );
-  }
-}
-
 class GetStartedButton extends StatelessWidget {
   const GetStartedButton({super.key});
 
@@ -38,14 +22,14 @@ class GetStartedButton extends StatelessWidget {
         ),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: COLOR_BLACK,
-            shadowColor: COLOR_BLACK,
-            foregroundColor: Colors.white,
+            backgroundColor: COLOR_WHITE,
+            shadowColor: COLOR_WHITE,
+            foregroundColor: COLOR_BLACK,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(
                 screenSize(context).width * 0.1,
               ),
-              side: const BorderSide(color: COLOR_WHITE, width: 2.0),
+              side: const BorderSide(color: COLOR_BLACK, width: 2.0),
             ),
           ),
           onPressed: () {
@@ -79,7 +63,7 @@ class GetStartedPage extends StatelessWidget {
               children: const [
                 FittedBox(
                   fit: BoxFit.contain,
-                  child: AppIcon(),
+                  //child: ,
                 ),
                 FittedBox(
                   fit: BoxFit.contain,
