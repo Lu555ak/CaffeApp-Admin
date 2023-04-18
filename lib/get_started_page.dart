@@ -38,14 +38,14 @@ class GetStartedButton extends StatelessWidget {
         ),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: COLOR_BROWN,
-            shadowColor: COLOR_BROWN,
+            backgroundColor: COLOR_BLACK,
+            shadowColor: COLOR_BLACK,
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(
                 screenSize(context).width * 0.1,
               ),
-              side: const BorderSide(color: COLOR_BLACK),
+              side: const BorderSide(color: COLOR_WHITE, width: 2.0),
             ),
           ),
           onPressed: () {
@@ -54,7 +54,10 @@ class GetStartedButton extends StatelessWidget {
               MaterialPageRoute(builder: (context) => const LoginPage()),
             );
           },
-          child: const Text('GET STARTED'),
+          child: const Text(
+            'GET STARTED',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );
