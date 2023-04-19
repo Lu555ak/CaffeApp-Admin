@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'login_page.dart';
 import 'utility/utility_functions.dart';
-import 'utility/colors.dart';
+import 'utility/constants.dart';
 import 'custom/background.dart';
 
 class GetStartedButton extends StatelessWidget {
