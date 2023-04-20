@@ -1,19 +1,19 @@
 import 'package:caffe_app/custom/background.dart';
-import 'package:caffe_app/registration_page.dart';
 import 'package:caffe_app/utility/constants.dart';
 import 'package:caffe_app/utility/utility_functions.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+import 'login_page.dart';
+
+class RegistrationPage extends StatefulWidget {
+  const RegistrationPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegistrationPage> createState() => _RegistrationPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegistrationPageState extends State<RegistrationPage> {
   bool? rememberMe = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
                   ]),
               child: Column(children: [
                 addVerticalSpace(40),
-                const Text("LOGIN",
+                const Text("REGISTER",
                     style: TextStyle(
                         color: primaryColor,
                         fontSize: 40,
@@ -51,6 +51,21 @@ class _LoginPageState extends State<LoginPage> {
                 const Divider(
                   color: primaryColor,
                   thickness: 8,
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    hintText: 'E-mail address',
+                  ),
+                  autocorrect: false,
+                ),
+                const Divider(
+                  color: primaryColor,
+                  indent: 20,
+                  endIndent: 20,
                 ),
                 TextFormField(
                   textAlign: TextAlign.center,
@@ -81,12 +96,6 @@ class _LoginPageState extends State<LoginPage> {
                   indent: 20,
                   endIndent: 20,
                 ),
-                const Text("Forgot your password?",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      color: subColor,
-                      fontSize: 10,
-                    )),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Row(
@@ -135,10 +144,10 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const RegistrationPage()),
+                          builder: (context) => const LoginPage()),
                     );
                   },
-                  child: const Text("Don't have an account?",
+                  child: const Text("Have an account?",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         color: subColor,
