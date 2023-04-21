@@ -58,7 +58,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   decoration: const InputDecoration(
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
-                    hintText: 'E-mail address',
+                    hintText: 'E-mail',
                   ),
                   autocorrect: false,
                 ),
