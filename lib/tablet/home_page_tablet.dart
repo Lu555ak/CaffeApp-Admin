@@ -1,4 +1,3 @@
-import 'package:caffe_app/utility/utility_functions.dart';
 import 'package:flutter/material.dart';
 
 class HomePageTablet extends StatefulWidget {
@@ -11,7 +10,7 @@ class HomePageTablet extends StatefulWidget {
 class _HomePageTabletState extends State<HomePageTablet> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Colors.blue,
     );
   }
