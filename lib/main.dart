@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-//import 'get_started_page.dart';
+import 'package:caffe_app/desktop/layout_desktop.dart';
+import 'package:caffe_app/tablet/layout_tablet.dart';
+import 'package:caffe_app/mobile/layout_mobile.dart';
 
-import 'desktop/home_page_desktop.dart';
-import 'mobile/home_page_mobile.dart';
-import 'tablet/home_page_tablet.dart';
 import 'custom/background.dart';
 
 void main() {
@@ -23,9 +22,9 @@ class MyApp extends StatelessWidget {
           opacity: 0.75,
         ),
         CaffeApp(
-          mobileLayout: const HomePageMobile(),
-          tabletLayout: const HomePageTablet(),
-          desktopLayout: const HomePageDesktop(),
+          mobileLayout: const LayoutMobile(),
+          tabletLayout: const LayoutTablet(),
+          desktopLayout: const LayoutDesktop(),
         ),
       ]),
     );

@@ -1,19 +1,19 @@
 import 'package:caffe_app/utility/constants.dart';
 import 'package:flutter/material.dart';
 
-class HomePageMobile extends StatefulWidget {
-  const HomePageMobile({super.key});
+class SettingsPageMobile extends StatefulWidget {
+  const SettingsPageMobile({super.key});
 
   @override
-  State<HomePageMobile> createState() => _HomePageMobileState();
+  State<SettingsPageMobile> createState() => _SettingsPageMobileState();
 }
 
-class _HomePageMobileState extends State<HomePageMobile> {
+class _SettingsPageMobileState extends State<SettingsPageMobile> {
   @override
   Widget build(BuildContext context) {
     return const Center(
         child: Text(
-      "HOME PAGE",
+      "SETTINGS PAGE",
       style: TextStyle(
           color: secondaryColor, fontSize: 30, backgroundColor: subColor),
     ));
