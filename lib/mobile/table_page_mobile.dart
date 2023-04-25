@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:caffe_app/utility/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -62,37 +64,42 @@ class _TablePageMobileState extends State<TablePageMobile> {
                           offset: Offset(1, 1))
                     ]),
                 child: Row(children: [
-                  Container(
-                    padding: const EdgeInsets.all(5.0),
-                    decoration: const BoxDecoration(
-                      color: primaryColor,
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                  InkWell(
+                    onTap: () {
+                      showTableSheet();
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(5.0),
+                      decoration: const BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      ),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Flexible(
+                              child: FittedBox(
+                                child: Icon(
+                                  Icons.table_restaurant_outlined,
+                                  color: secondaryColor,
+                                  size: 40,
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text(
+                                  exampleList[index].toString(),
+                                  style: const TextStyle(
+                                      color: secondaryColor,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 50),
+                                ),
+                              ),
+                            ),
+                          ]),
                     ),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          const Flexible(
-                            child: FittedBox(
-                              child: Icon(
-                                Icons.table_restaurant_outlined,
-                                color: secondaryColor,
-                                size: 40,
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                            child: FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                exampleList[index].toString(),
-                                style: const TextStyle(
-                                    color: secondaryColor,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 50),
-                              ),
-                            ),
-                          ),
-                        ]),
                   ),
                   Expanded(
                     child: Column(
@@ -101,9 +108,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                         Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            onTap: () {
-                              showEditTableSheet();
-                            },
+                            onTap: () {},
                             customBorder: const CircleBorder(),
                             splashColor: subColor,
                             child: const FittedBox(
@@ -144,18 +149,65 @@ class _TablePageMobileState extends State<TablePageMobile> {
         });
   }
 
-  void showEditTableSheet() {
+  void showTableSheet() {
     showModalBottomSheet(
         context: context,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
           return Container(
-            color: secondaryColor,
-            child: Column(
-              children: const [
-                ListTile(
-                  title: Text("EDIT ME"),
-                )
-              ],
+            padding: const EdgeInsets.all(25),
+            child: SingleChildScrollView(
+              child: Column(
+                children: const [
+                  ListTile(
+                    leading: FittedBox(
+                      child: Icon(
+                        Icons.table_restaurant_rounded,
+                        color: primaryColor,
+                        size: 40,
+                      ),
+                    ),
+                    title: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "8146",
+                        style: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 30),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    color: primaryColor,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Description: ",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc accumsan urna nec enim rhoncus cursus.",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(color: subColor, fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         });
