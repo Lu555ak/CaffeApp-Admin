@@ -124,9 +124,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () {
-                              setState(() {
-                                exampleList.remove(index + 1);
-                              });
+                              deleteTableCheck(index);
                             },
                             customBorder: const CircleBorder(),
                             splashColor: subColor,
@@ -211,5 +209,31 @@ class _TablePageMobileState extends State<TablePageMobile> {
             ),
           );
         });
+  }
+
+  void deleteTableCheck(index) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(25), bottom: Radius.circular(25))),
+              title: const Text("Are you sure you want to delete this table?"),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Cancel")),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        exampleList.removeAt(index);
+                      });
+                    },
+                    child: const Text("Delete"))
+              ],
+            ));
   }
 }
