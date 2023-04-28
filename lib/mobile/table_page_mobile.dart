@@ -124,7 +124,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () {
-                              deleteTableCheck(index);
+                              deleteTableConfirmWindow(index);
                             },
                             customBorder: const CircleBorder(),
                             splashColor: subColor,
@@ -211,29 +211,41 @@ class _TablePageMobileState extends State<TablePageMobile> {
         });
   }
 
-  void deleteTableCheck(index) {
-    showDialog(
+  void deleteTableConfirmWindow(index) {
+    showModalBottomSheet(
         context: context,
-        builder: (context) => AlertDialog(
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(25), bottom: Radius.circular(25))),
-              title: const Text("Are you sure you want to delete this table?"),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Cancel")),
-                TextButton(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(25),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const Text(
+                    "Are you sure you want to delete this table?",
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  SizedBox(height: 10),
+                  TextButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            const Color.fromARGB(255, 136, 51, 51))),
                     onPressed: () {
                       Navigator.pop(context);
                       setState(() {
                         exampleList.removeAt(index);
                       });
                     },
-                    child: const Text("Delete"))
-              ],
-            ));
+                    child: const Text(
+                      "Delete",
+                      style: TextStyle(color: secondaryColor),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
