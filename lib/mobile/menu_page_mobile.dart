@@ -1,5 +1,7 @@
 import 'package:caffe_app/utility/constants.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:caffe_app/models/menu_model.dart';
 
 class MenuPageMobile extends StatefulWidget {
   const MenuPageMobile({super.key});
@@ -9,13 +11,13 @@ class MenuPageMobile extends StatefulWidget {
 }
 
 class _MenuPageMobileState extends State<MenuPageMobile> {
-  List<List<int>> exampleList = [];
-
-  final createCategoryController = TextEditingController();
+  final createCategoryNameController = TextEditingController();
+  final createItemNameControler = TextEditingController();
+  final createItemPriceControler = TextEditingController();
 
   @override
   void dispose() {
-    createCategoryController.dispose();
+    createCategoryNameController.dispose();
     super.dispose();
   }
 
@@ -33,7 +35,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                     bottomLeft: Radius.circular(25.0),
                     bottomRight: Radius.circular(25.0))),
             child: Text(
-              "CATEGORIES: ${exampleList.length}\nITEMS: ${_itemsCount()}",
+              "CATEGORIES: ${Menu().menu.length}\nITEMS: ${Menu().itemCount()}",
               style: const TextStyle(
                   color: secondaryColor,
                   fontWeight: FontWeight.w600,
@@ -45,16 +47,15 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
             child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: exampleList.length + 1,
+                itemCount: Menu().getMenu().length + 1,
                 itemBuilder: ((context, index) {
-                  if (index == exampleList.length) {
+                  if (index == Menu().menu.length) {
                     return Padding(
                       padding: const EdgeInsets.all(12),
                       child: InkWell(
                         onTap: () {
                           setState(() {
                             _createCategoryMenu();
-                            //exampleList.add(List.empty(growable: true));
                           });
                         },
                         child: Container(
@@ -87,26 +88,30 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                             child: ExpansionTile(
                               backgroundColor: primaryColor,
                               title: Text(
-                                "Category ${index + 1}",
-                                style: TextStyle(
+                                Menu().getMenu()[index].name,
+                                style: const TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.w700),
                               ),
                               children: [
                                 ListView.builder(
                                     scrollDirection: Axis.vertical,
                                     shrinkWrap: true,
-                                    itemCount: exampleList[index].length + 1,
+                                    itemCount: Menu()
+                                            .getMenu()[index]
+                                            .getCategory()
+                                            .length +
+                                        1,
                                     itemBuilder: (context, i) {
-                                      if (exampleList[index].length == i) {
+                                      if (Menu()
+                                              .getMenu()[index]
+                                              .getCategory()
+                                              .length ==
+                                          i) {
                                         return Padding(
                                           padding: const EdgeInsets.all(10),
                                           child: InkWell(
                                             onTap: () {
-                                              setState(() {
-                                                exampleList[index].add(
-                                                    exampleList[index].length +
-                                                        1);
-                                              });
+                                              _createItemMenu(index);
                                             },
                                             child: Container(
                                               decoration: const BoxDecoration(
@@ -125,18 +130,22 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                       } else {
                                         return ListTile(
                                           selectedTileColor: secondaryColor,
-                                          trailing: Icon(
+                                          trailing: const Icon(
                                             Icons.water_drop_rounded,
                                             color: secondaryColor,
                                           ),
                                           title: Text(
-                                            "Item ${exampleList[index][i]}",
-                                            style: TextStyle(
+                                            Menu()
+                                                .getMenu()[index]
+                                                .getCategory()[i]
+                                                .name,
+                                            style: const TextStyle(
                                                 color: secondaryColor,
                                                 fontWeight: FontWeight.w600),
                                           ),
-                                          subtitle: Text("10€",
-                                              style: TextStyle(
+                                          subtitle: Text(
+                                              "${Menu().getMenu()[index].getCategory()[i].price.toString()} €",
+                                              style: const TextStyle(
                                                   color: secondaryColor,
                                                   fontWeight: FontWeight.w200)),
                                         );
@@ -154,15 +163,8 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
     );
   }
 
-  int _itemsCount() {
-    int sum = 0;
-    for (var element in exampleList) {
-      sum += element.length;
-    }
-    return sum;
-  }
-
   void _createCategoryMenu() {
+    createCategoryNameController.text = "";
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -177,7 +179,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
                 TextFormField(
-                  controller: createCategoryController,
+                  controller: createCategoryNameController,
                   textAlign: TextAlign.center,
                   decoration: const InputDecoration(
                     enabledBorder: InputBorder.none,
@@ -209,6 +211,94 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                           backgroundColor:
                               MaterialStateProperty.all(primaryColor)),
                       onPressed: () {
+                        setState(() {
+                          Menu().addCategory(
+                              MenuCategory(createCategoryNameController.text));
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Create",
+                        style: TextStyle(color: secondaryColor),
+                      ),
+                    ),
+                  ],
+                )
+              ]),
+            ),
+          );
+        });
+  }
+
+  void _createItemMenu(index) {
+    createItemNameControler.text = "";
+    createItemPriceControler.text = "";
+
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(25),
+            child: SingleChildScrollView(
+              child: Column(children: [
+                const Text(
+                  "Create new item.",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                ),
+                TextFormField(
+                  controller: createItemNameControler,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    hintText: 'Item name',
+                  ),
+                  autocorrect: false,
+                ),
+                TextFormField(
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  keyboardType: TextInputType.number,
+                  controller: createItemPriceControler,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    hintText: 'Price',
+                  ),
+                  autocorrect: false,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(neutralColor)),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(color: secondaryColor),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    TextButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(primaryColor)),
+                      onPressed: () {
+                        setState(() {
+                          Menu().getMenu()[index].addItem(MenuItem(
+                              createItemNameControler.text,
+                              double.parse(createItemPriceControler.text)));
+                        });
                         Navigator.pop(context);
                       },
                       child: const Text(
