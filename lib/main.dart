@@ -1,3 +1,4 @@
+import 'package:caffe_app/utility/constants.dart';
 import 'package:flutter/material.dart';
 
 import 'package:caffe_app/desktop/layout_desktop.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Stack(children: [
         const Background(
+          color: subColor,
           opacity: 0.75,
         ),
         CaffeApp(

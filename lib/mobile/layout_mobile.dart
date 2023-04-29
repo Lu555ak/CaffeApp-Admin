@@ -32,13 +32,13 @@ class _LayoutMobileState extends State<LayoutMobile> {
     return Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          backgroundColor: secondaryColor,
+          backgroundColor: primaryColor,
           iconTheme: const IconThemeData(
-            color: primaryColor,
+            color: secondaryColor,
           ),
           title: const Text(
             "A P P B A R",
-            style: TextStyle(color: primaryColor),
+            style: TextStyle(color: secondaryColor),
           ),
         ),
         drawer: Drawer(
