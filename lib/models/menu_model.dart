@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class Menu {
   static Menu? _instance;
 
@@ -7,44 +5,75 @@ class Menu {
 
   factory Menu() => _instance ??= Menu._();
 
-  List<MenuCategory> menu = List.empty(growable: true);
+  final List<MenuCategory> _categories = List.empty(growable: true);
 
-  List<MenuCategory> getMenu() {
-    return menu;
+  MenuCategory getCategory(int index) {
+    return _categories[index];
   }
 
   void addCategory(MenuCategory category) {
-    menu.add(category);
+    _categories.add(category);
   }
 
-  int itemCount() {
-    int count = 0;
-    for (var element in menu) {
-      count += element.items.length;
-    }
+  int getCategoryCount() {
+    return _categories.length;
+  }
 
+  int getTotalItemCount() {
+    int count = 0;
+    for (var element in _categories) {
+      count += element._items.length;
+    }
     return count;
   }
 }
 
 class MenuCategory {
-  String name;
-  List<MenuItem> items = List.empty(growable: true);
+  String _name;
+  final List<MenuItem> _items = List.empty(growable: true);
 
-  MenuCategory(this.name);
+  MenuCategory(this._name);
 
-  List<MenuItem> getCategory() {
-    return items;
+  String getName() {
+    return _name;
   }
 
-  void setName(String name) => this.name = name;
+  void setName(String name) {
+    _name = name;
+  }
 
-  void addItem(MenuItem item) => items.add(item);
+  MenuItem getItem(int index) {
+    return _items[index];
+  }
+
+  void addItem(MenuItem item) {
+    _items.add(item);
+  }
+
+  int getItemCount() {
+    return _items.length;
+  }
 }
 
 class MenuItem {
-  String name;
-  double price;
+  String _name;
+  double _price;
 
-  MenuItem(this.name, this.price);
+  MenuItem(this._name, this._price);
+
+  String getName() {
+    return _name;
+  }
+
+  double getPrice() {
+    return _price;
+  }
+
+  void setName(String name) {
+    _name = name;
+  }
+
+  void setPrice(double price) {
+    _price = price;
+  }
 }

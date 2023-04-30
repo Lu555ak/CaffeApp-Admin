@@ -35,7 +35,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                     bottomLeft: Radius.circular(25.0),
                     bottomRight: Radius.circular(25.0))),
             child: Text(
-              "CATEGORIES: ${Menu().menu.length}\nITEMS: ${Menu().itemCount()}",
+              "CATEGORIES: ${Menu().getCategoryCount()}\nITEMS: ${Menu().getTotalItemCount()}",
               style: const TextStyle(
                   color: secondaryColor,
                   fontWeight: FontWeight.w600,
@@ -47,9 +47,9 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
             child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: Menu().getMenu().length + 1,
+                itemCount: Menu().getCategoryCount() + 1,
                 itemBuilder: ((context, index) {
-                  if (index == Menu().menu.length) {
+                  if (index == Menu().getCategoryCount()) {
                     return Padding(
                       padding: const EdgeInsets.all(12),
                       child: InkWell(
@@ -88,7 +88,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                             child: ExpansionTile(
                               backgroundColor: primaryColor,
                               title: Text(
-                                Menu().getMenu()[index].name,
+                                Menu().getCategory(index).getName(),
                                 style: const TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.w700),
                               ),
@@ -97,15 +97,13 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                     scrollDirection: Axis.vertical,
                                     shrinkWrap: true,
                                     itemCount: Menu()
-                                            .getMenu()[index]
-                                            .getCategory()
-                                            .length +
+                                            .getCategory(index)
+                                            .getItemCount() +
                                         1,
                                     itemBuilder: (context, i) {
                                       if (Menu()
-                                              .getMenu()[index]
-                                              .getCategory()
-                                              .length ==
+                                              .getCategory(index)
+                                              .getItemCount() ==
                                           i) {
                                         return Padding(
                                           padding: const EdgeInsets.all(10),
@@ -129,22 +127,48 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                         );
                                       } else {
                                         return ListTile(
+                                          onTap: () {
+                                            _showItem(Menu()
+                                                .getCategory(index)
+                                                .getItem(i));
+                                          },
                                           selectedTileColor: secondaryColor,
-                                          trailing: const Icon(
-                                            Icons.water_drop_rounded,
-                                            color: secondaryColor,
+                                          trailing: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Material(
+                                                color: Colors.transparent,
+                                                child: InkWell(
+                                                  onTap: () {},
+                                                  customBorder:
+                                                      const CircleBorder(),
+                                                  splashColor: subColor,
+                                                  child: const FittedBox(
+                                                    child: Icon(
+                                                      Icons.delete_rounded,
+                                                      color: Color.fromARGB(
+                                                          255, 136, 51, 51),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const Icon(
+                                                Icons.arrow_forward_ios_sharp,
+                                                color: secondaryColor,
+                                              ),
+                                            ],
                                           ),
                                           title: Text(
                                             Menu()
-                                                .getMenu()[index]
-                                                .getCategory()[i]
-                                                .name,
+                                                .getCategory(index)
+                                                .getItem(i)
+                                                .getName(),
                                             style: const TextStyle(
                                                 color: secondaryColor,
                                                 fontWeight: FontWeight.w600),
                                           ),
                                           subtitle: Text(
-                                              "${Menu().getMenu()[index].getCategory()[i].price.toString()} €",
+                                              "${Menu().getCategory(index).getItem(i).getPrice().toString()} €",
                                               style: const TextStyle(
                                                   color: secondaryColor,
                                                   fontWeight: FontWeight.w200)),
@@ -295,7 +319,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                               MaterialStateProperty.all(primaryColor)),
                       onPressed: () {
                         setState(() {
-                          Menu().getMenu()[index].addItem(MenuItem(
+                          Menu().getCategory(index).addItem(MenuItem(
                               createItemNameControler.text,
                               double.parse(createItemPriceControler.text)));
                         });
@@ -309,6 +333,81 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                   ],
                 )
               ]),
+            ),
+          );
+        });
+  }
+
+  void _showItem(MenuItem item) {
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(25),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const FittedBox(
+                      child: Icon(
+                        Icons.water_drop_rounded,
+                        color: primaryColor,
+                        size: 40,
+                      ),
+                    ),
+                    title: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        item.getName(),
+                        style: const TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 30),
+                      ),
+                    ),
+                    subtitle: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "${item.getPrice()} €",
+                        style: const TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.w200,
+                            fontSize: 15),
+                      ),
+                    ),
+                  ),
+                  const Divider(
+                    color: primaryColor,
+                  ),
+                  const SizedBox(
+                    width: double.infinity,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Description: ",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc accumsan urna nec enim rhoncus cursus.",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(color: primaryColor, fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         });

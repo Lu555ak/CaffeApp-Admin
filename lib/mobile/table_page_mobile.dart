@@ -1,5 +1,8 @@
 import 'package:caffe_app/utility/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:caffe_app/models/tables_model.dart';
+import 'package:caffe_app/custom/confirm_delete_window.dart';
+import 'package:caffe_app/custom/small_icon_button.dart';
 
 class TablePageMobile extends StatefulWidget {
   const TablePageMobile({super.key});
@@ -9,8 +12,6 @@ class TablePageMobile extends StatefulWidget {
 }
 
 class _TablePageMobileState extends State<TablePageMobile> {
-  List<int> exampleList = [];
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -25,7 +26,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                     bottomLeft: Radius.circular(25.0),
                     bottomRight: Radius.circular(25.0))),
             child: Text(
-              "ACTIVE TABLES: ${exampleList.length}",
+              "ACTIVE TABLES: ${Tables().getTableCount()}",
               style: const TextStyle(
                   color: secondaryColor,
                   fontWeight: FontWeight.w600,
@@ -35,18 +36,19 @@ class _TablePageMobileState extends State<TablePageMobile> {
           GridView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              itemCount: exampleList.length + 1,
+              itemCount: Tables().getTableCount() + 1,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2),
               itemBuilder: (context, index) {
-                if (index == exampleList.length) {
+                if (index == Tables().getTableCount()) {
                   return Padding(
                     padding: const EdgeInsets.all(25.0),
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          exampleList.add(exampleList.length + 1);
+                          Tables().addTable(CaffeTable(1, "22"));
                         });
+                        // add table
                       },
                       child: Container(
                         decoration: const BoxDecoration(
@@ -99,7 +101,10 @@ class _TablePageMobileState extends State<TablePageMobile> {
                                     child: FittedBox(
                                       fit: BoxFit.contain,
                                       child: Text(
-                                        exampleList[index].toString(),
+                                        Tables()
+                                            .getTable(index)
+                                            .getId()
+                                            .toString(),
                                         style: const TextStyle(
                                             color: secondaryColor,
                                             fontWeight: FontWeight.w500,
@@ -114,38 +119,22 @@ class _TablePageMobileState extends State<TablePageMobile> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () {},
-                                  customBorder: const CircleBorder(),
-                                  splashColor: subColor,
-                                  child: const FittedBox(
-                                    child: Icon(
-                                      Icons.edit_rounded,
-                                      color: primaryColor,
-                                      size: 35,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
+                              SmallIconButton(
+                                  iconData: Icons.edit_rounded,
+                                  iconColor: primaryColor,
+                                  onTap: () {}),
+                              SmallIconButton(
+                                  iconData: Icons.delete_rounded,
+                                  iconColor: dangerColor,
                                   onTap: () {
-                                    deleteTableConfirmWindow(index);
-                                  },
-                                  customBorder: const CircleBorder(),
-                                  splashColor: subColor,
-                                  child: const FittedBox(
-                                    child: Icon(
-                                      Icons.delete_rounded,
-                                      color: Color.fromARGB(255, 136, 51, 51),
-                                      size: 35,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                                    confirmDeleteWindow(context,
+                                        "Are you sure you want to delete this table?",
+                                        () {
+                                      setState(() {
+                                        Tables().removeTable(index);
+                                      });
+                                    });
+                                  }),
                             ],
                           ),
                         )
@@ -216,44 +205,6 @@ class _TablePageMobileState extends State<TablePageMobile> {
                       style: TextStyle(color: subColor, fontSize: 15),
                     ),
                   ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  void deleteTableConfirmWindow(index) {
-    showModalBottomSheet(
-        context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
-        builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(25),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const Text(
-                    "Are you sure you want to delete this table?",
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(height: 10),
-                  TextButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            const Color.fromARGB(255, 136, 51, 51))),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      setState(() {
-                        exampleList.removeAt(index);
-                      });
-                    },
-                    child: const Text(
-                      "Delete",
-                      style: TextStyle(color: secondaryColor),
-                    ),
-                  )
                 ],
               ),
             ),
