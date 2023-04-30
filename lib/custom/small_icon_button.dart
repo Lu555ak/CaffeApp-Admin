@@ -36,12 +36,14 @@ class SmallIconButton extends StatelessWidget {
   final IconData iconData;
   final Color iconColor;
   final Function onTap;
+  final double iconSize;
 
   const SmallIconButton(
       {super.key,
       required this.iconData,
       required this.iconColor,
-      required this.onTap});
+      required this.onTap,
+      this.iconSize = 35});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,7 @@ class SmallIconButton extends StatelessWidget {
             color: iconColor,
           ),
           highlightColor: Colors.transparent,
-          iconSize: 35,
+          iconSize: iconSize,
           hoverColor: neutralColor.withOpacity(0.1),
           onPressed: () {
             onTap();

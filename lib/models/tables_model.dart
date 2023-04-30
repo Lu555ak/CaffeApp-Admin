@@ -22,6 +22,24 @@ class Tables {
   int getTableCount() {
     return _tables.length;
   }
+
+  int generateFreeId() {
+    int id = 1;
+    List<int> ids = List.empty(growable: true);
+
+    for (var element in _tables) {
+      ids.add(element._id);
+    }
+
+    while (id < 999) {
+      if (ids.contains(id)) {
+        id++;
+      } else {
+        return id;
+      }
+    }
+    return 0;
+  }
 }
 
 class CaffeTable {
@@ -35,7 +53,11 @@ class CaffeTable {
   }
 
   void setId(int id) {
-    _id = id;
+    if (id > 999) {
+      _id = 0;
+    } else {
+      _id = id;
+    }
   }
 
   String getDescription() {

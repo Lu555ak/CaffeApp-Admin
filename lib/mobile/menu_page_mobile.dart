@@ -2,6 +2,9 @@ import 'package:caffe_app/utility/constants.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:caffe_app/models/menu_model.dart';
+import 'package:caffe_app/custom/confirm_button.dart';
+import 'package:caffe_app/custom/small_icon_button.dart';
+import 'package:caffe_app/custom/confirm_delete_window.dart';
 
 class MenuPageMobile extends StatefulWidget {
   const MenuPageMobile({super.key});
@@ -12,12 +15,18 @@ class MenuPageMobile extends StatefulWidget {
 
 class _MenuPageMobileState extends State<MenuPageMobile> {
   final createCategoryNameController = TextEditingController();
+
   final createItemNameControler = TextEditingController();
   final createItemPriceControler = TextEditingController();
+
+  final editItemNameControler = TextEditingController();
+  final editItemPriceControler = TextEditingController();
 
   @override
   void dispose() {
     createCategoryNameController.dispose();
+    createItemNameControler.dispose();
+    createItemPriceControler.dispose();
     super.dispose();
   }
 
@@ -55,7 +64,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            _createCategoryMenu();
+                            _createCategory();
                           });
                         },
                         child: Container(
@@ -109,7 +118,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                           padding: const EdgeInsets.all(10),
                                           child: InkWell(
                                             onTap: () {
-                                              _createItemMenu(index);
+                                              _createItem(index);
                                             },
                                             child: Container(
                                               decoration: const BoxDecoration(
@@ -136,26 +145,31 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                           trailing: Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              Material(
-                                                color: Colors.transparent,
-                                                child: InkWell(
-                                                  onTap: () {},
-                                                  customBorder:
-                                                      const CircleBorder(),
-                                                  splashColor: subColor,
-                                                  child: const FittedBox(
-                                                    child: Icon(
+                                              SmallIconButton(
+                                                  iconData: Icons.edit_rounded,
+                                                  iconColor: secondaryColor,
+                                                  iconSize: 25,
+                                                  onTap: () {
+                                                    _editItem(Menu()
+                                                        .getCategory(index)
+                                                        .getItem(i));
+                                                  }),
+                                              SmallIconButton(
+                                                  iconData:
                                                       Icons.delete_rounded,
-                                                      color: Color.fromARGB(
-                                                          255, 136, 51, 51),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              const Icon(
-                                                Icons.arrow_forward_ios_sharp,
-                                                color: secondaryColor,
-                                              ),
+                                                  iconColor: dangerColor,
+                                                  iconSize: 25,
+                                                  onTap: () {
+                                                    confirmDeleteWindow(context,
+                                                        "Are you sure you want to delete this item?",
+                                                        () {
+                                                      setState(() {
+                                                        Menu()
+                                                            .getCategory(index)
+                                                            .removeItem(i);
+                                                      });
+                                                    });
+                                                  })
                                             ],
                                           ),
                                           title: Text(
@@ -187,7 +201,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
     );
   }
 
-  void _createCategoryMenu() {
+  void _createCategory() {
     createCategoryNameController.text = "";
     showModalBottomSheet(
         context: context,
@@ -197,64 +211,33 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
           return Container(
             padding: const EdgeInsets.all(25),
             child: SingleChildScrollView(
-              child: Column(children: [
-                const Text(
-                  "Create new category.",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                child: Column(children: [
+              const Text(
+                "Create new category.",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              ),
+              TextFormField(
+                controller: createCategoryNameController,
+                textAlign: TextAlign.center,
+                decoration: const InputDecoration(
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  hintText: 'Category name',
                 ),
-                TextFormField(
-                  controller: createCategoryNameController,
-                  textAlign: TextAlign.center,
-                  decoration: const InputDecoration(
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    hintText: 'Category name',
-                  ),
-                  autocorrect: false,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(neutralColor)),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(color: secondaryColor),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    TextButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(primaryColor)),
-                      onPressed: () {
-                        setState(() {
-                          Menu().addCategory(
-                              MenuCategory(createCategoryNameController.text));
-                        });
-                        Navigator.pop(context);
-                      },
-                      child: const Text(
-                        "Create",
-                        style: TextStyle(color: secondaryColor),
-                      ),
-                    ),
-                  ],
-                )
-              ]),
-            ),
+                autocorrect: false,
+              ),
+              ConfirmButton(onPress: () {
+                setState(() {
+                  Menu().addCategory(
+                      MenuCategory(createCategoryNameController.text));
+                });
+              })
+            ])),
           );
         });
   }
 
-  void _createItemMenu(index) {
+  void _createItem(index) {
     createItemNameControler.text = "";
     createItemPriceControler.text = "";
 
@@ -295,43 +278,13 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                   ),
                   autocorrect: false,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(neutralColor)),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(color: secondaryColor),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    TextButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(primaryColor)),
-                      onPressed: () {
-                        setState(() {
-                          Menu().getCategory(index).addItem(MenuItem(
-                              createItemNameControler.text,
-                              double.parse(createItemPriceControler.text)));
-                        });
-                        Navigator.pop(context);
-                      },
-                      child: const Text(
-                        "Create",
-                        style: TextStyle(color: secondaryColor),
-                      ),
-                    ),
-                  ],
-                )
+                ConfirmButton(onPress: () {
+                  setState(() {
+                    Menu().getCategory(index).addItem(MenuItem(
+                        createItemNameControler.text,
+                        double.parse(createItemPriceControler.text)));
+                  });
+                })
               ]),
             ),
           );
@@ -408,6 +361,63 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                   ),
                 ],
               ),
+            ),
+          );
+        });
+  }
+
+  void _editItem(MenuItem item) {
+    editItemNameControler.text = "";
+    editItemPriceControler.text = "";
+
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(25),
+            child: SingleChildScrollView(
+              child: Column(children: [
+                const Text(
+                  "Edit item.",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                ),
+                TextFormField(
+                  controller: editItemNameControler,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    hintText: 'Item name',
+                  ),
+                  autocorrect: false,
+                ),
+                TextFormField(
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  keyboardType: TextInputType.number,
+                  controller: editItemPriceControler,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    hintText: 'Price',
+                  ),
+                  autocorrect: false,
+                ),
+                ConfirmButton(onPress: () {
+                  setState(() {
+                    if (editItemPriceControler.text != "") {
+                      item.setPrice(double.parse(editItemPriceControler.text));
+                    }
+                    if (editItemNameControler.text != "") {
+                      item.setName(editItemNameControler.text);
+                    }
+                  });
+                })
+              ]),
             ),
           );
         });

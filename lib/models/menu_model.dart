@@ -34,6 +34,10 @@ class MenuCategory {
 
   MenuCategory(this._name);
 
+  void removeItem(index) {
+    _items.removeAt(index);
+  }
+
   String getName() {
     return _name;
   }

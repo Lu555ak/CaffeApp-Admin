@@ -1,8 +1,10 @@
 import 'package:caffe_app/utility/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:caffe_app/models/tables_model.dart';
 import 'package:caffe_app/custom/confirm_delete_window.dart';
 import 'package:caffe_app/custom/small_icon_button.dart';
+import 'package:caffe_app/custom/confirm_button.dart';
 
 class TablePageMobile extends StatefulWidget {
   const TablePageMobile({super.key});
@@ -12,6 +14,21 @@ class TablePageMobile extends StatefulWidget {
 }
 
 class _TablePageMobileState extends State<TablePageMobile> {
+  final editTableIdController = TextEditingController();
+  final editTableDescriptionController = TextEditingController();
+
+  final createTableIdController = TextEditingController();
+  final createTableDescriptionController = TextEditingController();
+
+  @override
+  void dispose() {
+    editTableIdController.dispose();
+    editTableDescriptionController.dispose();
+    createTableIdController.dispose();
+    createTableDescriptionController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -46,9 +63,8 @@ class _TablePageMobileState extends State<TablePageMobile> {
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          Tables().addTable(CaffeTable(1, "22"));
+                          createTableSheet();
                         });
-                        // add table
                       },
                       child: Container(
                         decoration: const BoxDecoration(
@@ -75,7 +91,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                       child: Row(children: [
                         InkWell(
                           onTap: () {
-                            showTableSheet();
+                            showTableSheet(Tables().getTable(index));
                           },
                           child: Container(
                             padding: const EdgeInsets.all(5.0),
@@ -122,7 +138,9 @@ class _TablePageMobileState extends State<TablePageMobile> {
                               SmallIconButton(
                                   iconData: Icons.edit_rounded,
                                   iconColor: primaryColor,
-                                  onTap: () {}),
+                                  onTap: () {
+                                    editTableSheet(Tables().getTable(index));
+                                  }),
                               SmallIconButton(
                                   iconData: Icons.delete_rounded,
                                   iconColor: dangerColor,
@@ -148,7 +166,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
     );
   }
 
-  void showTableSheet() {
+  void showTableSheet(CaffeTable table) {
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -158,7 +176,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
             padding: const EdgeInsets.all(25),
             child: SingleChildScrollView(
               child: Column(
-                children: const [
+                children: [
                   ListTile(
                     leading: FittedBox(
                       child: Icon(
@@ -171,7 +189,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                       fit: BoxFit.scaleDown,
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "8146",
+                        table.getId().toString(),
                         style: TextStyle(
                             color: primaryColor,
                             fontWeight: FontWeight.w500,
@@ -200,11 +218,136 @@ class _TablePageMobileState extends State<TablePageMobile> {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc accumsan urna nec enim rhoncus cursus.",
+                      table.getDescription(),
                       textAlign: TextAlign.justify,
-                      style: TextStyle(color: subColor, fontSize: 15),
+                      style: TextStyle(color: primaryColor, fontSize: 15),
                     ),
                   ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  void editTableSheet(CaffeTable table) {
+    editTableDescriptionController.text = "";
+    editTableIdController.text = "";
+
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(25),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const Text(
+                    "Edit table.",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  ),
+                  TextFormField(
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    controller: editTableIdController,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      hintText: 'ID',
+                    ),
+                    autocorrect: false,
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    controller: editTableDescriptionController,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      hintText: 'Description',
+                    ),
+                    autocorrect: false,
+                  ),
+                  ConfirmButton(onPress: () {
+                    setState(() {
+                      if (editTableIdController.text != "") {
+                        table.setId(int.parse(editTableIdController.text));
+                      }
+                      if (editTableDescriptionController.text != "") {
+                        table.setDescription(
+                            editTableDescriptionController.text);
+                      }
+                    });
+                  })
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  void createTableSheet() {
+    createTableDescriptionController.text = "";
+    createTableIdController.text = "";
+
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(25),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const Text(
+                    "Create table.",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  ),
+                  TextFormField(
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    controller: createTableIdController,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      hintText: 'ID',
+                    ),
+                    autocorrect: false,
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    controller: createTableDescriptionController,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      hintText: 'Description',
+                    ),
+                    autocorrect: false,
+                  ),
+                  ConfirmButton(onPress: () {
+                    setState(() {
+                      if (createTableIdController.text == "" &&
+                          createTableDescriptionController.text != "") {
+                        Tables().addTable(CaffeTable(Tables().generateFreeId(),
+                            createTableDescriptionController.text));
+                      } else if (createTableDescriptionController.text == "" &&
+                          createTableIdController.text != "") {
+                        Tables().addTable(CaffeTable(
+                            int.parse(createTableIdController.text), "Empty"));
+                      } else {
+                        Tables().addTable(
+                            CaffeTable(Tables().generateFreeId(), "Empty"));
+                      }
+                    });
+                  })
                 ],
               ),
             ),
