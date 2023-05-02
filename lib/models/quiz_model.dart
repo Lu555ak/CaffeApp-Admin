@@ -45,17 +45,15 @@ class Quiz {
 }
 
 class QuizQuestion {
-  String question;
+  String _question;
 
-  QuizQuestion(this.question);
+  QuizQuestion(this._question);
+
+  String getQuestion() {
+    return _question;
+  }
+
+  void setQuestion(String question) {
+    _question = question;
+  }
 }
-
-/*class SingleAnswerQuizQuestion implements QuizQuestion {
-  @override
-  String question;
-}
-
-class MultiAnswerQuizQuestion implements QuizQuestion {
-  @override
-  String question;
-}*/
