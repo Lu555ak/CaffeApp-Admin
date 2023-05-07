@@ -5,6 +5,7 @@ import 'package:caffe_app/models/menu_model.dart';
 import 'package:caffe_app/custom/confirm_button.dart';
 import 'package:caffe_app/custom/small_icon_button.dart';
 import 'package:caffe_app/custom/confirm_delete_window.dart';
+import 'package:caffe_app/custom/listview_add_button.dart';
 
 class MenuPageMobile extends StatefulWidget {
   const MenuPageMobile({super.key});
@@ -59,28 +60,12 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                 itemCount: Menu().getCategoryCount() + 1,
                 itemBuilder: ((context, index) {
                   if (index == Menu().getCategoryCount()) {
-                    return Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            _createCategory();
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          width: double.infinity,
-                          decoration: const BoxDecoration(
-                            color: secondaryColor,
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                          ),
-                          child: const Icon(
-                            Icons.add_rounded,
-                            color: subColor,
-                            size: 35,
-                          ),
-                        ),
-                      ),
+                    return ListViewAddButton(
+                      onTap: () {
+                        setState(() {
+                          _createCategory();
+                        });
+                      },
                     );
                   } else {
                     return Padding(

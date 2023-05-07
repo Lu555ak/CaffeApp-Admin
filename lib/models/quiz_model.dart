@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class Quizzes {
   static Quizzes? _instance;
 
@@ -12,12 +14,20 @@ class Quizzes {
         .firstWhere((element) => element.getIdentifier() == identifier);
   }
 
+  Quiz getQuizAt(int index) {
+    return _quizzes[index];
+  }
+
   void addQuiz(Quiz quiz) {
     _quizzes.add(quiz);
   }
 
   void removeQuiz(String identifier) {
     _quizzes.removeWhere((element) => element.getIdentifier() == identifier);
+  }
+
+  int getQuizCount() {
+    return _quizzes.length;
   }
 }
 
@@ -41,6 +51,16 @@ class Quiz {
 
   void removeQuestionAt(int index) {
     _questions.removeAt(index);
+  }
+
+  int getQuizCount() {
+    return _questions.length;
+  }
+
+  void swapQuestions(int index1, int index2) {
+    var temp = _questions[index1];
+    _questions[index1] = _questions[index2];
+    _questions[index2] = temp;
   }
 }
 
