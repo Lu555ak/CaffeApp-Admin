@@ -80,73 +80,7 @@ class _HomePageMobileState extends State<HomePageMobile> {
                               width: 150,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  showModalBottomSheet(
-                                      context: context,
-                                      builder: (context) {
-                                        return Container(
-                                          padding: const EdgeInsets.all(25),
-                                          child: SingleChildScrollView(
-                                            child: Column(
-                                              children: [
-                                                ListTile(
-                                                  leading: FittedBox(
-                                                    child: Icon(
-                                                      Icons
-                                                          .table_restaurant_rounded,
-                                                      color: primaryColor,
-                                                      size: 40,
-                                                    ),
-                                                  ),
-                                                  title: FittedBox(
-                                                    fit: BoxFit.scaleDown,
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    child: Text(
-                                                      "23",
-                                                      style: TextStyle(
-                                                          color: primaryColor,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: 30),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Divider(
-                                                  color: primaryColor,
-                                                ),
-                                                SizedBox(
-                                                  width: double.infinity,
-                                                  child: FittedBox(
-                                                    fit: BoxFit.scaleDown,
-                                                    alignment:
-                                                        Alignment.topLeft,
-                                                    child: Text(
-                                                      "Order: ",
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                          color: primaryColor,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: 18),
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: double.infinity,
-                                                  child: Text(
-                                                    "Empty!",
-                                                    textAlign:
-                                                        TextAlign.justify,
-                                                    style: TextStyle(
-                                                        color: primaryColor,
-                                                        fontSize: 15),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      });
+                                  showOrderInfo();
                                 },
                                 style: ButtonStyle(
                                   backgroundColor:
@@ -213,6 +147,70 @@ class _HomePageMobileState extends State<HomePageMobile> {
         )
       ],
     );
+  }
+
+  void showOrderInfo() {
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(25),
+            child: SingleChildScrollView(
+              child: Column(
+                children: const [
+                  ListTile(
+                    leading: FittedBox(
+                      child: Icon(
+                        Icons.table_restaurant_rounded,
+                        color: primaryColor,
+                        size: 40,
+                      ),
+                    ),
+                    title: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "23",
+                        style: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 30),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    color: primaryColor,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Order: ",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      "Empty!",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(color: primaryColor, fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
 
