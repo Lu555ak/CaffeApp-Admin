@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:caffe_app/models/quiz_model.dart';
 
 import 'package:caffe_app/custom/listview_add_button.dart';
+import 'package:flutter/services.dart';
+
+import '../custom/confirm_button.dart';
+import '../custom/confirm_delete_window.dart';
+import '../custom/small_icon_button.dart';
 
 class QuizPageMobile extends StatefulWidget {
   const QuizPageMobile({super.key});
@@ -12,7 +17,13 @@ class QuizPageMobile extends StatefulWidget {
 }
 
 class _QuizPageMobileState extends State<QuizPageMobile> {
-  final data = [1, 2, 3, 4, 5, 6, 7, 8];
+  final createCategoryNameController = TextEditingController();
+
+  final createItemNameControler = TextEditingController();
+  final createItemTopicControler = TextEditingController();
+
+  final editItemNameControler = TextEditingController();
+  final editItemPriceControler = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,94 +46,101 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: Quizzes().getQuizCount() + 1,
-              itemBuilder: ((context, index) {
-                if (index == Quizzes().getQuizCount()) {
-                  return ListViewAddButton(
-                    onTap: () {
-                      setState(() {
-                        Quizzes().addQuiz(Quiz("Quiz 3"));
-                      });
-                    },
-                  );
-                } else {
-                  return Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Theme(
-                        data: ThemeData(
-                            colorScheme: ColorScheme.fromSwatch()
-                                .copyWith(primary: secondaryColor)),
-                        child: Card(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              children: [
+                ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: 3,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Theme(
+                          data: ThemeData(
+                              colorScheme: ColorScheme.fromSwatch()
+                                  .copyWith(primary: secondaryColor)),
+                          child: Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
                             clipBehavior: Clip.antiAlias,
                             child: ExpansionTile(
                               backgroundColor: primaryColor,
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SmallIconButton(
+                                      iconData: Icons.delete_rounded,
+                                      iconColor: dangerColor,
+                                      iconSize: 25,
+                                      onTap: () {
+                                        confirmDeleteWindow(context,
+                                            "Are you sure you want to delete this item?",
+                                            () {
+                                          setState(() {
+                                            //Menu().getCategory(index).removeItem(i);
+                                          });
+                                        });
+                                      })
+                                ],
+                              ),
                               title: Text(
-                                Quizzes().getQuizAt(index).getIdentifier(),
+                                "a",
                                 style: const TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.w700),
                               ),
-                              children: [
-                                ReorderableListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: Quizzes()
-                                          .getQuizAt(index)
-                                          .getQuizCount() +
-                                      1,
-                                  onReorder: (oldIndex, newIndex) {
-                                    setState(() {
-                                      Quizzes()
-                                          .getQuizAt(index)
-                                          .swapQuestions(oldIndex, newIndex);
-                                    });
-                                  },
-                                  itemBuilder: (context, i) {
-                                    if (Quizzes()
-                                            .getQuizAt(index)
-                                            .getQuizCount() ==
-                                        i) {
-                                      return Padding(
-                                        key: const ValueKey("AddNewQuestion"),
-                                        padding: const EdgeInsets.all(10),
-                                        child: InkWell(
-                                          onTap: () {
-                                            Quizzes()
-                                                .getQuizAt(index)
-                                                .addQuestion(QuizQuestion(
-                                                    "What is your name?"));
-                                          },
-                                          child: Container(
-                                            decoration: const BoxDecoration(
-                                              color: secondaryColor,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5)),
-                                            ),
-                                            child: const Icon(
-                                              Icons.add_rounded,
-                                              color: primaryColor,
-                                              size: 25,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    } else {
-                                      return Container(key: ValueKey(i));
-                                    }
-                                  },
-                                )
-                              ],
-                            )),
-                      ));
-                }
-              })),
-        )
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                ListViewAddButton(onTap: () {
+                  _createQuiz();
+                })
+              ],
+            ))
       ]),
     );
+  }
+
+  void _createQuiz() {
+    createItemNameControler.text = "";
+    createItemTopicControler.text = "";
+
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(25),
+            child: SingleChildScrollView(
+              child: Column(children: [
+                const Text(
+                  "Create new quiz.",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                ),
+                TextFormField(
+                  controller: createItemNameControler,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    hintText: 'Quiz name',
+                  ),
+                  autocorrect: false,
+                ),
+                ConfirmButton(onPress: () {
+                  /*setState(() {
+                    Menu().getCategory(index).addItem(MenuItem(
+                        createItemNameControler.text,
+                        double.parse(createItemTopicControler.text)));
+                  });*/
+                })
+              ]),
+            ),
+          );
+        });
   }
 }
