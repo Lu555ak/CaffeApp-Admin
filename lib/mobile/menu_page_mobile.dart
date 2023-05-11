@@ -25,6 +25,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
 
   final _formKeyName = GlobalKey<FormState>();
   final _formKeyPrice = GlobalKey<FormState>();
+  final _formKeyCategory = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -204,22 +205,61 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                 "Create new category.",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
-              TextFormField(
-                controller: createCategoryNameController,
-                textAlign: TextAlign.center,
-                decoration: const InputDecoration(
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  hintText: 'Category name',
+              Form(
+                key: _formKeyCategory,
+                child: TextFormField(
+                  controller: createCategoryNameController,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    hintText: 'Category name',
+                  ),
+                  autocorrect: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some name!';
+                    }
+                    return null;
+                  },
                 ),
-                autocorrect: false,
               ),
-              ConfirmButton(onPress: () {
-                setState(() {
-                  Menu().addCategory(
-                      MenuCategory(createCategoryNameController.text));
-                });
-              })
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Align(
+                        alignment: Alignment.center,
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(subColor2),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Cancel'))),
+                  ),
+                  Expanded(
+                    child: Align(
+                        alignment: Alignment.center,
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(primaryColor),
+                            ),
+                            onPressed: () {
+                              if (_formKeyCategory.currentState!.validate()) {
+                                setState(() {
+                                  Menu().addCategory(MenuCategory(
+                                      createCategoryNameController.text));
+                                  Navigator.of(context).pop();
+                                });
+                              }
+                            },
+                            child: const Text('Confirm'))),
+                  ),
+                ],
+              ),
             ])),
           );
         });
