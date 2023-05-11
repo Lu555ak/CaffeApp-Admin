@@ -326,7 +326,20 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                     },
                   ),
                 ),
-                Row(
+                ConfirmButton(
+                  onPress: () {
+                    if (_formKeyName.currentState!.validate() &&
+                        _formKeyPrice.currentState!.validate()) {
+                      setState(() {
+                        Menu().getCategory(index).addItem(MenuItem(
+                            createItemNameControler.text,
+                            double.parse(createItemPriceControler.text)));
+                        Navigator.of(context).pop();
+                      });
+                    }
+                  },
+                )
+                /*Row(
                   children: <Widget>[
                     Expanded(
                       child: Align(
@@ -364,7 +377,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                               child: const Text('Confirm'))),
                     ),
                   ],
-                ),
+                ),*/
               ]),
             ),
           );

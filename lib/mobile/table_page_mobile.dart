@@ -281,6 +281,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                         table.setDescription(
                             editTableDescriptionController.text);
                       }
+                      Navigator.of(context).pop();
                     });
                   })
                 ],
@@ -346,6 +347,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                         Tables().addTable(
                             CaffeTable(Tables().generateFreeId(), "Empty"));
                       }
+                      Navigator.of(context).pop();
                     });
                   })
                 ],

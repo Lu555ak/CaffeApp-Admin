@@ -22,6 +22,10 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
 
   final createQuestionQuestionControler = TextEditingController();
 
+  final _formKeyName = GlobalKey<FormState>();
+  final _formKeyTopic = GlobalKey<FormState>();
+  final _formKeyQuestion = GlobalKey<FormState>();
+
   @override
   void dispose() {
     createQuizNameControler.dispose();
@@ -177,32 +181,51 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                   "Create new quiz.",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
-                TextFormField(
-                  controller: createQuizNameControler,
-                  textAlign: TextAlign.center,
-                  decoration: const InputDecoration(
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    hintText: 'Name',
+                Form(
+                  key: _formKeyName,
+                  child: TextFormField(
+                    controller: createQuizNameControler,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      hintText: 'Name',
+                    ),
+                    autocorrect: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some name!';
+                      }
+                      return null;
+                    },
                   ),
-                  autocorrect: false,
                 ),
-                TextFormField(
-                  controller: createQuizTopicControler,
-                  textAlign: TextAlign.center,
-                  decoration: const InputDecoration(
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    hintText: 'Topic',
+                Form(
+                  key: _formKeyTopic,
+                  child: TextFormField(
+                    controller: createQuizTopicControler,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      hintText: 'Topic',
+                    ),
+                    autocorrect: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the topic of the quiz!';
+                      }
+                      return null;
+                    },
                   ),
-                  autocorrect: false,
                 ),
                 ConfirmButton(onPress: () {
-                  if (createQuizNameControler.text.isNotEmpty &&
-                      createQuizTopicControler.text.isNotEmpty) {
+                  if (_formKeyName.currentState!.validate() &&
+                      _formKeyTopic.currentState!.validate()) {
                     setState(() {
                       Quizzes().addQuiz(Quiz(createQuizNameControler.text,
                           createQuizTopicControler.text));
+                      Navigator.of(context).pop();
                     });
                   }
                 })
@@ -228,21 +251,31 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                   "Create new quiz.",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
-                TextFormField(
-                  controller: createQuestionQuestionControler,
-                  textAlign: TextAlign.center,
-                  decoration: const InputDecoration(
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    hintText: 'Question',
+                Form(
+                  key: _formKeyQuestion,
+                  child: TextFormField(
+                    controller: createQuestionQuestionControler,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      hintText: 'Question',
+                    ),
+                    autocorrect: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the name of the question!';
+                      }
+                      return null;
+                    },
                   ),
-                  autocorrect: false,
                 ),
                 ConfirmButton(onPress: () {
-                  if (createQuestionQuestionControler.text.isNotEmpty) {
+                  if (_formKeyQuestion.currentState!.validate()) {
                     setState(() {
                       Quizzes().getQuizAt(index).addQuestion(
                           QuizQuestion(createQuestionQuestionControler.text));
+                      Navigator.of(context).pop();
                     });
                   }
                 })
@@ -268,21 +301,6 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                 ),
                 Divider(
                   color: primaryColor,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      "Answer: ",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          color: primaryColor,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13),
-                    ),
-                  ),
                 ),
                 SizedBox(
                   width: double.infinity,

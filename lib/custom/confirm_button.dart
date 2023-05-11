@@ -2,40 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:caffe_app/utility/constants.dart';
 
 class ConfirmButton extends StatelessWidget {
-  final Function onPress;
-
   const ConfirmButton({super.key, required this.onPress});
+  final Function onPress;
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        TextButton(
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(neutralColor)),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text(
-            "Cancel",
-            style: TextStyle(color: secondaryColor),
-          ),
+      children: <Widget>[
+        Expanded(
+          child: Align(
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(subColor2),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel'))),
         ),
-        const SizedBox(
-          width: 10,
-        ),
-        TextButton(
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(primaryColor)),
-          onPressed: () {
-            onPress();
-            Navigator.pop(context);
-          },
-          child: const Text(
-            "Confirm",
-            style: TextStyle(color: secondaryColor),
-          ),
+        Expanded(
+          child: Align(
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(primaryColor),
+                  ),
+                  onPressed: () {
+                    onPress();
+                  },
+                  child: const Text('Confirm'))),
         ),
       ],
     );
