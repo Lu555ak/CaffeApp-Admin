@@ -17,13 +17,19 @@ class QuizPageMobile extends StatefulWidget {
 }
 
 class _QuizPageMobileState extends State<QuizPageMobile> {
-  final createCategoryNameController = TextEditingController();
+  final createQuizNameControler = TextEditingController();
+  final createQuizTopicControler = TextEditingController();
 
-  final createItemNameControler = TextEditingController();
-  final createItemTopicControler = TextEditingController();
+  final createQuestionQuestionControler = TextEditingController();
 
-  final editItemNameControler = TextEditingController();
-  final editItemPriceControler = TextEditingController();
+  @override
+  void dispose() {
+    createQuizNameControler.dispose();
+    createQuizTopicControler.dispose();
+    createQuestionQuestionControler.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +43,9 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(25.0),
                   bottomRight: Radius.circular(25.0))),
-          child: const Text(
-            "QUIZES: 0",
-            style: TextStyle(
+          child: Text(
+            "QUIZES: ${Quizzes().getQuizCount()}",
+            style: const TextStyle(
                 color: secondaryColor,
                 fontWeight: FontWeight.w600,
                 fontSize: 15),
@@ -49,126 +55,101 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
             padding: const EdgeInsets.all(15.0),
             child: Column(
               children: [
+                // Quiz list
                 ListView.builder(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
-                    itemCount: 2,
+                    itemCount: Quizzes().getQuizCount(),
                     itemBuilder: (context, index) {
-                      if (index == -1) {
-                        return ListViewAddButton(
-                          onTap: () {
-                            setState(() {
-                              _createQuiz();
-                            });
-                          },
-                        );
-                      } else {
-                        return Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Theme(
-                            data: ThemeData(
-                                colorScheme: ColorScheme.fromSwatch()
-                                    .copyWith(primary: secondaryColor)),
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                      return Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Theme(
+                          data: ThemeData(
+                              colorScheme: ColorScheme.fromSwatch()
+                                  .copyWith(primary: secondaryColor)),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            child: ExpansionTile(
+                              backgroundColor: primaryColor,
+                              title: Text(
+                                "Quiz: ${Quizzes().getQuizAt(index).getName()} ",
+                                style: const TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w700),
                               ),
-                              clipBehavior: Clip.antiAlias,
-                              child: ExpansionTile(
-                                backgroundColor: primaryColor,
-                                title: Text(
-                                  "Quiz",
+                              subtitle: Text(
+                                  Quizzes().getQuizAt(index).getTopic(),
                                   style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                subtitle: Text("Topic",
-                                    style: const TextStyle(
-                                        color: secondaryColor,
-                                        fontWeight: FontWeight.w200)),
-                                children: [
-                                  ListView.builder(
+                                      color: primaryColor,
+                                      fontWeight: FontWeight.w200)),
+                              children: [
+                                // Question list
+                                ReorderableListView.builder(
                                     scrollDirection: Axis.vertical,
                                     shrinkWrap: true,
-                                    itemCount: 1,
-                                    itemBuilder: (context, i) {
-                                      if (2 == 1) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: InkWell(
-                                            onTap: () {
-                                              _createQuiz();
-                                            },
-                                            child: Container(
-                                              decoration: const BoxDecoration(
-                                                color: secondaryColor,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5)),
-                                              ),
-                                              child: const Icon(
-                                                Icons.add_rounded,
-                                                color: primaryColor,
-                                                size: 25,
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      } else {
-                                        return ReorderableListView(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 40),
-                                          children: <Widget>[
-                                            ListTile(
-                                              key: Key('$index'),
-                                              onTap: () {
-                                                _viewQuestion();
-                                              },
-                                              selectedTileColor: secondaryColor,
-                                              trailing: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  SmallIconButton(
-                                                      iconData:
-                                                          Icons.edit_rounded,
-                                                      iconColor: secondaryColor,
-                                                      iconSize: 25,
-                                                      onTap: () {}),
-                                                  SmallIconButton(
-                                                      iconData:
-                                                          Icons.delete_rounded,
-                                                      iconColor: dangerColor,
-                                                      iconSize: 25,
-                                                      onTap: () {
-                                                        confirmDeleteWindow(
-                                                            context,
-                                                            "Are you sure you want to delete this item?",
-                                                            () {
-                                                          setState(() {});
-                                                        });
-                                                      })
-                                                ],
-                                              ),
-                                              title: Text(
-                                                "Question 1",
-                                                style: const TextStyle(
-                                                    color: secondaryColor,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                            ),
-                                          ],
-                                          onReorder:
-                                              (int oldIndex, int newIndex) {},
-                                        );
-                                      }
+                                    buildDefaultDragHandles: false,
+                                    itemCount: Quizzes()
+                                        .getQuizAt(index)
+                                        .getQuestionCount(),
+                                    onReorder: (oldIndex, newIndex) {
+                                      setState(() {
+                                        Quizzes()
+                                            .getQuizAt(index)
+                                            .swapQuestions(oldIndex, newIndex);
+                                      });
                                     },
-                                  )
-                                ],
-                              ),
+                                    itemBuilder: (context, i) {
+                                      return ReorderableDragStartListener(
+                                        index: i,
+                                        key: Key('Question$i'),
+                                        child: ListTile(
+                                          onTap: () {
+                                            _viewQuestion();
+                                          },
+                                          title: Text(
+                                            "#${i + 1}: ${Quizzes().getQuizAt(index).getQuestionAt(i).getQuestion()}",
+                                            style: const TextStyle(
+                                                color: secondaryColor,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          selectedTileColor: secondaryColor,
+                                          trailing: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              SmallIconButton(
+                                                  iconData:
+                                                      Icons.delete_rounded,
+                                                  iconColor: dangerColor,
+                                                  iconSize: 25,
+                                                  onTap: () {
+                                                    confirmDeleteWindow(context,
+                                                        "Are you sure you want to delete this item?",
+                                                        () {
+                                                      setState(() {
+                                                        Quizzes()
+                                                            .getQuizAt(index)
+                                                            .removeQuestionAt(
+                                                                i);
+                                                      });
+                                                    });
+                                                  })
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                                ListViewAddButton(
+                                  onTap: () {
+                                    _createQuestion(index);
+                                  },
+                                )
+                              ],
                             ),
                           ),
-                        );
-                      }
+                        ),
+                      );
                     }),
                 ListViewAddButton(onTap: () {
                   _createQuiz();
@@ -180,8 +161,8 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
   }
 
   void _createQuiz() {
-    createItemNameControler.text = "";
-    createItemTopicControler.text = "";
+    createQuizNameControler.text = "";
+    createQuizTopicControler.text = "";
 
     showModalBottomSheet(
         context: context,
@@ -197,21 +178,73 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
                 TextFormField(
-                  controller: createItemNameControler,
+                  controller: createQuizNameControler,
                   textAlign: TextAlign.center,
                   decoration: const InputDecoration(
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
-                    hintText: 'Quiz name',
+                    hintText: 'Name',
+                  ),
+                  autocorrect: false,
+                ),
+                TextFormField(
+                  controller: createQuizTopicControler,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    hintText: 'Topic',
                   ),
                   autocorrect: false,
                 ),
                 ConfirmButton(onPress: () {
-                  /*setState(() {
-                    Menu().getCategory(index).addItem(MenuItem(
-                        createItemNameControler.text,
-                        double.parse(createItemTopicControler.text)));
-                  });*/
+                  if (createQuizNameControler.text.isNotEmpty &&
+                      createQuizTopicControler.text.isNotEmpty) {
+                    setState(() {
+                      Quizzes().addQuiz(Quiz(createQuizNameControler.text,
+                          createQuizTopicControler.text));
+                    });
+                  }
+                })
+              ]),
+            ),
+          );
+        });
+  }
+
+  void _createQuestion(int index) {
+    createQuestionQuestionControler.text = "";
+
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(25),
+            child: SingleChildScrollView(
+              child: Column(children: [
+                const Text(
+                  "Create new quiz.",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                ),
+                TextFormField(
+                  controller: createQuestionQuestionControler,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    hintText: 'Question',
+                  ),
+                  autocorrect: false,
+                ),
+                ConfirmButton(onPress: () {
+                  if (createQuestionQuestionControler.text.isNotEmpty) {
+                    setState(() {
+                      Quizzes().getQuizAt(index).addQuestion(
+                          QuizQuestion(createQuestionQuestionControler.text));
+                    });
+                  }
                 })
               ]),
             ),

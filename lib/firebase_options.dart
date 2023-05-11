@@ -4,19 +4,32 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
+/// Default [FirebaseOptions] for use with your Firebase apps.
+///
+/// Example:
+/// ```dart
+/// import 'firebase_options.dart';
+/// // ...
+/// await Firebase.initializeApp(
+///   options: DefaultFirebaseOptions.currentPlatform,
+/// );
+/// ```
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return android;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for android - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -39,22 +52,13 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCTFg5WXRx-OjBCPcMgR3Pqce3CEXG0-LE',
-    appId: '1:857911351350:android:6fe64def271a24c39fe097',
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyC4Cq1ab5l1YWZQvTci0XxHpxrZezGNpA0',
+    appId: '1:857911351350:web:afb9c60424e086d19fe097',
     messagingSenderId: '857911351350',
     projectId: 'caffeapp-zavrsni',
+    authDomain: 'caffeapp-zavrsni.firebaseapp.com',
     storageBucket: 'caffeapp-zavrsni.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDPgUkFp4tURHAb02h8zFfSLJlQ_ctn7Q0',
-    appId: '1:857911351350:ios:dc599f8745e5730d9fe097',
-    messagingSenderId: '857911351350',
-    projectId: 'caffeapp-zavrsni',
-    storageBucket: 'caffeapp-zavrsni.appspot.com',
-    iosClientId:
-        '857911351350-g05j84kjv8hfntvnklg37nj6gnrsbenu.apps.googleusercontent.com',
-    iosBundleId: 'com.example.caffeApp',
+    measurementId: 'G-7BKX41TB69',
   );
 }

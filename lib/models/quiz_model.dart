@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class Quizzes {
   static Quizzes? _instance;
 
@@ -9,9 +7,8 @@ class Quizzes {
 
   final List<Quiz> _quizzes = List.empty(growable: true);
 
-  Quiz getQuiz(String identifier) {
-    return _quizzes
-        .firstWhere((element) => element.getIdentifier() == identifier);
+  Quiz getQuiz(String name) {
+    return _quizzes.firstWhere((element) => element.getName() == name);
   }
 
   Quiz getQuizAt(int index) {
@@ -22,8 +19,8 @@ class Quizzes {
     _quizzes.add(quiz);
   }
 
-  void removeQuiz(String identifier) {
-    _quizzes.removeWhere((element) => element.getIdentifier() == identifier);
+  void removeQuiz(String name) {
+    _quizzes.removeWhere((element) => element.getName() == name);
   }
 
   int getQuizCount() {
@@ -32,28 +29,30 @@ class Quizzes {
 }
 
 class Quiz {
-  String _identifier;
+  String _name;
+  String _topic;
   final List<QuizQuestion> _questions = List.empty(growable: true);
 
-  Quiz(this._identifier);
+  Quiz(this._name, this._topic);
 
-  String getIdentifier() {
-    return _identifier;
-  }
-
-  void setIdentifier(String identifier) {
-    _identifier = identifier;
-  }
+  void setName(String name) => _name = name;
+  String getName() => _name;
+  void setTopic(String topic) => _topic = topic;
+  String getTopic() => _topic;
 
   void addQuestion(QuizQuestion question) {
     _questions.add(question);
+  }
+
+  QuizQuestion getQuestionAt(int index) {
+    return _questions[index];
   }
 
   void removeQuestionAt(int index) {
     _questions.removeAt(index);
   }
 
-  int getQuizCount() {
+  int getQuestionCount() {
     return _questions.length;
   }
 
