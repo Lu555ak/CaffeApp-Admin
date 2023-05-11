@@ -22,6 +22,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
 
   final editItemNameControler = TextEditingController();
   final editItemPriceControler = TextEditingController();
+  final editItemActionControler = TextEditingController();
 
   final _formKeyName = GlobalKey<FormState>();
   final _formKeyPrice = GlobalKey<FormState>();
@@ -32,6 +33,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
     createCategoryNameController.dispose();
     createItemNameControler.dispose();
     createItemPriceControler.dispose();
+    editItemActionControler.dispose();
     super.dispose();
   }
 
@@ -224,42 +226,15 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                   },
                 ),
               ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Align(
-                        alignment: Alignment.center,
-                        child: ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(subColor2),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Cancel'))),
-                  ),
-                  Expanded(
-                    child: Align(
-                        alignment: Alignment.center,
-                        child: ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(primaryColor),
-                            ),
-                            onPressed: () {
-                              if (_formKeyCategory.currentState!.validate()) {
-                                setState(() {
-                                  Menu().addCategory(MenuCategory(
-                                      createCategoryNameController.text));
-                                  Navigator.of(context).pop();
-                                });
-                              }
-                            },
-                            child: const Text('Confirm'))),
-                  ),
-                ],
-              ),
+              ConfirmButton(onPress: () {
+                if (_formKeyCategory.currentState!.validate()) {
+                  setState(() {
+                    Menu().addCategory(
+                        MenuCategory(createCategoryNameController.text));
+                    Navigator.of(context).pop();
+                  });
+                }
+              }),
             ])),
           );
         });
@@ -339,45 +314,6 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                     }
                   },
                 )
-                /*Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Align(
-                          alignment: Alignment.center,
-                          child: ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(subColor2),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Cancel'))),
-                    ),
-                    Expanded(
-                      child: Align(
-                          alignment: Alignment.center,
-                          child: ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(primaryColor),
-                              ),
-                              onPressed: () {
-                                if (_formKeyName.currentState!.validate() &&
-                                    _formKeyPrice.currentState!.validate()) {
-                                  setState(() {
-                                    Menu().getCategory(index).addItem(MenuItem(
-                                        createItemNameControler.text,
-                                        double.parse(
-                                            createItemPriceControler.text)));
-                                    Navigator.of(context).pop();
-                                  });
-                                }
-                              },
-                              child: const Text('Confirm'))),
-                    ),
-                  ],
-                ),*/
               ]),
             ),
           );
@@ -497,6 +433,20 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     hintText: 'Price',
+                  ),
+                  autocorrect: false,
+                ),
+                TextFormField(
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  controller: editItemActionControler,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    hintText: 'Action',
                   ),
                   autocorrect: false,
                 ),

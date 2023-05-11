@@ -313,6 +313,8 @@ class _TablePageMobileState extends State<TablePageMobile> {
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
                     ],
+                    keyboardType:
+                        TextInputType.numberWithOptions(decimal: true),
                     controller: createTableIdController,
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(
@@ -323,7 +325,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                     autocorrect: false,
                   ),
                   TextFormField(
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.text,
                     controller: createTableDescriptionController,
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(
