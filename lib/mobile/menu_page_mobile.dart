@@ -23,6 +23,10 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
   final editItemNameControler = TextEditingController();
   final editItemPriceControler = TextEditingController();
 
+  final _formKeyName = GlobalKey<FormState>();
+  final _formKeyPrice = GlobalKey<FormState>();
+  final _formKeyCategory = GlobalKey<FormState>();
+
   @override
   void dispose() {
     createCategoryNameController.dispose();
@@ -201,22 +205,61 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                 "Create new category.",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
-              TextFormField(
-                controller: createCategoryNameController,
-                textAlign: TextAlign.center,
-                decoration: const InputDecoration(
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  hintText: 'Category name',
+              Form(
+                key: _formKeyCategory,
+                child: TextFormField(
+                  controller: createCategoryNameController,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    hintText: 'Category name',
+                  ),
+                  autocorrect: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some name!';
+                    }
+                    return null;
+                  },
                 ),
-                autocorrect: false,
               ),
-              ConfirmButton(onPress: () {
-                setState(() {
-                  Menu().addCategory(
-                      MenuCategory(createCategoryNameController.text));
-                });
-              })
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Align(
+                        alignment: Alignment.center,
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(subColor2),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Cancel'))),
+                  ),
+                  Expanded(
+                    child: Align(
+                        alignment: Alignment.center,
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(primaryColor),
+                            ),
+                            onPressed: () {
+                              if (_formKeyCategory.currentState!.validate()) {
+                                setState(() {
+                                  Menu().addCategory(MenuCategory(
+                                      createCategoryNameController.text));
+                                  Navigator.of(context).pop();
+                                });
+                              }
+                            },
+                            child: const Text('Confirm'))),
+                  ),
+                ],
+              ),
             ])),
           );
         });
@@ -239,37 +282,89 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                   "Create new item.",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
-                TextFormField(
-                  controller: createItemNameControler,
-                  textAlign: TextAlign.center,
-                  decoration: const InputDecoration(
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    hintText: 'Item name',
+                Form(
+                  key: _formKeyName,
+                  child: TextFormField(
+                    controller: createItemNameControler,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      hintText: 'Item name',
+                    ),
+                    autocorrect: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some name!';
+                      }
+                      return null;
+                    },
                   ),
-                  autocorrect: false,
                 ),
-                TextFormField(
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
+                Form(
+                  key: _formKeyPrice,
+                  child: TextFormField(
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^\d+\.?\d{0,2}')),
+                    ],
+                    keyboardType:
+                        TextInputType.numberWithOptions(decimal: true),
+                    controller: createItemPriceControler,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      hintText: 'Price',
+                    ),
+                    autocorrect: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some price!';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Align(
+                          alignment: Alignment.center,
+                          child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(subColor2),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Cancel'))),
+                    ),
+                    Expanded(
+                      child: Align(
+                          alignment: Alignment.center,
+                          child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(primaryColor),
+                              ),
+                              onPressed: () {
+                                if (_formKeyName.currentState!.validate() &&
+                                    _formKeyPrice.currentState!.validate()) {
+                                  setState(() {
+                                    Menu().getCategory(index).addItem(MenuItem(
+                                        createItemNameControler.text,
+                                        double.parse(
+                                            createItemPriceControler.text)));
+                                    Navigator.of(context).pop();
+                                  });
+                                }
+                              },
+                              child: const Text('Confirm'))),
+                    ),
                   ],
-                  keyboardType: TextInputType.number,
-                  controller: createItemPriceControler,
-                  textAlign: TextAlign.center,
-                  decoration: const InputDecoration(
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    hintText: 'Price',
-                  ),
-                  autocorrect: false,
                 ),
-                ConfirmButton(onPress: () {
-                  setState(() {
-                    Menu().getCategory(index).addItem(MenuItem(
-                        createItemNameControler.text,
-                        double.parse(createItemPriceControler.text)));
-                  });
-                })
               ]),
             ),
           );
