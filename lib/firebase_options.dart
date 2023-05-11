@@ -21,15 +21,9 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -60,5 +54,23 @@ class DefaultFirebaseOptions {
     authDomain: 'caffeapp-zavrsni.firebaseapp.com',
     storageBucket: 'caffeapp-zavrsni.appspot.com',
     measurementId: 'G-7BKX41TB69',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyCTFg5WXRx-OjBCPcMgR3Pqce3CEXG0-LE',
+    appId: '1:857911351350:android:6fe64def271a24c39fe097',
+    messagingSenderId: '857911351350',
+    projectId: 'caffeapp-zavrsni',
+    storageBucket: 'caffeapp-zavrsni.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDPgUkFp4tURHAb02h8zFfSLJlQ_ctn7Q0',
+    appId: '1:857911351350:ios:dc599f8745e5730d9fe097',
+    messagingSenderId: '857911351350',
+    projectId: 'caffeapp-zavrsni',
+    storageBucket: 'caffeapp-zavrsni.appspot.com',
+    iosClientId: '857911351350-g05j84kjv8hfntvnklg37nj6gnrsbenu.apps.googleusercontent.com',
+    iosBundleId: 'com.example.caffeApp',
   );
 }

@@ -29,6 +29,13 @@
             {
               "client_id": "857911351350-8ae1n0ob9epiu8vt9uq3el4u0obj0ca4.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "857911351350-g05j84kjv8hfntvnklg37nj6gnrsbenu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.caffeApp"
+              }
             }
           ]
         }
