@@ -19,7 +19,7 @@ class ConfirmButton extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Cancel'))),
+                  child: const Text('Cancel', style: TextStyle(fontSize: 14)))),
         ),
         Expanded(
           child: Align(
@@ -31,7 +31,8 @@ class ConfirmButton extends StatelessWidget {
                   onPressed: () {
                     onPress();
                   },
-                  child: const Text('Confirm'))),
+                  child:
+                      const Text('Confirm', style: TextStyle(fontSize: 14)))),
         ),
       ],
     );

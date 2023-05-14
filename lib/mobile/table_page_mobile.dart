@@ -20,6 +20,8 @@ class _TablePageMobileState extends State<TablePageMobile> {
   final createTableIdController = TextEditingController();
   final createTableDescriptionController = TextEditingController();
 
+  final _formKeyId = GlobalKey<FormState>();
+
   @override
   void dispose() {
     editTableIdController.dispose();
@@ -309,20 +311,29 @@ class _TablePageMobileState extends State<TablePageMobile> {
                     "Create table.",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
-                  TextFormField(
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    keyboardType:
-                        TextInputType.numberWithOptions(decimal: true),
-                    controller: createTableIdController,
-                    textAlign: TextAlign.center,
-                    decoration: const InputDecoration(
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      hintText: 'ID',
+                  Form(
+                    key: _formKeyId,
+                    child: TextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      controller: createTableIdController,
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        hintText: 'ID',
+                      ),
+                      autocorrect: false,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some ID!';
+                        }
+                        return null;
+                      },
                     ),
-                    autocorrect: false,
                   ),
                   TextFormField(
                     keyboardType: TextInputType.text,
@@ -337,12 +348,17 @@ class _TablePageMobileState extends State<TablePageMobile> {
                   ),
                   ConfirmButton(onPress: () {
                     setState(() {
-                      if (createTableIdController.text == "" &&
+                      if (createTableIdController.text != "" &&
+                          createTableDescriptionController.text != "") {
+                        Tables().addTable(CaffeTable(
+                            int.parse(createTableIdController.text),
+                            createTableDescriptionController.text));
+                      } else if (createTableIdController.text == "" &&
                           createTableDescriptionController.text != "") {
                         Tables().addTable(CaffeTable(Tables().generateFreeId(),
                             createTableDescriptionController.text));
-                      } else if (createTableDescriptionController.text == "" &&
-                          createTableIdController.text != "") {
+                      } else if (createTableIdController.text != "" &&
+                          createTableDescriptionController.text == "") {
                         Tables().addTable(CaffeTable(
                             int.parse(createTableIdController.text), "Empty"));
                       } else {
