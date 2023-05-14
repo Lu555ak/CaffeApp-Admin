@@ -5,7 +5,6 @@ import 'package:caffe_app/models/tables_model.dart';
 import 'package:caffe_app/custom/confirm_delete_window.dart';
 import 'package:caffe_app/custom/small_icon_button.dart';
 import 'package:caffe_app/custom/confirm_button.dart';
-import 'package:caffe_app/custom/custom_scroll_behavior.dart';
 
 class TablePageMobile extends StatefulWidget {
   const TablePageMobile({super.key});
@@ -182,7 +181,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
               child: Column(
                 children: [
                   ListTile(
-                    leading: FittedBox(
+                    leading: const FittedBox(
                       child: Icon(
                         Icons.table_restaurant_rounded,
                         color: primaryColor,
@@ -194,17 +193,17 @@ class _TablePageMobileState extends State<TablePageMobile> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         table.getId().toString(),
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: primaryColor,
                             fontWeight: FontWeight.w500,
                             fontSize: 30),
                       ),
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     color: primaryColor,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: double.infinity,
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
@@ -224,7 +223,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                     child: Text(
                       table.getDescription(),
                       textAlign: TextAlign.justify,
-                      style: TextStyle(color: primaryColor, fontSize: 15),
+                      style: const TextStyle(color: primaryColor, fontSize: 15),
                     ),
                   ),
                 ],
@@ -320,7 +319,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                         FilteringTextInputFormatter.digitsOnly,
                       ],
                       keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
+                          const TextInputType.numberWithOptions(decimal: true),
                       controller: createTableIdController,
                       textAlign: TextAlign.center,
                       decoration: const InputDecoration(

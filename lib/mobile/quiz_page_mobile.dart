@@ -107,7 +107,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                               subtitle: Text(
                                   Quizzes().getQuizAt(index).getTopic(),
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.w200)),
+                                      fontWeight: FontWeight.w400)),
                               children: [
                                 // Question list
                                 ReorderableListView.builder(
@@ -165,10 +165,50 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                                         ),
                                       );
                                     }),
-                                ListViewAddButton(
-                                  onTap: () {
-                                    _showQuestion(index, false);
-                                  },
+                                Padding(
+                                  padding: const EdgeInsets.all(padding1),
+                                  child: Row(
+                                    children: [
+                                      Flexible(
+                                          flex: 4,
+                                          child: ListViewAddButton(
+                                            onTap: () {
+                                              _showQuestion(index, false);
+                                            },
+                                          )),
+                                      Flexible(
+                                          flex: 1,
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 8),
+                                            child: SmallIconButton(
+                                                iconData: Icons.edit_rounded,
+                                                iconColor: secondaryColor,
+                                                onTap: () {
+                                                  _showQuiz(index, true);
+                                                }),
+                                          )),
+                                      Flexible(
+                                          flex: 1,
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 8),
+                                            child: SmallIconButton(
+                                                iconData: Icons.delete_rounded,
+                                                iconColor: dangerColor,
+                                                onTap: () {
+                                                  confirmDeleteWindow(context,
+                                                      "Are you sure you want to delete this quiz?",
+                                                      () {
+                                                    setState(() {
+                                                      Quizzes()
+                                                          .removeQuizAt(index);
+                                                    });
+                                                  });
+                                                }),
+                                          )),
+                                    ],
+                                  ),
                                 )
                               ],
                             ),
@@ -176,18 +216,26 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                         ),
                       );
                     }),
-                ListViewAddButton(onTap: () {
-                  _createQuiz();
-                })
+                Padding(
+                  padding: const EdgeInsets.all(padding1),
+                  child: ListViewAddButton(onTap: () {
+                    _showQuiz(-1, false);
+                  }),
+                )
               ],
             ))
       ]),
     );
   }
 
-  void _createQuiz() {
+  void _showQuiz(int index, bool editQuiz) {
     createQuizNameControler.text = "";
     createQuizTopicControler.text = "";
+
+    if (editQuiz == true) {
+      createQuizNameControler.text = Quizzes().getQuizAt(index).getName();
+      createQuizTopicControler.text = Quizzes().getQuizAt(index).getTopic();
+    }
 
     showModalBottomSheet(
         isScrollControlled: true,
@@ -202,9 +250,10 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
               padding: const EdgeInsets.all(25),
               child: SingleChildScrollView(
                 child: Column(children: [
-                  const Text(
-                    "Create new quiz.",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  Text(
+                    (editQuiz) ? "Edit quiz." : "Create new quiz.",
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.w700),
                   ),
                   Form(
                     key: _formKeyName,
@@ -219,7 +268,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                       autocorrect: false,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter some name!';
+                          return 'Please enter quiz name!';
                         }
                         return null;
                       },
@@ -248,8 +297,17 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                     if (_formKeyName.currentState!.validate() &&
                         _formKeyTopic.currentState!.validate()) {
                       setState(() {
-                        Quizzes().addQuiz(Quiz(createQuizNameControler.text,
-                            createQuizTopicControler.text));
+                        if (editQuiz) {
+                          Quizzes()
+                              .getQuizAt(index)
+                              .setName(createQuizNameControler.text);
+                          Quizzes()
+                              .getQuizAt(index)
+                              .setTopic(createQuizTopicControler.text);
+                        } else {
+                          Quizzes().addQuiz(Quiz(createQuizNameControler.text,
+                              createQuizTopicControler.text));
+                        }
                         Navigator.of(context).pop();
                       });
                     }
@@ -263,6 +321,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
 
   void _showQuestion(int index, bool editQuestion) {
     int currentTabIndex = 0;
+    String warningText = "";
 
     defaultQuizQuestions();
     if (editQuestion) {
@@ -304,154 +363,199 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
-          return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Container(
-              padding: const EdgeInsets.all(25),
-              child: SingleChildScrollView(
-                child: Column(children: [
-                  const Text(
-                    "Create new question.",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                  ),
-                  Form(
-                    key: _formKeyQuestion,
-                    child: TextFormField(
-                      controller: createQuestionQuestionControler,
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        hintText: 'Question',
+          return StatefulBuilder(
+            builder: (context, setStateInner) {
+              return Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: Container(
+                  padding: const EdgeInsets.all(25),
+                  child: SingleChildScrollView(
+                    child: Column(children: [
+                      const Text(
+                        "Create new question.",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w700),
                       ),
-                      autocorrect: false,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter the name of the question!';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      color: primaryColor,
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                    ),
-                    height: 400,
-                    child: DefaultTabController(
-                      length: 3,
-                      initialIndex: currentTabIndex,
-                      child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        TabBar(
-                          labelColor: secondaryColor,
-                          dividerColor: secondaryColor,
-                          indicatorColor: secondaryColor,
-                          onTap: (value) {
-                            currentTabIndex = value;
+                      Form(
+                        key: _formKeyQuestion,
+                        child: TextFormField(
+                          controller: createQuestionQuestionControler,
+                          textAlign: TextAlign.center,
+                          decoration: const InputDecoration(
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            hintText: 'Question',
+                          ),
+                          autocorrect: false,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the name of the question!';
+                            }
+                            return null;
                           },
-                          tabs: const <Widget>[
-                            Tab(
-                              icon: Icon(Icons.question_answer_rounded),
-                            ),
-                            Tab(
-                              icon: Icon(Icons.list_rounded),
-                            ),
-                            Tab(
-                              icon: Icon(Icons.text_fields_rounded),
-                            )
-                          ],
                         ),
-                        Expanded(
-                          child: TabBarView(children: [
-                            _showTrueFalseQuestion(),
-                            _showMultipleChoiceQuestion(),
-                            _showFillInQuestion()
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8, bottom: 8),
+                          child: Text(
+                            textAlign: TextAlign.left,
+                            warningText,
+                            style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.red),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                        height: 400,
+                        child: DefaultTabController(
+                          length: 3,
+                          initialIndex: currentTabIndex,
+                          child:
+                              Column(mainAxisSize: MainAxisSize.min, children: [
+                            TabBar(
+                              labelColor: secondaryColor,
+                              dividerColor: secondaryColor,
+                              indicatorColor: secondaryColor,
+                              onTap: (value) {
+                                setStateInner(() {
+                                  warningText = "";
+                                });
+                                currentTabIndex = value;
+                              },
+                              tabs: const <Widget>[
+                                Tab(
+                                  icon: Icon(Icons.question_answer_rounded),
+                                ),
+                                Tab(
+                                  icon: Icon(Icons.list_rounded),
+                                ),
+                                Tab(
+                                  icon: Icon(Icons.text_fields_rounded),
+                                )
+                              ],
+                            ),
+                            Expanded(
+                              child: TabBarView(children: [
+                                _showTrueFalseQuestion(),
+                                _showMultipleChoiceQuestion(),
+                                _showFillInQuestion()
+                              ]),
+                            ),
                           ]),
                         ),
-                      ]),
-                    ),
+                      ),
+                      ConfirmButton(onPress: () {
+                        if (_formKeyQuestion.currentState!.validate()) {
+                          if (currentTabIndex == 0) {
+                            questionTrueFalse.setQuestion(
+                                createQuestionQuestionControler.text);
+                            setStateInner(() {
+                              warningText = "";
+                            });
+                            setState(() {
+                              if (editQuestion) {
+                                Quizzes().getQuizAt(index).setQuestionAt(
+                                    currentQuestion, questionTrueFalse);
+                              } else {
+                                Quizzes()
+                                    .getQuizAt(index)
+                                    .addQuestion(questionTrueFalse);
+                              }
+                            });
+                            Navigator.of(context).pop();
+                          }
+                          if (currentTabIndex == 1) {
+                            bool flagItemsFilled = true;
+                            bool flagOneTrue = false;
+                            for (var validator in multipleAnswerForm) {
+                              if (!validator.currentState!.validate()) {
+                                flagItemsFilled = false;
+                              }
+                            }
+                            for (var question
+                                in questionMultiple.getAnswers()) {
+                              if (question.isCorrect == true) {
+                                flagOneTrue = true;
+                              }
+                            }
+                            if (questionMultiple.answerCount() <= 1) {
+                              setStateInner(() {
+                                warningText = "Please add at least 2 answers.";
+                              });
+                            } else if (flagOneTrue == false) {
+                              setStateInner(() {
+                                warningText =
+                                    "Please mark at least 1 answer as correct.";
+                              });
+                            } else if (flagItemsFilled == true &&
+                                flagOneTrue == true &&
+                                questionMultiple.answerCount() > 1) {
+                              questionMultiple.setQuestion(
+                                  createQuestionQuestionControler.text);
+                              setStateInner(() {
+                                warningText = "";
+                              });
+                              setState(() {
+                                if (editQuestion) {
+                                  Quizzes().getQuizAt(index).setQuestionAt(
+                                      currentQuestion, questionMultiple);
+                                } else {
+                                  Quizzes()
+                                      .getQuizAt(index)
+                                      .addQuestion(questionMultiple);
+                                }
+                              });
+                              Navigator.of(context).pop();
+                            }
+                          }
+
+                          if (currentTabIndex == 2) {
+                            bool flagItemsFilled = true;
+                            for (var validator in fillInAnswerForm) {
+                              if (!validator.currentState!.validate()) {
+                                flagItemsFilled = false;
+                              }
+                            }
+                            if (questionFillIn.answerCount() < 1) {
+                              setStateInner(() {
+                                warningText = "Please add at least 1 answer.";
+                              });
+                            } else if (flagItemsFilled == true &&
+                                questionFillIn.answerCount() > 0) {
+                              questionFillIn.setQuestion(
+                                  createQuestionQuestionControler.text);
+                              setStateInner(() {
+                                warningText = "";
+                              });
+                              setState(() {
+                                if (editQuestion) {
+                                  Quizzes().getQuizAt(index).setQuestionAt(
+                                      currentQuestion, questionFillIn);
+                                } else {
+                                  Quizzes()
+                                      .getQuizAt(index)
+                                      .addQuestion(questionFillIn);
+                                }
+                              });
+                              Navigator.of(context).pop();
+                            }
+                          }
+                        }
+                      })
+                    ]),
                   ),
-                  ConfirmButton(onPress: () {
-                    if (_formKeyQuestion.currentState!.validate()) {
-                      if (currentTabIndex == 0) {
-                        questionTrueFalse
-                            .setQuestion(createQuestionQuestionControler.text);
-                        setState(() {
-                          if (editQuestion) {
-                            Quizzes().getQuizAt(index).setQuestionAt(
-                                currentQuestion, questionTrueFalse);
-                          } else {
-                            Quizzes()
-                                .getQuizAt(index)
-                                .addQuestion(questionTrueFalse);
-                          }
-                        });
-                        Navigator.of(context).pop();
-                      }
-
-                      if (currentTabIndex == 1) {
-                        bool flagItemsFilled = true;
-                        bool flagOneTrue = false;
-                        for (var validator in multipleAnswerForm) {
-                          if (!validator.currentState!.validate()) {
-                            flagItemsFilled = false;
-                          }
-                        }
-                        for (var question in questionMultiple.getAnswers()) {
-                          if (question.isCorrect == true) {
-                            flagOneTrue = true;
-                          }
-                        }
-                        if (flagItemsFilled == true &&
-                            flagOneTrue == true &&
-                            questionMultiple.answerCount() > 1) {
-                          questionMultiple.setQuestion(
-                              createQuestionQuestionControler.text);
-                          setState(() {
-                            if (editQuestion) {
-                              Quizzes().getQuizAt(index).setQuestionAt(
-                                  currentQuestion, questionMultiple);
-                            } else {
-                              Quizzes()
-                                  .getQuizAt(index)
-                                  .addQuestion(questionMultiple);
-                            }
-                          });
-                          Navigator.of(context).pop();
-                        }
-                      }
-
-                      if (currentTabIndex == 2) {
-                        bool flagItemsFilled = true;
-                        for (var validator in fillInAnswerForm) {
-                          if (!validator.currentState!.validate()) {
-                            flagItemsFilled = false;
-                          }
-                        }
-                        if (flagItemsFilled == true &&
-                            questionFillIn.answerCount() > 0) {
-                          questionFillIn.setQuestion(
-                              createQuestionQuestionControler.text);
-                          setState(() {
-                            if (editQuestion) {
-                              Quizzes().getQuizAt(index).setQuestionAt(
-                                  currentQuestion, questionFillIn);
-                            } else {
-                              Quizzes()
-                                  .getQuizAt(index)
-                                  .addQuestion(questionFillIn);
-                            }
-                          });
-                          Navigator.of(context).pop();
-                        }
-                      }
-                    }
-                  })
-                ]),
-              ),
-            ),
+                ),
+              );
+            },
           );
         });
   }
@@ -603,17 +707,20 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                           }));
                 },
               ),
-              ListViewAddButton(
-                onTap: () {
-                  setState(() {
-                    multipleAnswerForm.add(GlobalKey<FormState>());
-                    multipleAnswerControllers.add(TextEditingController());
-                    questionMultiple.addAnswer("", false);
-                  });
-                },
-                iconSize: 20,
-                boxColor: secondaryColor,
-                iconColor: primaryColor,
+              Padding(
+                padding: const EdgeInsets.all(padding1),
+                child: ListViewAddButton(
+                  onTap: () {
+                    setState(() {
+                      multipleAnswerForm.add(GlobalKey<FormState>());
+                      multipleAnswerControllers.add(TextEditingController());
+                      questionMultiple.addAnswer("", false);
+                    });
+                  },
+                  iconSize: 20,
+                  boxColor: secondaryColor,
+                  iconColor: primaryColor,
+                ),
               )
             ],
           ),
@@ -693,17 +800,20 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                           }));
                 },
               ),
-              ListViewAddButton(
-                onTap: () {
-                  setState(() {
-                    fillInAnswerForm.add(GlobalKey<FormState>());
-                    fillInAnswerControllers.add(TextEditingController());
-                    questionFillIn.addAnswer("");
-                  });
-                },
-                iconSize: 20,
-                boxColor: secondaryColor,
-                iconColor: primaryColor,
+              Padding(
+                padding: const EdgeInsets.all(padding1),
+                child: ListViewAddButton(
+                  onTap: () {
+                    setState(() {
+                      fillInAnswerForm.add(GlobalKey<FormState>());
+                      fillInAnswerControllers.add(TextEditingController());
+                      questionFillIn.addAnswer("");
+                    });
+                  },
+                  iconSize: 20,
+                  boxColor: secondaryColor,
+                  iconColor: primaryColor,
+                ),
               ),
               ListTile(
                 trailing: Switch(

@@ -18,15 +18,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Stack(children: [
-        const Background(
+      home: Stack(children: const [
+        Background(
           color: subColor,
           opacity: 0.75,
         ),
         CaffeApp(
-          mobileLayout: const LayoutMobile(),
-          tabletLayout: const LayoutTablet(),
-          desktopLayout: const LayoutDesktop(),
+          mobileLayout: LayoutMobile(),
+          tabletLayout: LayoutTablet(),
+          desktopLayout: LayoutDesktop(),
         ),
       ]),
     );
@@ -38,8 +38,9 @@ class CaffeApp extends StatelessWidget {
   final Widget tabletLayout;
   final Widget desktopLayout;
 
-  CaffeApp(
-      {required this.mobileLayout,
+  const CaffeApp(
+      {super.key,
+      required this.mobileLayout,
       required this.tabletLayout,
       required this.desktopLayout});
 

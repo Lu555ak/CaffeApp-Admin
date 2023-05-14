@@ -59,75 +59,43 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: Menu().getCategoryCount() + 1,
-                itemBuilder: ((context, index) {
-                  if (index == Menu().getCategoryCount()) {
-                    return ListViewAddButton(
-                      onTap: () {
-                        setState(() {
-                          _createCategory();
-                        });
-                      },
-                    );
-                  } else {
-                    return Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Theme(
-                          data: ThemeData(
-                              colorScheme: ColorScheme.fromSwatch()
-                                  .copyWith(primary: secondaryColor)),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            clipBehavior: Clip.antiAlias,
-                            child: ExpansionTile(
-                              backgroundColor: primaryColor,
-                              title: Text(
-                                Menu().getCategory(index).getName(),
-                                style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w700),
+            child: Column(
+              children: [
+                ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: Menu().getCategoryCount(),
+                    itemBuilder: ((context, index) {
+                      return Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Theme(
+                            data: ThemeData(
+                                colorScheme: ColorScheme.fromSwatch()
+                                    .copyWith(primary: secondaryColor)),
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                              children: [
-                                ListView.builder(
-                                    scrollDirection: Axis.vertical,
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: Menu()
-                                            .getCategory(index)
-                                            .getItemCount() +
-                                        1,
-                                    itemBuilder: (context, i) {
-                                      if (Menu()
-                                              .getCategory(index)
-                                              .getItemCount() ==
-                                          i) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: InkWell(
-                                            onTap: () {
-                                              _createItem(index);
-                                            },
-                                            child: Container(
-                                              decoration: const BoxDecoration(
-                                                color: secondaryColor,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5)),
-                                              ),
-                                              child: const Icon(
-                                                Icons.add_rounded,
-                                                color: primaryColor,
-                                                size: 25,
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      } else {
+                              clipBehavior: Clip.antiAlias,
+                              child: ExpansionTile(
+                                backgroundColor: primaryColor,
+                                title: Text(
+                                  Menu().getCategory(index).getName(),
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                                children: [
+                                  ListView.builder(
+                                      scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: Menu()
+                                          .getCategory(index)
+                                          .getItemCount(),
+                                      itemBuilder: (context, i) {
                                         return ListTile(
                                           onTap: () {
                                             _showItem(Menu()
@@ -180,14 +148,31 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                                   color: secondaryColor,
                                                   fontWeight: FontWeight.w300)),
                                         );
-                                      }
-                                    })
-                              ],
+                                      }),
+                                  Padding(
+                                      padding: const EdgeInsets.all(padding1),
+                                      child: ListViewAddButton(
+                                        onTap: () {
+                                          _createItem(index);
+                                        },
+                                      ))
+                                ],
+                              ),
                             ),
-                          ),
-                        ));
-                  }
-                })),
+                          ));
+                    })),
+                Padding(
+                  padding: const EdgeInsets.all(padding1),
+                  child: ListViewAddButton(
+                    onTap: () {
+                      setState(() {
+                        _createCategory();
+                      });
+                    },
+                  ),
+                )
+              ],
+            ),
           )
         ],
       ),

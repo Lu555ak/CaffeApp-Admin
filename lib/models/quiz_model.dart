@@ -7,10 +7,6 @@ class Quizzes {
 
   final List<Quiz> _quizzes = List.empty(growable: true);
 
-  Quiz getQuiz(String name) {
-    return _quizzes.firstWhere((element) => element.getName() == name);
-  }
-
   Quiz getQuizAt(int index) {
     return _quizzes[index];
   }
@@ -19,8 +15,8 @@ class Quizzes {
     _quizzes.add(quiz);
   }
 
-  void removeQuiz(String name) {
-    _quizzes.removeWhere((element) => element.getName() == name);
+  void removeQuizAt(int index) {
+    _quizzes.removeAt(index);
   }
 
   int getQuizCount() {
