@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:caffe_app/models/quiz_model.dart';
 
 import 'package:caffe_app/custom/listview_add_button.dart';
-import 'package:flutter/services.dart';
 
 import '../custom/confirm_button.dart';
 import '../custom/confirm_delete_window.dart';
@@ -19,12 +18,33 @@ class QuizPageMobile extends StatefulWidget {
 class _QuizPageMobileState extends State<QuizPageMobile> {
   final createQuizNameControler = TextEditingController();
   final createQuizTopicControler = TextEditingController();
+  late List<TextEditingController> multipleAnswerControllers;
+  late List<TextEditingController> fillInAnswerControllers;
 
   final createQuestionQuestionControler = TextEditingController();
 
   final _formKeyName = GlobalKey<FormState>();
   final _formKeyTopic = GlobalKey<FormState>();
   final _formKeyQuestion = GlobalKey<FormState>();
+  late List<GlobalKey<FormState>> multipleAnswerForm;
+  late List<GlobalKey<FormState>> fillInAnswerForm;
+
+  late QuizQuestionTrueFalse questionTrueFalse;
+  late QuizQuestionMultiple questionMultiple;
+  late QuizQuestionFillIn questionFillIn;
+
+  late int currentQuestion;
+  void defaultQuizQuestions() {
+    questionTrueFalse = QuizQuestionTrueFalse("", true);
+    questionMultiple = QuizQuestionMultiple("");
+    questionFillIn = QuizQuestionFillIn("");
+    createQuestionQuestionControler.text = "";
+
+    multipleAnswerControllers = List.empty(growable: true);
+    fillInAnswerControllers = List.empty(growable: true);
+    multipleAnswerForm = List.empty(growable: true);
+    fillInAnswerForm = List.empty(growable: true);
+  }
 
   @override
   void dispose() {
@@ -110,7 +130,8 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                                         key: Key('Question$i'),
                                         child: ListTile(
                                           onTap: () {
-                                            _viewQuestion();
+                                            currentQuestion = i;
+                                            _showQuestion(index, true);
                                           },
                                           title: Text(
                                             "#${i + 1}: ${Quizzes().getQuizAt(index).getQuestionAt(i).getQuestion()}",
@@ -146,7 +167,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                                     }),
                                 ListViewAddButton(
                                   onTap: () {
-                                    _createQuestion(index);
+                                    _showQuestion(index, false);
                                   },
                                 )
                               ],
@@ -169,150 +190,521 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
     createQuizTopicControler.text = "";
 
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(25),
-            child: SingleChildScrollView(
-              child: Column(children: [
-                const Text(
-                  "Create new quiz.",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                ),
-                Form(
-                  key: _formKeyName,
-                  child: TextFormField(
-                    controller: createQuizNameControler,
-                    textAlign: TextAlign.center,
-                    decoration: const InputDecoration(
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      hintText: 'Name',
-                    ),
-                    autocorrect: false,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some name!';
-                      }
-                      return null;
-                    },
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+              padding: const EdgeInsets.all(25),
+              child: SingleChildScrollView(
+                child: Column(children: [
+                  const Text(
+                    "Create new quiz.",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
-                ),
-                Form(
-                  key: _formKeyTopic,
-                  child: TextFormField(
-                    controller: createQuizTopicControler,
-                    textAlign: TextAlign.center,
-                    decoration: const InputDecoration(
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      hintText: 'Topic',
+                  Form(
+                    key: _formKeyName,
+                    child: TextFormField(
+                      controller: createQuizNameControler,
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        hintText: 'Name',
+                      ),
+                      autocorrect: false,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some name!';
+                        }
+                        return null;
+                      },
                     ),
-                    autocorrect: false,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the topic of the quiz!';
-                      }
-                      return null;
-                    },
                   ),
-                ),
-                ConfirmButton(onPress: () {
-                  if (_formKeyName.currentState!.validate() &&
-                      _formKeyTopic.currentState!.validate()) {
-                    setState(() {
-                      Quizzes().addQuiz(Quiz(createQuizNameControler.text,
-                          createQuizTopicControler.text));
-                      Navigator.of(context).pop();
-                    });
-                  }
-                })
-              ]),
+                  Form(
+                    key: _formKeyTopic,
+                    child: TextFormField(
+                      controller: createQuizTopicControler,
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        hintText: 'Topic',
+                      ),
+                      autocorrect: false,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter the topic of the quiz!';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  ConfirmButton(onPress: () {
+                    if (_formKeyName.currentState!.validate() &&
+                        _formKeyTopic.currentState!.validate()) {
+                      setState(() {
+                        Quizzes().addQuiz(Quiz(createQuizNameControler.text,
+                            createQuizTopicControler.text));
+                        Navigator.of(context).pop();
+                      });
+                    }
+                  })
+                ]),
+              ),
             ),
           );
         });
   }
 
-  void _createQuestion(int index) {
-    createQuestionQuestionControler.text = "";
+  void _showQuestion(int index, bool editQuestion) {
+    int currentTabIndex = 0;
+
+    defaultQuizQuestions();
+    if (editQuestion) {
+      String type =
+          Quizzes().getQuizAt(index).getQuestionAt(currentQuestion).getType();
+      QuizQuestion question =
+          Quizzes().getQuizAt(index).getQuestionAt(currentQuestion);
+      createQuestionQuestionControler.text = Quizzes()
+          .getQuizAt(index)
+          .getQuestionAt(currentQuestion)
+          .getQuestion();
+
+      if (type == "QuizQuestionTrueFalse") {
+        questionTrueFalse = question as QuizQuestionTrueFalse;
+        currentTabIndex = 0;
+      } else if (type == "QuizQuestionMultipleAnswer") {
+        questionMultiple = question as QuizQuestionMultiple;
+        currentTabIndex = 1;
+        for (int i = 0; i < questionMultiple.answerCount(); i++) {
+          multipleAnswerControllers.add(TextEditingController());
+          multipleAnswerControllers[i].text =
+              questionMultiple.getAnswerAt(i).statement;
+          multipleAnswerForm.add(GlobalKey<FormState>());
+        }
+      } else if (type == "QuizQuestionFillIn") {
+        questionFillIn = question as QuizQuestionFillIn;
+        currentTabIndex = 2;
+        for (int i = 0; i < questionFillIn.answerCount(); i++) {
+          fillInAnswerControllers.add(TextEditingController());
+          fillInAnswerControllers[i].text = questionFillIn.getAnswerAt(i);
+          fillInAnswerForm.add(GlobalKey<FormState>());
+        }
+      }
+    }
 
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(25),
-            child: SingleChildScrollView(
-              child: Column(children: [
-                const Text(
-                  "Create new quiz.",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                ),
-                Form(
-                  key: _formKeyQuestion,
-                  child: TextFormField(
-                    controller: createQuestionQuestionControler,
-                    textAlign: TextAlign.center,
-                    decoration: const InputDecoration(
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      hintText: 'Question',
-                    ),
-                    autocorrect: false,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the name of the question!';
-                      }
-                      return null;
-                    },
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+              padding: const EdgeInsets.all(25),
+              child: SingleChildScrollView(
+                child: Column(children: [
+                  const Text(
+                    "Create new question.",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
-                ),
-                ConfirmButton(onPress: () {
-                  if (_formKeyQuestion.currentState!.validate()) {
-                    setState(() {
-                      Quizzes().getQuizAt(index).addQuestion(
-                          QuizQuestion(createQuestionQuestionControler.text));
-                      Navigator.of(context).pop();
-                    });
-                  }
-                })
-              ]),
+                  Form(
+                    key: _formKeyQuestion,
+                    child: TextFormField(
+                      controller: createQuestionQuestionControler,
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        hintText: 'Question',
+                      ),
+                      autocorrect: false,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter the name of the question!';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                    ),
+                    height: 400,
+                    child: DefaultTabController(
+                      length: 3,
+                      initialIndex: currentTabIndex,
+                      child: Column(mainAxisSize: MainAxisSize.min, children: [
+                        TabBar(
+                          labelColor: secondaryColor,
+                          dividerColor: secondaryColor,
+                          indicatorColor: secondaryColor,
+                          onTap: (value) {
+                            currentTabIndex = value;
+                          },
+                          tabs: const <Widget>[
+                            Tab(
+                              icon: Icon(Icons.question_answer_rounded),
+                            ),
+                            Tab(
+                              icon: Icon(Icons.list_rounded),
+                            ),
+                            Tab(
+                              icon: Icon(Icons.text_fields_rounded),
+                            )
+                          ],
+                        ),
+                        Expanded(
+                          child: TabBarView(children: [
+                            _showTrueFalseQuestion(),
+                            _showMultipleChoiceQuestion(),
+                            _showFillInQuestion()
+                          ]),
+                        ),
+                      ]),
+                    ),
+                  ),
+                  ConfirmButton(onPress: () {
+                    if (_formKeyQuestion.currentState!.validate()) {
+                      if (currentTabIndex == 0) {
+                        questionTrueFalse
+                            .setQuestion(createQuestionQuestionControler.text);
+                        setState(() {
+                          if (editQuestion) {
+                            Quizzes().getQuizAt(index).setQuestionAt(
+                                currentQuestion, questionTrueFalse);
+                          } else {
+                            Quizzes()
+                                .getQuizAt(index)
+                                .addQuestion(questionTrueFalse);
+                          }
+                        });
+                        Navigator.of(context).pop();
+                      }
+
+                      if (currentTabIndex == 1) {
+                        bool flagItemsFilled = true;
+                        bool flagOneTrue = false;
+                        for (var validator in multipleAnswerForm) {
+                          if (!validator.currentState!.validate()) {
+                            flagItemsFilled = false;
+                          }
+                        }
+                        for (var question in questionMultiple.getAnswers()) {
+                          if (question.isCorrect == true) {
+                            flagOneTrue = true;
+                          }
+                        }
+                        if (flagItemsFilled == true &&
+                            flagOneTrue == true &&
+                            questionMultiple.answerCount() > 1) {
+                          questionMultiple.setQuestion(
+                              createQuestionQuestionControler.text);
+                          setState(() {
+                            if (editQuestion) {
+                              Quizzes().getQuizAt(index).setQuestionAt(
+                                  currentQuestion, questionMultiple);
+                            } else {
+                              Quizzes()
+                                  .getQuizAt(index)
+                                  .addQuestion(questionMultiple);
+                            }
+                          });
+                          Navigator.of(context).pop();
+                        }
+                      }
+
+                      if (currentTabIndex == 2) {
+                        bool flagItemsFilled = true;
+                        for (var validator in fillInAnswerForm) {
+                          if (!validator.currentState!.validate()) {
+                            flagItemsFilled = false;
+                          }
+                        }
+                        if (flagItemsFilled == true &&
+                            questionFillIn.answerCount() > 0) {
+                          questionFillIn.setQuestion(
+                              createQuestionQuestionControler.text);
+                          setState(() {
+                            if (editQuestion) {
+                              Quizzes().getQuizAt(index).setQuestionAt(
+                                  currentQuestion, questionFillIn);
+                            } else {
+                              Quizzes()
+                                  .getQuizAt(index)
+                                  .addQuestion(questionFillIn);
+                            }
+                          });
+                          Navigator.of(context).pop();
+                        }
+                      }
+                    }
+                  })
+                ]),
+              ),
             ),
           );
         });
   }
 
-  void _viewQuestion() {
-    showModalBottomSheet(
-        context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
-        builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(25),
-            child: SingleChildScrollView(
-              child: Column(children: [
-                const Text(
-                  "What are some practical tips for improving focus and concentration during work or study?",
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+  Widget _showTrueFalseQuestion() {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              const Text(
+                "TRUE / FALSE",
+                style: TextStyle(
+                    color: secondaryColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700),
+              ),
+              Center(
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: const Text(
+                        "True",
+                        style: TextStyle(
+                            color: secondaryColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      leading: Radio(
+                        activeColor: secondaryColor,
+                        groupValue: questionTrueFalse.getAnswer(),
+                        value: true,
+                        onChanged: (value) => {
+                          setState(() {
+                            questionTrueFalse.setAnswer(value!);
+                          })
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text(
+                        "False",
+                        style: TextStyle(
+                            color: secondaryColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      leading: Radio(
+                        activeColor: secondaryColor,
+                        groupValue: questionTrueFalse.getAnswer(),
+                        value: false,
+                        onChanged: (value) => {
+                          setState(() {
+                            questionTrueFalse.setAnswer(value!);
+                          })
+                        },
+                      ),
+                    )
+                  ],
                 ),
-                Divider(
-                  color: primaryColor,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    "Empty!",
-                    textAlign: TextAlign.justify,
-                    style: TextStyle(color: primaryColor, fontSize: 12),
-                  ),
-                ),
-              ]),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _showMultipleChoiceQuestion() {
+    return StatefulBuilder(builder: (context, setState) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const Text(
+                "MULTIPLE CHOICE",
+                style: TextStyle(
+                    color: secondaryColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700),
+              ),
+              ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: questionMultiple.answerCount(),
+                itemBuilder: (context, index) {
+                  return ListTile(
+                      leading: Checkbox(
+                        value: questionMultiple.getAnswerAt(index).isCorrect,
+                        onChanged: (newValue) {
+                          setState(() {
+                            questionMultiple.getAnswerAt(index).isCorrect =
+                                newValue!;
+                          });
+                        },
+                        activeColor: secondaryColor,
+                        checkColor: primaryColor,
+                      ),
+                      title: Form(
+                        key: multipleAnswerForm[index],
+                        autovalidateMode: AutovalidateMode.always,
+                        child: TextFormField(
+                          textAlign: TextAlign.left,
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.zero,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            hintText: 'Answer',
+                            hintStyle: TextStyle(
+                                color: subColor2,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
+                          controller: multipleAnswerControllers[index],
+                          autocorrect: false,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the answer!';
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            questionMultiple.getAnswerAt(index).statement =
+                                multipleAnswerControllers[index].text;
+                          },
+                          style: const TextStyle(
+                              color: secondaryColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                      trailing: SmallIconButton(
+                          iconData: Icons.delete_rounded,
+                          iconColor: dangerColor,
+                          iconSize: 25,
+                          onTap: () {
+                            confirmDeleteWindow(context,
+                                "Are you sure you want to delete this answer?",
+                                () {
+                              setState(() {
+                                multipleAnswerForm.removeAt(index);
+                                multipleAnswerControllers.removeAt(index);
+                                questionMultiple.removeAnswerAt(index);
+                              });
+                            });
+                          }));
+                },
+              ),
+              ListViewAddButton(
+                onTap: () {
+                  setState(() {
+                    multipleAnswerForm.add(GlobalKey<FormState>());
+                    multipleAnswerControllers.add(TextEditingController());
+                    questionMultiple.addAnswer("", false);
+                  });
+                },
+                iconSize: 20,
+                boxColor: secondaryColor,
+                iconColor: primaryColor,
+              )
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _showFillInQuestion() {
+    return StatefulBuilder(builder: (context, setState) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            const Text(
+              "FILL IN",
+              style: TextStyle(
+                  color: secondaryColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700),
             ),
-          );
-        });
+            ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: questionFillIn.answerCount(),
+              itemBuilder: (context, index) {
+                return ListTile(
+                    title: Form(
+                      key: fillInAnswerForm[index],
+                      autovalidateMode: AutovalidateMode.always,
+                      child: TextFormField(
+                        textAlign: TextAlign.left,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.zero,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          hintText: 'Answer',
+                          hintStyle: TextStyle(
+                              color: subColor2,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        controller: fillInAnswerControllers[index],
+                        autocorrect: false,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the answer!';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          questionFillIn.setAnswerAt(
+                              index, fillInAnswerControllers[index].text);
+                        },
+                        style: const TextStyle(
+                            color: secondaryColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                    trailing: SmallIconButton(
+                        iconData: Icons.delete_rounded,
+                        iconColor: dangerColor,
+                        iconSize: 25,
+                        onTap: () {
+                          confirmDeleteWindow(context,
+                              "Are you sure you want to delete this answer?",
+                              () {
+                            setState(() {
+                              fillInAnswerForm.removeAt(index);
+                              fillInAnswerControllers.removeAt(index);
+                              questionFillIn.removeAnswerAt(index);
+                            });
+                          });
+                        }));
+              },
+            ),
+            ListViewAddButton(
+              onTap: () {
+                setState(() {
+                  fillInAnswerForm.add(GlobalKey<FormState>());
+                  fillInAnswerControllers.add(TextEditingController());
+                  questionFillIn.addAnswer("");
+                });
+              },
+              iconSize: 20,
+              boxColor: secondaryColor,
+              iconColor: primaryColor,
+            )
+          ],
+        ),
+      );
+    });
   }
 }

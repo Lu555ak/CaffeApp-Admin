@@ -2,9 +2,17 @@ import 'package:caffe_app/utility/constants.dart';
 import 'package:flutter/material.dart';
 
 class ListViewAddButton extends StatelessWidget {
-  const ListViewAddButton({super.key, required this.onTap});
+  ListViewAddButton(
+      {super.key,
+      required this.onTap,
+      this.iconSize = 35,
+      this.iconColor = subColor,
+      this.boxColor = secondaryColor});
 
   final Function onTap;
+  double iconSize;
+  Color iconColor;
+  Color boxColor;
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +25,14 @@ class ListViewAddButton extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(10),
           width: double.infinity,
-          decoration: const BoxDecoration(
-            color: secondaryColor,
-            borderRadius: BorderRadius.all(Radius.circular(5)),
+          decoration: BoxDecoration(
+            color: boxColor,
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.add_rounded,
-            color: subColor,
-            size: 35,
+            color: iconColor,
+            size: iconSize,
           ),
         ),
       ),

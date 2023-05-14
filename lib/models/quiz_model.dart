@@ -48,6 +48,10 @@ class Quiz {
     return _questions[index];
   }
 
+  void setQuestionAt(int index, QuizQuestion question) {
+    _questions[index] = question;
+  }
+
   void removeQuestionAt(int index) {
     _questions.removeAt(index);
   }
@@ -70,6 +74,10 @@ class QuizQuestion {
 
   String getQuestion() => _question;
   void setQuestion(String question) => _question = question;
+
+  String getType() {
+    return "QuizQuestion";
+  }
 }
 
 // True/False
@@ -86,13 +94,17 @@ class QuizQuestionTrueFalse implements QuizQuestion {
   void setQuestion(String question) => _question = question;
   bool getAnswer() => _answer;
   void setAnswer(bool answer) => _answer = answer;
+  @override
+  String getType() {
+    return "QuizQuestionTrueFalse";
+  }
 }
 
 // Multiple Answers
 class QuizQuestionMultiple implements QuizQuestion {
   @override
   String _question;
-  final Map<String, bool> _answers = {};
+  final List<QuizQuestionMultipleAnswer> _answers = List.empty(growable: true);
 
   QuizQuestionMultiple(this._question);
 
@@ -102,11 +114,28 @@ class QuizQuestionMultiple implements QuizQuestion {
   void setQuestion(String question) => _question = question;
 
   void addAnswer(String statement, bool isCorrect) {
-    _answers[statement] = isCorrect;
+    _answers.add(QuizQuestionMultipleAnswer(statement, isCorrect));
   }
 
-  void removeAnswer(String statement) {
-    _answers.remove(statement);
+  void removeAnswerAt(int index) {
+    _answers.removeAt(index);
+  }
+
+  QuizQuestionMultipleAnswer getAnswerAt(int index) {
+    return _answers[index];
+  }
+
+  List<QuizQuestionMultipleAnswer> getAnswers() {
+    return _answers;
+  }
+
+  int answerCount() {
+    return _answers.length;
+  }
+
+  @override
+  String getType() {
+    return "QuizQuestionMultipleAnswer";
   }
 }
 
@@ -131,7 +160,26 @@ class QuizQuestionFillIn implements QuizQuestion {
     return _answers[index];
   }
 
+  void setAnswerAt(int index, String answer) {
+    _answers[index] = answer;
+  }
+
   void removeAnswerAt(int index) {
     _answers.removeAt(index);
   }
+
+  int answerCount() {
+    return _answers.length;
+  }
+
+  @override
+  String getType() {
+    return "QuizQuestionFillIn";
+  }
+}
+
+class QuizQuestionMultipleAnswer {
+  String statement;
+  bool isCorrect;
+  QuizQuestionMultipleAnswer(this.statement, this.isCorrect);
 }

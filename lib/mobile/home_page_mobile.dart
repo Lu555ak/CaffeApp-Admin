@@ -34,8 +34,7 @@ class _HomePageMobileState extends State<HomePageMobile> {
           ),
         ),
         SizedBox(
-          height: 200,
-          width: double.infinity,
+          height: 230,
           child: ScrollConfiguration(
             behavior: CustomScrollBehavior(),
             child: ListView.builder(
