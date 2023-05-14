@@ -143,6 +143,7 @@ class QuizQuestionMultiple implements QuizQuestion {
 class QuizQuestionFillIn implements QuizQuestion {
   @override
   String _question;
+  bool _caseSensitive = true;
   final List<String> _answers = List.empty(growable: true);
 
   QuizQuestionFillIn(this._question);
@@ -170,6 +171,14 @@ class QuizQuestionFillIn implements QuizQuestion {
 
   int answerCount() {
     return _answers.length;
+  }
+
+  bool getCaseSensitive() {
+    return _caseSensitive;
+  }
+
+  void setCaseSensitive(bool ignoreCase) {
+    _caseSensitive = ignoreCase;
   }
 
   @override

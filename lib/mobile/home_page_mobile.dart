@@ -1,5 +1,5 @@
 import 'package:caffe_app/utility/constants.dart';
-import 'package:flutter/gestures.dart';
+import 'package:caffe_app/custom/custom_scroll_behavior.dart';
 import 'package:flutter/material.dart';
 
 class HomePageMobile extends StatefulWidget {
@@ -211,12 +211,4 @@ class _HomePageMobileState extends State<HomePageMobile> {
           );
         });
   }
-}
-
-class CustomScrollBehavior extends MaterialScrollBehavior {
-  @override
-  Set<PointerDeviceKind> get dragDevices => {
-        PointerDeviceKind.touch,
-        PointerDeviceKind.mouse,
-      };
 }

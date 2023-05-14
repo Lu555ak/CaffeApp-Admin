@@ -83,6 +83,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                 ListView.builder(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: Quizzes().getQuizCount(),
                     itemBuilder: (context, index) {
                       return Padding(
@@ -535,6 +536,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                     fontWeight: FontWeight.w700),
               ),
               ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemCount: questionMultiple.answerCount(),
@@ -624,84 +626,106 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
     return StatefulBuilder(builder: (context, setState) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            const Text(
-              "FILL IN",
-              style: TextStyle(
-                  color: secondaryColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700),
-            ),
-            ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: questionFillIn.answerCount(),
-              itemBuilder: (context, index) {
-                return ListTile(
-                    title: Form(
-                      key: fillInAnswerForm[index],
-                      autovalidateMode: AutovalidateMode.always,
-                      child: TextFormField(
-                        textAlign: TextAlign.left,
-                        decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.zero,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          hintText: 'Answer',
-                          hintStyle: TextStyle(
-                              color: subColor2,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const Text(
+                "FILL IN",
+                style: TextStyle(
+                    color: secondaryColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700),
+              ),
+              ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: questionFillIn.answerCount(),
+                itemBuilder: (context, index) {
+                  return ListTile(
+                      title: Form(
+                        key: fillInAnswerForm[index],
+                        autovalidateMode: AutovalidateMode.always,
+                        child: TextFormField(
+                          textAlign: TextAlign.left,
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.zero,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            hintText: 'Answer',
+                            hintStyle: TextStyle(
+                                color: subColor2,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
+                          controller: fillInAnswerControllers[index],
+                          autocorrect: false,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the answer!';
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            questionFillIn.setAnswerAt(
+                                index, fillInAnswerControllers[index].text);
+                          },
+                          style: const TextStyle(
+                              color: secondaryColor,
                               fontSize: 16,
                               fontWeight: FontWeight.w400),
                         ),
-                        controller: fillInAnswerControllers[index],
-                        autocorrect: false,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter the answer!';
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          questionFillIn.setAnswerAt(
-                              index, fillInAnswerControllers[index].text);
-                        },
-                        style: const TextStyle(
-                            color: secondaryColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400),
                       ),
-                    ),
-                    trailing: SmallIconButton(
-                        iconData: Icons.delete_rounded,
-                        iconColor: dangerColor,
-                        iconSize: 25,
-                        onTap: () {
-                          confirmDeleteWindow(context,
-                              "Are you sure you want to delete this answer?",
-                              () {
-                            setState(() {
-                              fillInAnswerForm.removeAt(index);
-                              fillInAnswerControllers.removeAt(index);
-                              questionFillIn.removeAnswerAt(index);
+                      trailing: SmallIconButton(
+                          iconData: Icons.delete_rounded,
+                          iconColor: dangerColor,
+                          iconSize: 25,
+                          onTap: () {
+                            confirmDeleteWindow(context,
+                                "Are you sure you want to delete this answer?",
+                                () {
+                              setState(() {
+                                fillInAnswerForm.removeAt(index);
+                                fillInAnswerControllers.removeAt(index);
+                                questionFillIn.removeAnswerAt(index);
+                              });
                             });
-                          });
-                        }));
-              },
-            ),
-            ListViewAddButton(
-              onTap: () {
-                setState(() {
-                  fillInAnswerForm.add(GlobalKey<FormState>());
-                  fillInAnswerControllers.add(TextEditingController());
-                  questionFillIn.addAnswer("");
-                });
-              },
-              iconSize: 20,
-              boxColor: secondaryColor,
-              iconColor: primaryColor,
-            )
-          ],
+                          }));
+                },
+              ),
+              ListViewAddButton(
+                onTap: () {
+                  setState(() {
+                    fillInAnswerForm.add(GlobalKey<FormState>());
+                    fillInAnswerControllers.add(TextEditingController());
+                    questionFillIn.addAnswer("");
+                  });
+                },
+                iconSize: 20,
+                boxColor: secondaryColor,
+                iconColor: primaryColor,
+              ),
+              ListTile(
+                trailing: Switch(
+                  value: questionFillIn.getCaseSensitive(),
+                  onChanged: (value) {
+                    setState(() {
+                      questionFillIn.setCaseSensitive(value);
+                    });
+                  },
+                  activeColor: secondaryColor,
+                  activeTrackColor: subColor,
+                ),
+                title: const Text(
+                  "Case sensitive",
+                  style: TextStyle(
+                      color: secondaryColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                ),
+              )
+            ],
+          ),
         ),
       );
     });

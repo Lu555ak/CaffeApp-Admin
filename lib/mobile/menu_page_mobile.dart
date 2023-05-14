@@ -62,6 +62,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
             child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: Menu().getCategoryCount() + 1,
                 itemBuilder: ((context, index) {
                   if (index == Menu().getCategoryCount()) {
@@ -95,6 +96,8 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                 ListView.builder(
                                     scrollDirection: Axis.vertical,
                                     shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
                                     itemCount: Menu()
                                             .getCategory(index)
                                             .getItemCount() +
@@ -175,7 +178,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                               "${Menu().getCategory(index).getItem(i).getPrice().toString()} €",
                                               style: const TextStyle(
                                                   color: secondaryColor,
-                                                  fontWeight: FontWeight.w200)),
+                                                  fontWeight: FontWeight.w300)),
                                         );
                                       }
                                     })
@@ -244,76 +247,81 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
     createItemPriceControler.text = "";
 
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(25),
-            child: SingleChildScrollView(
-              child: Column(children: [
-                const Text(
-                  "Create new item.",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                ),
-                Form(
-                  key: _formKeyName,
-                  child: TextFormField(
-                    controller: createItemNameControler,
-                    textAlign: TextAlign.center,
-                    decoration: const InputDecoration(
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      hintText: 'Item name',
-                    ),
-                    autocorrect: false,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some name!';
-                      }
-                      return null;
-                    },
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+              padding: const EdgeInsets.all(25),
+              child: SingleChildScrollView(
+                child: Column(children: [
+                  const Text(
+                    "Create new item.",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
-                ),
-                Form(
-                  key: _formKeyPrice,
-                  child: TextFormField(
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d+\.?\d{0,2}')),
-                    ],
-                    keyboardType:
-                        TextInputType.numberWithOptions(decimal: true),
-                    controller: createItemPriceControler,
-                    textAlign: TextAlign.center,
-                    decoration: const InputDecoration(
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      hintText: 'Price',
+                  Form(
+                    key: _formKeyName,
+                    child: TextFormField(
+                      controller: createItemNameControler,
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        hintText: 'Item name',
+                      ),
+                      autocorrect: false,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some name!';
+                        }
+                        return null;
+                      },
                     ),
-                    autocorrect: false,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some price!';
-                      }
-                      return null;
-                    },
                   ),
-                ),
-                ConfirmButton(
-                  onPress: () {
-                    if (_formKeyName.currentState!.validate() &&
-                        _formKeyPrice.currentState!.validate()) {
-                      setState(() {
-                        Menu().getCategory(index).addItem(MenuItem(
-                            createItemNameControler.text,
-                            double.parse(createItemPriceControler.text)));
-                        Navigator.of(context).pop();
-                      });
-                    }
-                  },
-                )
-              ]),
+                  Form(
+                    key: _formKeyPrice,
+                    child: TextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d+\.?\d{0,2}')),
+                      ],
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      controller: createItemPriceControler,
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        hintText: 'Price',
+                      ),
+                      autocorrect: false,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some price!';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  ConfirmButton(
+                    onPress: () {
+                      if (_formKeyName.currentState!.validate() &&
+                          _formKeyPrice.currentState!.validate()) {
+                        setState(() {
+                          Menu().getCategory(index).addItem(MenuItem(
+                              createItemNameControler.text,
+                              double.parse(createItemPriceControler.text)));
+                          Navigator.of(context).pop();
+                        });
+                      }
+                    },
+                  )
+                ]),
+              ),
             ),
           );
         });
@@ -321,73 +329,78 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
 
   void _showItem(MenuItem item) {
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(25),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: const FittedBox(
-                      child: Icon(
-                        Icons.water_drop_rounded,
-                        color: primaryColor,
-                        size: 40,
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+              padding: const EdgeInsets.all(25),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: const FittedBox(
+                        child: Icon(
+                          Icons.water_drop_rounded,
+                          color: primaryColor,
+                          size: 40,
+                        ),
+                      ),
+                      title: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          item.getName(),
+                          style: const TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 30),
+                        ),
+                      ),
+                      subtitle: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "${item.getPrice()} €",
+                          style: const TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.w200,
+                              fontSize: 15),
+                        ),
                       ),
                     ),
-                    title: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
+                    const Divider(
+                      color: primaryColor,
+                    ),
+                    const SizedBox(
+                      width: double.infinity,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Description: ",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: double.infinity,
                       child: Text(
-                        item.getName(),
-                        style: const TextStyle(
-                            color: primaryColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 30),
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc accumsan urna nec enim rhoncus cursus.",
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(color: primaryColor, fontSize: 15),
                       ),
                     ),
-                    subtitle: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "${item.getPrice()} €",
-                        style: const TextStyle(
-                            color: primaryColor,
-                            fontWeight: FontWeight.w200,
-                            fontSize: 15),
-                      ),
-                    ),
-                  ),
-                  const Divider(
-                    color: primaryColor,
-                  ),
-                  const SizedBox(
-                    width: double.infinity,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Description: ",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            color: primaryColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc accumsan urna nec enim rhoncus cursus.",
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(color: primaryColor, fontSize: 15),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );
@@ -399,68 +412,74 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
     editItemPriceControler.text = "";
 
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(25),
-            child: SingleChildScrollView(
-              child: Column(children: [
-                const Text(
-                  "Edit item.",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                ),
-                TextFormField(
-                  controller: editItemNameControler,
-                  textAlign: TextAlign.center,
-                  decoration: const InputDecoration(
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    hintText: 'Item name',
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+              padding: const EdgeInsets.all(25),
+              child: SingleChildScrollView(
+                child: Column(children: [
+                  const Text(
+                    "Edit item.",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
-                  autocorrect: false,
-                ),
-                TextFormField(
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                  keyboardType: TextInputType.number,
-                  controller: editItemPriceControler,
-                  textAlign: TextAlign.center,
-                  decoration: const InputDecoration(
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    hintText: 'Price',
+                  TextFormField(
+                    controller: editItemNameControler,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      hintText: 'Item name',
+                    ),
+                    autocorrect: false,
                   ),
-                  autocorrect: false,
-                ),
-                TextFormField(
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                  keyboardType: TextInputType.number,
-                  controller: editItemDiscountControler,
-                  textAlign: TextAlign.center,
-                  decoration: const InputDecoration(
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    hintText: 'Discount',
+                  TextFormField(
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    keyboardType: TextInputType.number,
+                    controller: editItemPriceControler,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      hintText: 'Price',
+                    ),
+                    autocorrect: false,
                   ),
-                  autocorrect: false,
-                ),
-                ConfirmButton(onPress: () {
-                  setState(() {
-                    if (editItemPriceControler.text != "") {
-                      item.setPrice(double.parse(editItemPriceControler.text));
-                    }
-                    if (editItemNameControler.text != "") {
-                      item.setName(editItemNameControler.text);
-                    }
-                    Navigator.of(context).pop();
-                  });
-                })
-              ]),
+                  TextFormField(
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    keyboardType: TextInputType.number,
+                    controller: editItemDiscountControler,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      hintText: 'Discount',
+                    ),
+                    autocorrect: false,
+                  ),
+                  ConfirmButton(onPress: () {
+                    setState(() {
+                      if (editItemPriceControler.text != "") {
+                        item.setPrice(
+                            double.parse(editItemPriceControler.text));
+                      }
+                      if (editItemNameControler.text != "") {
+                        item.setName(editItemNameControler.text);
+                      }
+                      Navigator.of(context).pop();
+                    });
+                  })
+                ]),
+              ),
             ),
           );
         });

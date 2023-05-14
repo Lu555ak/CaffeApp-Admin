@@ -5,6 +5,7 @@ import 'package:caffe_app/models/tables_model.dart';
 import 'package:caffe_app/custom/confirm_delete_window.dart';
 import 'package:caffe_app/custom/small_icon_button.dart';
 import 'package:caffe_app/custom/confirm_button.dart';
+import 'package:caffe_app/custom/custom_scroll_behavior.dart';
 
 class TablePageMobile extends StatefulWidget {
   const TablePageMobile({super.key});
@@ -55,6 +56,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
           GridView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: Tables().getTableCount() + 1,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2),
