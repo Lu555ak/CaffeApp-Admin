@@ -22,7 +22,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
 
   final editItemNameControler = TextEditingController();
   final editItemPriceControler = TextEditingController();
-  final editItemActionControler = TextEditingController();
+  final editItemDiscountControler = TextEditingController();
 
   final _formKeyName = GlobalKey<FormState>();
   final _formKeyPrice = GlobalKey<FormState>();
@@ -33,7 +33,6 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
     createCategoryNameController.dispose();
     createItemNameControler.dispose();
     createItemPriceControler.dispose();
-    editItemActionControler.dispose();
     super.dispose();
   }
 
@@ -440,13 +439,13 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                   ],
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  controller: editItemActionControler,
+                  keyboardType: TextInputType.number,
+                  controller: editItemDiscountControler,
                   textAlign: TextAlign.center,
                   decoration: const InputDecoration(
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
-                    hintText: 'Action',
+                    hintText: 'Discount',
                   ),
                   autocorrect: false,
                 ),
@@ -458,6 +457,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                     if (editItemNameControler.text != "") {
                       item.setName(editItemNameControler.text);
                     }
+                    Navigator.of(context).pop();
                   });
                 })
               ]),

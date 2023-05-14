@@ -106,7 +106,6 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                               subtitle: Text(
                                   Quizzes().getQuizAt(index).getTopic(),
                                   style: const TextStyle(
-                                      color: primaryColor,
                                       fontWeight: FontWeight.w200)),
                               children: [
                                 // Question list
