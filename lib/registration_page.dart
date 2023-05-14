@@ -96,27 +96,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   indent: 20,
                   endIndent: 20,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        value: rememberMe,
-                        activeColor: primaryColor,
-                        onChanged: (value) {
-                          setState(() {
-                            rememberMe = value;
-                          });
-                        },
-                      ),
-                      const Text("Remember me",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: subColor,
-                            fontSize: 12,
-                          )),
-                    ],
+                ListTile(
+                  leading: Checkbox(
+                    value: rememberMe,
+                    activeColor: primaryColor,
+                    onChanged: (value) {
+                      setState(() {
+                        rememberMe = value;
+                      });
+                    },
                   ),
+                  horizontalTitleGap: 0,
+                  title: const Text("Remember me",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 14,
+                      )),
                 ),
                 const Expanded(child: SizedBox()),
                 Padding(
@@ -150,8 +146,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   child: const Text("Have an account?",
                       textAlign: TextAlign.left,
                       style: TextStyle(
-                        color: subColor,
-                        fontSize: 10,
+                        color: subColor2,
+                        fontSize: 12,
                       )),
                 ),
               ]),

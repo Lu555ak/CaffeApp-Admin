@@ -171,62 +171,68 @@ class _TablePageMobileState extends State<TablePageMobile> {
 
   void showTableSheet(CaffeTable table) {
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(25),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: const FittedBox(
-                      child: Icon(
-                        Icons.table_restaurant_rounded,
-                        color: primaryColor,
-                        size: 40,
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+              padding: const EdgeInsets.all(25),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: const FittedBox(
+                        child: Icon(
+                          Icons.table_restaurant_rounded,
+                          color: primaryColor,
+                          size: 40,
+                        ),
+                      ),
+                      title: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          table.getId().toString(),
+                          style: const TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 30),
+                        ),
                       ),
                     ),
-                    title: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
+                    const Divider(
+                      color: primaryColor,
+                    ),
+                    const SizedBox(
+                      width: double.infinity,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Description: ",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: double.infinity,
                       child: Text(
-                        table.getId().toString(),
-                        style: const TextStyle(
-                            color: primaryColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 30),
+                        table.getDescription(),
+                        textAlign: TextAlign.justify,
+                        style:
+                            const TextStyle(color: primaryColor, fontSize: 15),
                       ),
                     ),
-                  ),
-                  const Divider(
-                    color: primaryColor,
-                  ),
-                  const SizedBox(
-                    width: double.infinity,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Description: ",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            color: primaryColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      table.getDescription(),
-                      textAlign: TextAlign.justify,
-                      style: const TextStyle(color: primaryColor, fontSize: 15),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );
@@ -238,56 +244,62 @@ class _TablePageMobileState extends State<TablePageMobile> {
     editTableIdController.text = "";
 
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(25),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const Text(
-                    "Edit table.",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                  ),
-                  TextFormField(
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    controller: editTableIdController,
-                    textAlign: TextAlign.center,
-                    decoration: const InputDecoration(
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      hintText: 'ID',
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+              padding: const EdgeInsets.all(25),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const Text(
+                      "Edit table.",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                     ),
-                    autocorrect: false,
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    controller: editTableDescriptionController,
-                    textAlign: TextAlign.center,
-                    decoration: const InputDecoration(
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      hintText: 'Description',
+                    TextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      controller: editTableIdController,
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        hintText: 'ID',
+                      ),
+                      autocorrect: false,
                     ),
-                    autocorrect: false,
-                  ),
-                  ConfirmButton(onPress: () {
-                    setState(() {
-                      if (editTableIdController.text != "") {
-                        table.setId(int.parse(editTableIdController.text));
-                      }
-                      if (editTableDescriptionController.text != "") {
-                        table.setDescription(
-                            editTableDescriptionController.text);
-                      }
-                      Navigator.of(context).pop();
-                    });
-                  })
-                ],
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: editTableDescriptionController,
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        hintText: 'Description',
+                      ),
+                      autocorrect: false,
+                    ),
+                    ConfirmButton(onPress: () {
+                      setState(() {
+                        if (editTableIdController.text != "") {
+                          table.setId(int.parse(editTableIdController.text));
+                        }
+                        if (editTableDescriptionController.text != "") {
+                          table.setDescription(
+                              editTableDescriptionController.text);
+                        }
+                        Navigator.of(context).pop();
+                      });
+                    })
+                  ],
+                ),
               ),
             ),
           );
@@ -299,77 +311,85 @@ class _TablePageMobileState extends State<TablePageMobile> {
     createTableIdController.text = "";
 
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(25),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const Text(
-                    "Create table.",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                  ),
-                  Form(
-                    key: _formKeyId,
-                    child: TextFormField(
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      controller: createTableIdController,
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+              padding: const EdgeInsets.all(25),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const Text(
+                      "Create table.",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                    ),
+                    Form(
+                      key: _formKeyId,
+                      child: TextFormField(
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        controller: createTableIdController,
+                        textAlign: TextAlign.center,
+                        decoration: const InputDecoration(
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          hintText: 'ID',
+                        ),
+                        autocorrect: false,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter some ID!';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    TextFormField(
+                      keyboardType: TextInputType.text,
+                      controller: createTableDescriptionController,
                       textAlign: TextAlign.center,
                       decoration: const InputDecoration(
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
-                        hintText: 'ID',
+                        hintText: 'Description',
                       ),
                       autocorrect: false,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some ID!';
+                    ),
+                    ConfirmButton(onPress: () {
+                      setState(() {
+                        if (createTableIdController.text != "" &&
+                            createTableDescriptionController.text != "") {
+                          Tables().addTable(CaffeTable(
+                              int.parse(createTableIdController.text),
+                              createTableDescriptionController.text));
+                        } else if (createTableIdController.text == "" &&
+                            createTableDescriptionController.text != "") {
+                          Tables().addTable(CaffeTable(
+                              Tables().generateFreeId(),
+                              createTableDescriptionController.text));
+                        } else if (createTableIdController.text != "" &&
+                            createTableDescriptionController.text == "") {
+                          Tables().addTable(CaffeTable(
+                              int.parse(createTableIdController.text),
+                              "Empty"));
+                        } else {
+                          Tables().addTable(
+                              CaffeTable(Tables().generateFreeId(), "Empty"));
                         }
-                        return null;
-                      },
-                    ),
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.text,
-                    controller: createTableDescriptionController,
-                    textAlign: TextAlign.center,
-                    decoration: const InputDecoration(
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      hintText: 'Description',
-                    ),
-                    autocorrect: false,
-                  ),
-                  ConfirmButton(onPress: () {
-                    setState(() {
-                      if (createTableIdController.text != "" &&
-                          createTableDescriptionController.text != "") {
-                        Tables().addTable(CaffeTable(
-                            int.parse(createTableIdController.text),
-                            createTableDescriptionController.text));
-                      } else if (createTableIdController.text == "" &&
-                          createTableDescriptionController.text != "") {
-                        Tables().addTable(CaffeTable(Tables().generateFreeId(),
-                            createTableDescriptionController.text));
-                      } else if (createTableIdController.text != "" &&
-                          createTableDescriptionController.text == "") {
-                        Tables().addTable(CaffeTable(
-                            int.parse(createTableIdController.text), "Empty"));
-                      } else {
-                        Tables().addTable(
-                            CaffeTable(Tables().generateFreeId(), "Empty"));
-                      }
-                      Navigator.of(context).pop();
-                    });
-                  })
-                ],
+                        Navigator.of(context).pop();
+                      });
+                    })
+                  ],
+                ),
               ),
             ),
           );

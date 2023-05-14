@@ -84,30 +84,26 @@ class _LoginPageState extends State<LoginPage> {
                 const Text("Forgot your password?",
                     textAlign: TextAlign.left,
                     style: TextStyle(
-                      color: subColor,
-                      fontSize: 10,
+                      color: subColor2,
+                      fontSize: 12,
                     )),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        value: rememberMe,
-                        activeColor: primaryColor,
-                        onChanged: (value) {
-                          setState(() {
-                            rememberMe = value;
-                          });
-                        },
-                      ),
-                      const Text("Remember me",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: subColor,
-                            fontSize: 12,
-                          )),
-                    ],
+                ListTile(
+                  leading: Checkbox(
+                    value: rememberMe,
+                    activeColor: primaryColor,
+                    onChanged: (value) {
+                      setState(() {
+                        rememberMe = value;
+                      });
+                    },
                   ),
+                  horizontalTitleGap: 0,
+                  title: const Text("Remember me",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 14,
+                      )),
                 ),
                 const Expanded(child: SizedBox()),
                 Padding(
@@ -141,8 +137,8 @@ class _LoginPageState extends State<LoginPage> {
                   child: const Text("Don't have an account?",
                       textAlign: TextAlign.left,
                       style: TextStyle(
-                        color: subColor,
-                        fontSize: 10,
+                        color: subColor2,
+                        fontSize: 12,
                       )),
                 ),
               ]),

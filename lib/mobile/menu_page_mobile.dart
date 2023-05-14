@@ -228,53 +228,58 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
 
     showModalBottomSheet(
         context: context,
+        isScrollControlled: true,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(25),
-            child: SingleChildScrollView(
-                child: Column(children: [
-              Text(
-                (editCategory) ? "Edit category." : "Create new category.",
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-              ),
-              Form(
-                key: _formKeyCategory,
-                child: TextFormField(
-                  controller: createCategoryNameController,
-                  textAlign: TextAlign.center,
-                  decoration: const InputDecoration(
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    hintText: 'Category name',
-                  ),
-                  autocorrect: false,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter category name!';
-                    }
-                    return null;
-                  },
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+              padding: const EdgeInsets.all(25),
+              child: SingleChildScrollView(
+                  child: Column(children: [
+                Text(
+                  (editCategory) ? "Edit category." : "Create new category.",
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w700),
                 ),
-              ),
-              ConfirmButton(onPress: () {
-                if (_formKeyCategory.currentState!.validate()) {
-                  setState(() {
-                    if (editCategory) {
-                      Menu()
-                          .getCategoryAt(index)
-                          .setName(createCategoryNameController.text);
-                    } else {
-                      Menu().addCategory(
-                          MenuCategory(createCategoryNameController.text));
-                    }
-                    Navigator.of(context).pop();
-                  });
-                }
-              }),
-            ])),
+                Form(
+                  key: _formKeyCategory,
+                  child: TextFormField(
+                    controller: createCategoryNameController,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      hintText: 'Category name',
+                    ),
+                    autocorrect: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter category name!';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                ConfirmButton(onPress: () {
+                  if (_formKeyCategory.currentState!.validate()) {
+                    setState(() {
+                      if (editCategory) {
+                        Menu()
+                            .getCategoryAt(index)
+                            .setName(createCategoryNameController.text);
+                      } else {
+                        Menu().addCategory(
+                            MenuCategory(createCategoryNameController.text));
+                      }
+                      Navigator.of(context).pop();
+                    });
+                  }
+                }),
+              ])),
+            ),
           );
         });
   }

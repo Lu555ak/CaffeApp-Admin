@@ -13,16 +13,16 @@ class Background extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: [
       Container(color: color),
-      /*Container(
+      Container(
         decoration: BoxDecoration(
           image: DecorationImage(
             image: const AssetImage("images/backgroundImage.png"),
-            scale: 2.6,
+            scale: 1.5,
             repeat: ImageRepeat.repeat,
             opacity: opacity,
           ),
         ),
-      ),*/
+      ),
     ]);
   }
 }

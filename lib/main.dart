@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:caffe_app/desktop/layout_desktop.dart';
 import 'package:caffe_app/tablet/layout_tablet.dart';
 import 'package:caffe_app/mobile/layout_mobile.dart';
+import 'package:caffe_app/login_page.dart';
 
 import 'custom/background.dart';
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
           color: subColor,
           opacity: 0.75,
         ),
+        //LoginPage(),
         CaffeApp(
           mobileLayout: LayoutMobile(),
           tabletLayout: LayoutTablet(),
