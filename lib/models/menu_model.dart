@@ -7,12 +7,16 @@ class Menu {
 
   final List<MenuCategory> _categories = List.empty(growable: true);
 
-  MenuCategory getCategory(int index) {
+  MenuCategory getCategoryAt(int index) {
     return _categories[index];
   }
 
   void addCategory(MenuCategory category) {
     _categories.add(category);
+  }
+
+  void removeCategoryAt(int index) {
+    _categories.removeAt(index);
   }
 
   int getCategoryCount() {

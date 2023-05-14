@@ -81,7 +81,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                               child: ExpansionTile(
                                 backgroundColor: primaryColor,
                                 title: Text(
-                                  Menu().getCategory(index).getName(),
+                                  Menu().getCategoryAt(index).getName(),
                                   style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w700),
@@ -93,13 +93,13 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                       physics:
                                           const NeverScrollableScrollPhysics(),
                                       itemCount: Menu()
-                                          .getCategory(index)
+                                          .getCategoryAt(index)
                                           .getItemCount(),
                                       itemBuilder: (context, i) {
                                         return ListTile(
                                           onTap: () {
                                             _showItem(Menu()
-                                                .getCategory(index)
+                                                .getCategoryAt(index)
                                                 .getItem(i));
                                           },
                                           selectedTileColor: secondaryColor,
@@ -112,7 +112,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                                   iconSize: 25,
                                                   onTap: () {
                                                     _editItem(Menu()
-                                                        .getCategory(index)
+                                                        .getCategoryAt(index)
                                                         .getItem(i));
                                                   }),
                                               SmallIconButton(
@@ -126,7 +126,8 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                                         () {
                                                       setState(() {
                                                         Menu()
-                                                            .getCategory(index)
+                                                            .getCategoryAt(
+                                                                index)
                                                             .removeItem(i);
                                                       });
                                                     });
@@ -135,7 +136,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                           ),
                                           title: Text(
                                             Menu()
-                                                .getCategory(index)
+                                                .getCategoryAt(index)
                                                 .getItem(i)
                                                 .getName(),
                                             style: const TextStyle(
@@ -143,19 +144,58 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                                 fontWeight: FontWeight.w600),
                                           ),
                                           subtitle: Text(
-                                              "${Menu().getCategory(index).getItem(i).getPrice().toString()} €",
+                                              "${Menu().getCategoryAt(index).getItem(i).getPrice().toString()} €",
                                               style: const TextStyle(
                                                   color: secondaryColor,
                                                   fontWeight: FontWeight.w300)),
                                         );
                                       }),
                                   Padding(
-                                      padding: const EdgeInsets.all(padding1),
-                                      child: ListViewAddButton(
-                                        onTap: () {
-                                          _createItem(index);
-                                        },
-                                      ))
+                                    padding: const EdgeInsets.all(padding1),
+                                    child: Row(
+                                      children: [
+                                        Flexible(
+                                            flex: 4,
+                                            child: ListViewAddButton(
+                                              onTap: () {
+                                                _createItem(index);
+                                              },
+                                            )),
+                                        Flexible(
+                                            flex: 1,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8),
+                                              child: SmallIconButton(
+                                                  iconData: Icons.edit_rounded,
+                                                  iconColor: secondaryColor,
+                                                  onTap: () {
+                                                    _showCategory(index, true);
+                                                  }),
+                                            )),
+                                        Flexible(
+                                            flex: 1,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8),
+                                              child: SmallIconButton(
+                                                  iconData:
+                                                      Icons.delete_rounded,
+                                                  iconColor: dangerColor,
+                                                  onTap: () {
+                                                    confirmDeleteWindow(context,
+                                                        "Are you sure you want to delete this category?",
+                                                        () {
+                                                      setState(() {
+                                                        Menu().removeCategoryAt(
+                                                            index);
+                                                      });
+                                                    });
+                                                  }),
+                                            )),
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
@@ -166,7 +206,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                   child: ListViewAddButton(
                     onTap: () {
                       setState(() {
-                        _createCategory();
+                        _showCategory(-1, false);
                       });
                     },
                   ),
@@ -179,8 +219,13 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
     );
   }
 
-  void _createCategory() {
+  void _showCategory(int index, bool editCategory) {
     createCategoryNameController.text = "";
+
+    if (editCategory) {
+      createCategoryNameController.text = Menu().getCategoryAt(index).getName();
+    }
+
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -190,9 +235,10 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
             padding: const EdgeInsets.all(25),
             child: SingleChildScrollView(
                 child: Column(children: [
-              const Text(
-                "Create new category.",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              Text(
+                (editCategory) ? "Edit category." : "Create new category.",
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
               Form(
                 key: _formKeyCategory,
@@ -207,7 +253,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                   autocorrect: false,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter some name!';
+                      return 'Please enter category name!';
                     }
                     return null;
                   },
@@ -216,8 +262,14 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
               ConfirmButton(onPress: () {
                 if (_formKeyCategory.currentState!.validate()) {
                   setState(() {
-                    Menu().addCategory(
-                        MenuCategory(createCategoryNameController.text));
+                    if (editCategory) {
+                      Menu()
+                          .getCategoryAt(index)
+                          .setName(createCategoryNameController.text);
+                    } else {
+                      Menu().addCategory(
+                          MenuCategory(createCategoryNameController.text));
+                    }
                     Navigator.of(context).pop();
                   });
                 }
@@ -297,7 +349,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                       if (_formKeyName.currentState!.validate() &&
                           _formKeyPrice.currentState!.validate()) {
                         setState(() {
-                          Menu().getCategory(index).addItem(MenuItem(
+                          Menu().getCategoryAt(index).addItem(MenuItem(
                               createItemNameControler.text,
                               double.parse(createItemPriceControler.text)));
                           Navigator.of(context).pop();
