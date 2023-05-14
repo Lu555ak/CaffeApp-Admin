@@ -19,6 +19,7 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
   final formulaEditPriceControler = TextEditingController();
   final formulaEditPointsControler = TextEditingController();
   final ScrollController scrollController = ScrollController();
+  final editDaysControler = TextEditingController();
 
   @override
   void dispose() {
@@ -65,108 +66,32 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
         ),
       ),
       SizedBox(
-        height: 200,
-        width: double.infinity,
+        height: 150,
         child: ScrollConfiguration(
           behavior: CustomScrollBehavior(),
           child: ListView.builder(
               controller: scrollController,
-              scrollDirection: Axis.vertical,
-              itemCount: 3,
+              scrollDirection: Axis.horizontal,
+              itemCount: 10,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.all(25.0),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: secondaryColor,
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            width: 150,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: const [
-                                Icon(
-                                  Icons.table_restaurant_rounded,
-                                  color: subColor2,
-                                  size: 35,
-                                ),
-                                Text(
-                                  "23",
-                                  style: TextStyle(fontSize: 25),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const Divider(
-                            color: primaryColor,
-                            indent: 20,
-                            endIndent: 20,
-                          ),
-                          SizedBox(
-                            width: 150,
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(primaryColor),
-                              ),
-                              child: const Text('VIEW MORE'),
-                            ),
-                          ),
-                          const Divider(
-                            color: primaryColor,
-                            indent: 20,
-                            endIndent: 20,
-                          ),
-                          Row(
-                            children: [
-                              const Divider(
-                                color: primaryColor,
-                                indent: 5,
-                                endIndent: 5,
-                              ),
-                              const Icon(
-                                Icons.access_time_filled,
-                                color: subColor2,
-                                size: 33.5,
-                              ),
-                              const Text(" 2s"),
-                              const Divider(
-                                color: primaryColor,
-                                indent: 5,
-                                endIndent: 5,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 40),
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: ButtonStyle(
-                                    shape: MaterialStateProperty.all(
-                                        const CircleBorder()),
-                                    padding: MaterialStateProperty.all(
-                                        const EdgeInsets.all(10)),
-                                    backgroundColor:
-                                        MaterialStateProperty.all(subColor2),
-                                    overlayColor: MaterialStateProperty
-                                        .resolveWith<Color?>((states) {
-                                      if (states
-                                          .contains(MaterialState.pressed)) {
-                                        return subColor;
-                                      }
-                                      return null;
-                                    }),
-                                  ),
-                                  child: const Icon(Icons.check),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                  child: InkWell(
+                    onTap: () {
+                      _AddRoadMapItem();
+                    },
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: secondaryColor,
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          "142",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 65),
+                        ),
                       ),
                     ),
                   ),
@@ -176,7 +101,9 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
       ),
       ListViewAddButton(
         onTap: () {
-          setState(() {});
+          setState(() {
+            _AddRoadMapItem();
+          });
         },
       ),
     ]));
@@ -251,6 +178,64 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
                               fontSize: 20, fontWeight: FontWeight.w500),
                         ),
                       ]),
+                ),
+                ConfirmButton(onPress: () {
+                  setState(() {
+                    if (formulaEditPriceControler.text != "") {}
+                    if (formulaEditPointsControler.text != "") {}
+                    Navigator.of(context).pop();
+                  });
+                })
+              ]),
+            ),
+          );
+        });
+  }
+
+  void _AddRoadMapItem() {
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(25),
+            child: SingleChildScrollView(
+              child: Column(children: [
+                const Text(
+                  "Add road map item.",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                ),
+                SizedBox(
+                  height: 50,
+                  child: Column(children: [
+                    Row(children: [
+                      Text(
+                        "Item: ",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w400),
+                      ),
+                      SizedBox(
+                        width: 22,
+                        child: TextFormField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(2),
+                          ],
+                          keyboardType: TextInputType.number,
+                          controller: formulaEditPriceControler,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 15),
+                          decoration: const InputDecoration(
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            hintText: '-',
+                          ),
+                          autocorrect: false,
+                        ),
+                      ),
+                    ]),
+                  ]),
                 ),
                 ConfirmButton(onPress: () {
                   setState(() {

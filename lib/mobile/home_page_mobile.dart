@@ -143,7 +143,7 @@ class _HomePageMobileState extends State<HomePageMobile> {
                   );
                 }),
           ),
-        )
+        ),
       ],
     );
   }
