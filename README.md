@@ -1,16 +1,11 @@
-# caffe_app
+# Caffe App - Admin
+Welcome to the Flutter Caffe App Admin Panel! This admin panel is designed to help you manage and control your Flutter Caffe App, a mobile application built using Flutter. With this admin panel, you can easily create and manage menus, pub quizzes, loyalty system rewards, and tables for users to order via QR code.
 
-A new Flutter project.
+## Features
+- **Menu**: Easily create and manage menus for your cafe. Add new categories, items, descriptions, prices, and images. Update and delete existing menu items as needed.
 
-## Getting Started
+- **Quiz**: Engage your app users with exciting pub quizzes. Create quiz questions, set options, and define correct answers. Customize the quiz difficulty level and categories to suit your audience.
 
-This project is a starting point for a Flutter application.
+- **Loyalty**: Design a loyalty system to reward your customers. Create different rewards such as discounts, free items, or special privileges. Set the point threshold required for customers to redeem rewards.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **Table Management**: Enable users to conveniently order from their tables using QR codes. Create and manage table layouts, assign tables to specific areas, and generate unique QR codes for each table.
