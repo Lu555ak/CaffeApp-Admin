@@ -5,6 +5,7 @@ import 'package:caffe_app/models/tables_model.dart';
 import 'package:caffe_app/custom/confirm_delete_window.dart';
 import 'package:caffe_app/custom/small_icon_button.dart';
 import 'package:caffe_app/custom/confirm_button.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class TablePageMobile extends StatefulWidget {
   const TablePageMobile({super.key});
@@ -14,20 +15,15 @@ class TablePageMobile extends StatefulWidget {
 }
 
 class _TablePageMobileState extends State<TablePageMobile> {
-  final editTableIdController = TextEditingController();
-  final editTableDescriptionController = TextEditingController();
-
-  final createTableIdController = TextEditingController();
-  final createTableDescriptionController = TextEditingController();
-
+  final _tableIdController = TextEditingController();
+  final _tableDescriptionController = TextEditingController();
   final _formKeyId = GlobalKey<FormState>();
+  final _formKeyDescription = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    editTableIdController.dispose();
-    editTableDescriptionController.dispose();
-    createTableIdController.dispose();
-    createTableDescriptionController.dispose();
+    _tableIdController.dispose();
+    _tableDescriptionController.dispose();
     super.dispose();
   }
 
@@ -66,7 +62,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          createTableSheet();
+                          _createTableSheet(-1, false);
                         });
                       },
                       child: Container(
@@ -142,7 +138,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                                   iconData: Icons.edit_rounded,
                                   iconColor: primaryColor,
                                   onTap: () {
-                                    editTableSheet(Tables().getTable(index));
+                                    _createTableSheet(index, true);
                                   }),
                               SmallIconButton(
                                   iconData: Icons.delete_rounded,
@@ -154,6 +150,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                                       setState(() {
                                         Tables().removeTable(index);
                                       });
+                                      Tables().saveToDatabase();
                                     });
                                   }),
                             ],
@@ -231,6 +228,11 @@ class _TablePageMobileState extends State<TablePageMobile> {
                             const TextStyle(color: primaryColor, fontSize: 15),
                       ),
                     ),
+                    QrImageView(
+                      data: table.generateQRCodeData(),
+                      version: QrVersions.auto,
+                      size: 100,
+                    )
                   ],
                 ),
               ),
@@ -239,9 +241,15 @@ class _TablePageMobileState extends State<TablePageMobile> {
         });
   }
 
-  void editTableSheet(CaffeTable table) {
-    editTableDescriptionController.text = "";
-    editTableIdController.text = "";
+  void _createTableSheet(int index, bool editTable) {
+    _tableDescriptionController.text = "";
+    _tableIdController.text = "";
+
+    if (editTable == true) {
+      _tableIdController.text = Tables().getTable(index).getId().toString();
+      _tableDescriptionController.text =
+          Tables().getTable(index).getDescription();
+    }
 
     showModalBottomSheet(
         isScrollControlled: true,
@@ -257,77 +265,10 @@ class _TablePageMobileState extends State<TablePageMobile> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    const Text(
-                      "Edit table.",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                    ),
-                    TextFormField(
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      controller: editTableIdController,
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        hintText: 'ID',
-                      ),
-                      autocorrect: false,
-                    ),
-                    TextFormField(
-                      keyboardType: TextInputType.number,
-                      controller: editTableDescriptionController,
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        hintText: 'Description',
-                      ),
-                      autocorrect: false,
-                    ),
-                    ConfirmButton(onPress: () {
-                      setState(() {
-                        if (editTableIdController.text != "") {
-                          table.setId(int.parse(editTableIdController.text));
-                        }
-                        if (editTableDescriptionController.text != "") {
-                          table.setDescription(
-                              editTableDescriptionController.text);
-                        }
-                        Navigator.of(context).pop();
-                      });
-                    })
-                  ],
-                ),
-              ),
-            ),
-          );
-        });
-  }
-
-  void createTableSheet() {
-    createTableDescriptionController.text = "";
-    createTableIdController.text = "";
-
-    showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
-        builder: (context) {
-          return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Container(
-              padding: const EdgeInsets.all(25),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const Text(
-                      "Create table.",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                    Text(
+                      (editTable) ? "Edit table." : "Create table.",
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.w700),
                     ),
                     Form(
                       key: _formKeyId,
@@ -337,7 +278,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                         ],
                         keyboardType: const TextInputType.numberWithOptions(
                             decimal: true),
-                        controller: createTableIdController,
+                        controller: _tableIdController,
                         textAlign: TextAlign.center,
                         decoration: const InputDecoration(
                           enabledBorder: InputBorder.none,
@@ -347,46 +288,64 @@ class _TablePageMobileState extends State<TablePageMobile> {
                         autocorrect: false,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter some ID!';
+                            return 'Please enter a valid ID!';
+                          } else if (int.parse(value) < 1 ||
+                              int.parse(value) > 999) {
+                            return 'Please enter an ID between 1 - 999!';
+                          } else if (Tables().idExists(int.parse(value))) {
+                            if (editTable &&
+                                int.parse(value) ==
+                                    Tables().getTable(index).getId()) {
+                              return null;
+                            } else {
+                              return 'This ID is already in use!';
+                            }
                           }
                           return null;
                         },
                       ),
                     ),
-                    TextFormField(
-                      keyboardType: TextInputType.text,
-                      controller: createTableDescriptionController,
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        hintText: 'Description',
+                    Form(
+                      key: _formKeyDescription,
+                      child: TextFormField(
+                        keyboardType: TextInputType.text,
+                        controller: _tableDescriptionController,
+                        textAlign: TextAlign.center,
+                        decoration: const InputDecoration(
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          hintText: 'Description',
+                        ),
+                        autocorrect: false,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a description!';
+                          }
+                          return null;
+                        },
                       ),
-                      autocorrect: false,
                     ),
                     ConfirmButton(onPress: () {
-                      setState(() {
-                        if (createTableIdController.text != "" &&
-                            createTableDescriptionController.text != "") {
-                          Tables().addTable(CaffeTable(
-                              int.parse(createTableIdController.text),
-                              createTableDescriptionController.text));
-                        } else if (createTableIdController.text == "" &&
-                            createTableDescriptionController.text != "") {
-                          Tables().addTable(CaffeTable(
-                              Tables().generateFreeId(),
-                              createTableDescriptionController.text));
-                        } else if (createTableIdController.text != "" &&
-                            createTableDescriptionController.text == "") {
-                          Tables().addTable(CaffeTable(
-                              int.parse(createTableIdController.text),
-                              "Empty"));
+                      if (_formKeyId.currentState!.validate() &&
+                          _formKeyDescription.currentState!.validate()) {
+                        if (editTable) {
+                          setState(() {
+                            Tables()
+                                .getTable(index)
+                                .setId(int.parse(_tableIdController.text));
+                            Tables().getTable(index).setDescription(
+                                _tableDescriptionController.text);
+                          });
                         } else {
-                          Tables().addTable(
-                              CaffeTable(Tables().generateFreeId(), "Empty"));
+                          setState(() {
+                            Tables().addTable(CaffeTable(
+                                int.parse(_tableIdController.text),
+                                _tableDescriptionController.text));
+                          });
                         }
-                        Navigator.of(context).pop();
-                      });
+                        Tables().saveToDatabase();
+                        Navigator.pop(context);
+                      }
                     })
                   ],
                 ),

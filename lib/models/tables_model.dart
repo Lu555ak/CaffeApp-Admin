@@ -1,3 +1,7 @@
+import 'dart:ffi';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Tables {
   static Tables? _instance;
 
@@ -40,6 +44,35 @@ class Tables {
     }
     return 0;
   }
+
+  bool idExists(int id) {
+    return _tables.any((element) => element._id == id);
+  }
+
+  Future saveToDatabase() async {
+    var collection = FirebaseFirestore.instance.collection('tables');
+    var snapshots = await collection.get();
+    for (var doc in snapshots.docs) {
+      await doc.reference.delete();
+    }
+
+    for (var element in _tables) {
+      await FirebaseFirestore.instance.collection("tables").add(
+          {"id": element.getId(), "description": element.getDescription()});
+    }
+  }
+
+  Future loadFromDatabase() async {
+    await FirebaseFirestore.instance
+        .collection("tables")
+        .get()
+        .then((snapshot) {
+      for (var element in snapshot.docs) {
+        addTable(
+            CaffeTable(element.data()["id"], element.data()["description"]));
+      }
+    });
+  }
 }
 
 class CaffeTable {
@@ -53,11 +86,7 @@ class CaffeTable {
   }
 
   void setId(int id) {
-    if (id > 999) {
-      _id = 0;
-    } else {
-      _id = id;
-    }
+    _id = id;
   }
 
   String getDescription() {
@@ -66,5 +95,9 @@ class CaffeTable {
 
   void setDescription(String description) {
     _description = description;
+  }
+
+  String generateQRCodeData() {
+    return "CaffeAppTable: $_id";
   }
 }
