@@ -15,14 +15,14 @@ class MenuPageMobile extends StatefulWidget {
 }
 
 class _MenuPageMobileState extends State<MenuPageMobile> {
-  final createCategoryNameController = TextEditingController();
+  final _createCategoryNameController = TextEditingController();
+  final _createItemNameControler = TextEditingController();
+  final _createItemPriceControler = TextEditingController();
 
-  final createItemNameControler = TextEditingController();
-  final createItemPriceControler = TextEditingController();
-
-  final editItemNameControler = TextEditingController();
-  final editItemPriceControler = TextEditingController();
-  final editItemDiscountControler = TextEditingController();
+  final _editItemNameControler = TextEditingController();
+  final _editItemPriceControler = TextEditingController();
+  final _editItemDiscountControler = TextEditingController();
+  final _searchBarController = TextEditingController();
 
   final _formKeyName = GlobalKey<FormState>();
   final _formKeyPrice = GlobalKey<FormState>();
@@ -30,9 +30,9 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
 
   @override
   void dispose() {
-    createCategoryNameController.dispose();
-    createItemNameControler.dispose();
-    createItemPriceControler.dispose();
+    _createCategoryNameController.dispose();
+    _createItemNameControler.dispose();
+    _createItemPriceControler.dispose();
     super.dispose();
   }
 
@@ -55,6 +55,26 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                   color: secondaryColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 15),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: TextField(
+              controller: _searchBarController,
+              decoration: const InputDecoration(
+                labelText: "Search",
+                hintText: "Search",
+                prefixIcon: Icon(Icons.search),
+                prefixIconColor: primaryColor,
+                labelStyle: TextStyle(color: primaryColor),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 2, color: subColor2),
+                    borderRadius: BorderRadius.all(Radius.circular(15.0))),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 4, color: subColor2),
+                    borderRadius: BorderRadius.all(Radius.circular(15.0))),
+              ),
+              onChanged: (value) {},
             ),
           ),
           Padding(
@@ -220,10 +240,11 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
   }
 
   void _showCategory(int index, bool editCategory) {
-    createCategoryNameController.text = "";
+    _createCategoryNameController.text = "";
 
     if (editCategory) {
-      createCategoryNameController.text = Menu().getCategoryAt(index).getName();
+      _createCategoryNameController.text =
+          Menu().getCategoryAt(index).getName();
     }
 
     showModalBottomSheet(
@@ -247,7 +268,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                 Form(
                   key: _formKeyCategory,
                   child: TextFormField(
-                    controller: createCategoryNameController,
+                    controller: _createCategoryNameController,
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(
                       enabledBorder: InputBorder.none,
@@ -269,10 +290,10 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                       if (editCategory) {
                         Menu()
                             .getCategoryAt(index)
-                            .setName(createCategoryNameController.text);
+                            .setName(_createCategoryNameController.text);
                       } else {
                         Menu().addCategory(
-                            MenuCategory(createCategoryNameController.text));
+                            MenuCategory(_createCategoryNameController.text));
                       }
                       Navigator.of(context).pop();
                     });
@@ -285,8 +306,8 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
   }
 
   void _createItem(index) {
-    createItemNameControler.text = "";
-    createItemPriceControler.text = "";
+    _createItemNameControler.text = "";
+    _createItemPriceControler.text = "";
 
     showModalBottomSheet(
         isScrollControlled: true,
@@ -308,7 +329,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                   Form(
                     key: _formKeyName,
                     child: TextFormField(
-                      controller: createItemNameControler,
+                      controller: _createItemNameControler,
                       textAlign: TextAlign.center,
                       decoration: const InputDecoration(
                         enabledBorder: InputBorder.none,
@@ -333,7 +354,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                       ],
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
-                      controller: createItemPriceControler,
+                      controller: _createItemPriceControler,
                       textAlign: TextAlign.center,
                       decoration: const InputDecoration(
                         enabledBorder: InputBorder.none,
@@ -355,8 +376,8 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                           _formKeyPrice.currentState!.validate()) {
                         setState(() {
                           Menu().getCategoryAt(index).addItem(MenuItem(
-                              createItemNameControler.text,
-                              double.parse(createItemPriceControler.text)));
+                              _createItemNameControler.text,
+                              double.parse(_createItemPriceControler.text)));
                           Navigator.of(context).pop();
                         });
                       }
@@ -450,8 +471,8 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
   }
 
   void _editItem(MenuItem item) {
-    editItemNameControler.text = "";
-    editItemPriceControler.text = "";
+    _editItemNameControler.text = "";
+    _editItemPriceControler.text = "";
 
     showModalBottomSheet(
         isScrollControlled: true,
@@ -471,7 +492,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
                   TextFormField(
-                    controller: editItemNameControler,
+                    controller: _editItemNameControler,
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(
                       enabledBorder: InputBorder.none,
@@ -485,7 +506,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                       FilteringTextInputFormatter.digitsOnly,
                     ],
                     keyboardType: TextInputType.number,
-                    controller: editItemPriceControler,
+                    controller: _editItemPriceControler,
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(
                       enabledBorder: InputBorder.none,
@@ -499,7 +520,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                       FilteringTextInputFormatter.digitsOnly,
                     ],
                     keyboardType: TextInputType.number,
-                    controller: editItemDiscountControler,
+                    controller: _editItemDiscountControler,
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(
                       enabledBorder: InputBorder.none,
@@ -510,12 +531,12 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                   ),
                   ConfirmButton(onPress: () {
                     setState(() {
-                      if (editItemPriceControler.text != "") {
+                      if (_editItemPriceControler.text != "") {
                         item.setPrice(
-                            double.parse(editItemPriceControler.text));
+                            double.parse(_editItemPriceControler.text));
                       }
-                      if (editItemNameControler.text != "") {
-                        item.setName(editItemNameControler.text);
+                      if (_editItemNameControler.text != "") {
+                        item.setName(_editItemNameControler.text);
                       }
                       Navigator.of(context).pop();
                     });
