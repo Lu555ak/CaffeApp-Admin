@@ -5,6 +5,7 @@ import 'package:caffe_app/models/menu_model.dart';
 import 'package:caffe_app/custom/confirm_button.dart';
 import 'package:caffe_app/custom/small_icon_button.dart';
 import 'package:caffe_app/custom/confirm_delete_window.dart';
+import 'package:caffe_app/custom/circle_icon_button.dart';
 import 'package:caffe_app/custom/listview_add_button.dart';
 import 'package:caffe_app/custom/discount_component.dart';
 
@@ -88,7 +89,10 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                             title: Row(
                               children: [
                                 Text(
-                                  Menu().getMenuItemAt(index).getName,
+                                  Menu()
+                                      .getMenuItemAt(index)
+                                      .getName
+                                      .toUpperCase(),
                                   style: const TextStyle(
                                       color: primaryColor,
                                       fontSize: 18,
@@ -129,7 +133,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                         padding:
                                             const EdgeInsets.only(left: 8.0),
                                         child: Text(
-                                            "${Menu().getMenuItemAt(index).getPriceDiscount}€",
+                                            "${Menu().getMenuItemAt(index).getPriceDiscount.toStringAsFixed(2)}€",
                                             style: const TextStyle(
                                                 color: dangerColor,
                                                 fontSize: 15,
@@ -143,30 +147,10 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                 (Menu().getMenuItemAt(index).getFeatured)
                                     ? const Icon(Icons.star)
                                     : Container(),
-                                ElevatedButton(
-                                  onPressed: () {
+                                CircleIconButton(
+                                  onPress: () {
                                     _showItem(index, true);
                                   },
-                                  style: ButtonStyle(
-                                    shape: MaterialStateProperty.all(
-                                        const CircleBorder()),
-                                    padding: MaterialStateProperty.all(
-                                        const EdgeInsets.all(5)),
-                                    backgroundColor:
-                                        MaterialStateProperty.all(primaryColor),
-                                    overlayColor: MaterialStateProperty
-                                        .resolveWith<Color?>((states) {
-                                      if (states
-                                          .contains(MaterialState.pressed)) {
-                                        return subColor2;
-                                      }
-                                      return null;
-                                    }),
-                                  ),
-                                  child: const Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: secondaryColor,
-                                  ),
                                 )
                               ],
                             ));
@@ -190,72 +174,6 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
       ),
     );
   }
-
-  /*void _showCategory(int index, bool editCategory) {
-    _createCategoryNameController.text = "";
-
-    if (editCategory) {
-      _createCategoryNameController.text =
-          Menu().getCategoryAt(index).getName();
-    }
-
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
-        builder: (context) {
-          return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Container(
-              padding: const EdgeInsets.all(25),
-              child: SingleChildScrollView(
-                  child: Column(children: [
-                Text(
-                  (editCategory) ? "Edit category." : "Create new category.",
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w700),
-                ),
-                Form(
-                  key: _formKeyCategory,
-                  child: TextFormField(
-                    controller: _createCategoryNameController,
-                    textAlign: TextAlign.center,
-                    decoration: const InputDecoration(
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      hintText: 'Category name',
-                    ),
-                    autocorrect: false,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter category name!';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                ConfirmButton(onPress: () {
-                  if (_formKeyCategory.currentState!.validate()) {
-                    setState(() {
-                      if (editCategory) {
-                        Menu()
-                            .getCategoryAt(index)
-                            .setName(_createCategoryNameController.text);
-                      } else {
-                        Menu().addCategory(
-                            MenuCategory(_createCategoryNameController.text));
-                      }
-                      Navigator.of(context).pop();
-                    });
-                  }
-                }),
-              ])),
-            ),
-          );
-        });
-  }*/
 
   void _showItem(int index, bool editMode) {
     _showItemNameControler.text = "";
@@ -288,9 +206,9 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                     child: Form(
                       key: _showItemFormKey,
                       child: Column(children: [
-                        const Text(
-                          "Create new item.",
-                          style: TextStyle(
+                        Text(
+                          (!editMode) ? "Create new item." : "Edit item.",
+                          style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w700),
                         ),
                         Padding(
@@ -374,33 +292,67 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                 fontWeight: FontWeight.w400),
                           ),
                         ),
-                        ConfirmButton(
-                          onPress: () {
-                            if (_showItemFormKey.currentState!.validate()) {
-                              if (editMode) {
-                                setState(() {
-                                  MenuItem menuItem =
-                                      Menu().getMenuItemAt(index);
-                                  menuItem.setName =
-                                      _showItemNameControler.text;
-                                  menuItem.setPrice = double.parse(
-                                      _showItemPriceControler.text);
-                                  menuItem.setDiscount = discountSlider.toInt();
-                                  menuItem.setFeatured = featuredSwitch;
-                                });
-                              } else {
-                                setState(() {
-                                  Menu().addMenuItem(MenuItem(
-                                      _showItemNameControler.text,
-                                      double.parse(
-                                          _showItemPriceControler.text),
-                                      discountSlider.toInt(),
-                                      featuredSwitch));
-                                });
-                              }
-                              Navigator.pop(context);
-                            }
-                          },
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Flexible(
+                                flex: 5,
+                                child: ConfirmButton(
+                                  onPress: () {
+                                    if (_showItemFormKey.currentState!
+                                        .validate()) {
+                                      if (editMode) {
+                                        setState(() {
+                                          MenuItem menuItem =
+                                              Menu().getMenuItemAt(index);
+                                          menuItem.setName =
+                                              _showItemNameControler.text;
+                                          menuItem.setPrice = double.parse(
+                                              _showItemPriceControler.text);
+                                          menuItem.setDiscount =
+                                              discountSlider.toInt();
+                                          menuItem.setFeatured = featuredSwitch;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          Menu().addMenuItem(MenuItem(
+                                              _showItemNameControler.text,
+                                              double.parse(
+                                                  _showItemPriceControler.text),
+                                              discountSlider.toInt(),
+                                              featuredSwitch));
+                                        });
+                                      }
+                                      Menu().saveToFirestore();
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                ),
+                              ),
+                              Flexible(
+                                  flex: 1,
+                                  fit: FlexFit.tight,
+                                  child: (editMode)
+                                      ? CircleIconButton(
+                                          buttonColor: dangerColor,
+                                          iconData: Icons.delete_rounded,
+                                          onPress: () {
+                                            confirmDeleteWindow(context,
+                                                "Are you sure you want to delete this item?",
+                                                () {
+                                              setState(() {
+                                                Menu().removeMenuItemAt(index);
+                                                Menu().saveToFirestore();
+                                                Navigator.pop(context);
+                                              });
+                                            });
+                                          },
+                                        )
+                                      : Container())
+                            ],
+                          ),
                         )
                       ]),
                     ),
@@ -411,162 +363,4 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
           );
         });
   }
-/*
-  void _showItem(MenuItem item) {
-    showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
-        builder: (context) {
-          return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Container(
-              padding: const EdgeInsets.all(25),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ListTile(
-                      leading: const FittedBox(
-                        child: Icon(
-                          Icons.water_drop_rounded,
-                          color: primaryColor,
-                          size: 40,
-                        ),
-                      ),
-                      title: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          item.getName(),
-                          style: const TextStyle(
-                              color: primaryColor,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 30),
-                        ),
-                      ),
-                      subtitle: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "${item.getPrice()} €",
-                          style: const TextStyle(
-                              color: primaryColor,
-                              fontWeight: FontWeight.w200,
-                              fontSize: 15),
-                        ),
-                      ),
-                    ),
-                    const Divider(
-                      color: primaryColor,
-                    ),
-                    const SizedBox(
-                      width: double.infinity,
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Description: ",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              color: primaryColor,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc accumsan urna nec enim rhoncus cursus.",
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(color: primaryColor, fontSize: 15),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        });
-  }
-
-  void _editItem(MenuItem item) {
-    _editItemNameControler.text = "";
-    _editItemPriceControler.text = "";
-
-    showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
-        builder: (context) {
-          return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Container(
-              padding: const EdgeInsets.all(25),
-              child: SingleChildScrollView(
-                child: Column(children: [
-                  const Text(
-                    "Edit item.",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                  ),
-                  TextFormField(
-                    controller: _editItemNameControler,
-                    textAlign: TextAlign.center,
-                    decoration: const InputDecoration(
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      hintText: 'Item name',
-                    ),
-                    autocorrect: false,
-                  ),
-                  TextFormField(
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    keyboardType: TextInputType.number,
-                    controller: _editItemPriceControler,
-                    textAlign: TextAlign.center,
-                    decoration: const InputDecoration(
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      hintText: 'Price',
-                    ),
-                    autocorrect: false,
-                  ),
-                  TextFormField(
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    keyboardType: TextInputType.number,
-                    controller: _editItemDiscountControler,
-                    textAlign: TextAlign.center,
-                    decoration: const InputDecoration(
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      hintText: 'Discount',
-                    ),
-                    autocorrect: false,
-                  ),
-                  ConfirmButton(onPress: () {
-                    setState(() {
-                      if (_editItemPriceControler.text != "") {
-                        item.setPrice(
-                            double.parse(_editItemPriceControler.text));
-                      }
-                      if (_editItemNameControler.text != "") {
-                        item.setName(_editItemNameControler.text);
-                      }
-                      Navigator.of(context).pop();
-                    });
-                  })
-                ]),
-              ),
-            ),
-          );
-        });
-  }*/
 }

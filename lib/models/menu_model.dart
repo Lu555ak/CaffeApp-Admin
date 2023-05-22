@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Menu {
   static Menu? _instance;
 
@@ -11,6 +13,30 @@ class Menu {
   MenuItem getMenuItemAt(int index) => _menu[index];
   void removeMenuItemAt(int index) => _menu.removeAt(index);
   void addMenuItem(MenuItem menuItem) => _menu.add(menuItem);
+
+  Future saveToFirestore() async {
+    /*final instance = FirebaseFirestore.instance;
+    final batch = instance.batch();
+    var collection = instance.collection("menu");
+    var snapshots = await collection.get();
+    for (var doc in snapshots.docs) {
+      batch.delete(doc.reference);
+    }
+    await batch.commit();
+
+    for (var menuItem in _menu) {
+      await FirebaseFirestore.instance.collection("menu").add(menuItem.toMap());
+    }*/
+  }
+
+  Future loadFromDatabase() async {
+    /*await FirebaseFirestore.instance.collection("menu").get().then((snapshot) {
+      for (var menuItem in snapshot.docs) {
+        addMenuItem(MenuItem(menuItem["name"], menuItem["price"],
+            menuItem["discount"], menuItem["featured"]));
+      }
+    });*/
+  }
 }
 
 class MenuItem {
@@ -44,4 +70,11 @@ class MenuItem {
   String getCategoryAt(int index) => _categories[index];
   void removeCategoryAt(int index) => _categories.removeAt(index);
   void addCategory(String category) => _categories.add(category);
+
+  Map<String, dynamic> toMap() => {
+        'name': _name,
+        'price': _price,
+        'discount': _discount,
+        'featured': _featured,
+      };
 }

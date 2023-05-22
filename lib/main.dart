@@ -1,4 +1,5 @@
 import 'package:caffe_app/models/tables_model.dart';
+import 'package:caffe_app/models/menu_model.dart';
 import 'package:caffe_app/utility/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,8 @@ void main() async {
   );
 
   Tables().loadFromDatabase();
+  Menu().loadFromDatabase();
+
   runApp(const MyApp());
 }
 

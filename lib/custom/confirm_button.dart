@@ -7,36 +7,32 @@ class ConfirmButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Align(
-                alignment: Alignment.center,
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(subColor2),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Cancel'))),
-          ),
-          Expanded(
-            child: Align(
-                alignment: Alignment.center,
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(primaryColor),
-                    ),
-                    onPressed: () {
-                      onPress();
-                    },
-                    child: const Text('Confirm'))),
-          ),
-        ],
-      ),
+    return Row(
+      children: <Widget>[
+        Align(
+            alignment: Alignment.centerLeft,
+            child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(subColor2),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel'))),
+        Padding(
+          padding: const EdgeInsets.only(left: 15.0),
+          child: Align(
+              alignment: Alignment.centerLeft,
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(primaryColor),
+                  ),
+                  onPressed: () {
+                    onPress();
+                  },
+                  child: const Text('Confirm'))),
+        ),
+      ],
     );
   }
 }

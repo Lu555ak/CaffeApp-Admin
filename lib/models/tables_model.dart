@@ -50,7 +50,7 @@ class Tables {
   }
 
   Future saveToDatabase() async {
-    var collection = FirebaseFirestore.instance.collection('tables');
+    /*var collection = FirebaseFirestore.instance.collection('tables');
     var snapshots = await collection.get();
     for (var doc in snapshots.docs) {
       await doc.reference.delete();
@@ -59,11 +59,11 @@ class Tables {
     for (var element in _tables) {
       await FirebaseFirestore.instance.collection("tables").add(
           {"id": element.getId(), "description": element.getDescription()});
-    }
+    }*/
   }
 
   Future loadFromDatabase() async {
-    await FirebaseFirestore.instance
+    /*await FirebaseFirestore.instance
         .collection("tables")
         .get()
         .then((snapshot) {
@@ -71,7 +71,7 @@ class Tables {
         addTable(
             CaffeTable(element.data()["id"], element.data()["description"]));
       }
-    });
+    });*/
   }
 }
 
