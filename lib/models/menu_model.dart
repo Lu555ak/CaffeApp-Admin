@@ -5,83 +5,43 @@ class Menu {
 
   factory Menu() => _instance ??= Menu._();
 
-  final List<MenuCategory> _categories = List.empty(growable: true);
+  final List<MenuItem> _menu = List.empty(growable: true);
 
-  MenuCategory getCategoryAt(int index) {
-    return _categories[index];
-  }
-
-  void addCategory(MenuCategory category) {
-    _categories.add(category);
-  }
-
-  void removeCategoryAt(int index) {
-    _categories.removeAt(index);
-  }
-
-  int getCategoryCount() {
-    return _categories.length;
-  }
-
-  int getTotalItemCount() {
-    int count = 0;
-    for (var element in _categories) {
-      count += element._items.length;
-    }
-    return count;
-  }
-}
-
-class MenuCategory {
-  String _name;
-  final List<MenuItem> _items = List.empty(growable: true);
-
-  MenuCategory(this._name);
-
-  void removeItem(index) {
-    _items.removeAt(index);
-  }
-
-  String getName() {
-    return _name;
-  }
-
-  void setName(String name) {
-    _name = name;
-  }
-
-  MenuItem getItem(int index) {
-    return _items[index];
-  }
-
-  void addItem(MenuItem item) {
-    _items.add(item);
-  }
-
-  int getItemCount() {
-    return _items.length;
-  }
+  int get getMenuLength => _menu.length;
+  MenuItem getMenuItemAt(int index) => _menu[index];
+  void removeMenuItemAt(int index) => _menu.removeAt(index);
+  void addMenuItem(MenuItem menuItem) => _menu.add(menuItem);
 }
 
 class MenuItem {
   String _name;
   double _price;
+  late double _priceDiscount;
+  int _discount;
+  bool _featured;
+  final List<String> _categories = [];
 
-  MenuItem(this._name, this._price);
-
-  String getName() {
-    return _name;
+  MenuItem(this._name, this._price, this._discount, this._featured) {
+    _priceDiscount = _price * (1 - _discount / 100);
   }
 
-  double getPrice() {
-    return _price;
+  String get getName => _name;
+  double get getPrice => _price;
+  double get getPriceDiscount => _priceDiscount;
+  int get getDiscount => _discount;
+  bool get getFeatured => _featured;
+
+  set setName(String name) => _name = name;
+  set setPrice(double price) => (price >= 0) ? _price = price : _price = 0;
+  set setDiscount(int discount) {
+    (discount >= 0 && discount <= 100) ? _discount = discount : _discount = 0;
+    _priceDiscount = _price * (1 - _discount / 100);
   }
 
-  void setName(String name) {
-    _name = name;
-  }
+  set setFeatured(bool featured) => _featured = featured;
 
-  void setPrice(double price) {
-    _price = price;
-  }
+  int get getCategoryLength => _categories.length;
+  String getCategoryAt(int index) => _categories[index];
+  void removeCategoryAt(int index) => _categories.removeAt(index);
+  void addCategory(String category) => _categories.add(category);
 }
