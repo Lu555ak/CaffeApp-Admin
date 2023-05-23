@@ -67,14 +67,56 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
           ],
         ),
       ),
-      Padding(
+      const Padding(
           padding: EdgeInsets.only(left: 15.0, bottom: 10, top: 10),
           child: Text(
             "R O A D   M A P",
             style: TextStyle(
                 color: primaryColor, fontSize: 24, fontWeight: FontWeight.w900),
           )),
-      RoadMap(roadmap: roadmap)
+      RoadMap(roadmap: roadmap),
+      const Padding(
+          padding: EdgeInsets.only(left: 15.0, bottom: 10, top: 10),
+          child: Text(
+            "L O Y A L  C U S T O M E R S",
+            style: TextStyle(
+                color: primaryColor, fontSize: 24, fontWeight: FontWeight.w900),
+          )),
+      Container(
+        height: 500,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0),
+          child: ScrollConfiguration(
+            behavior: CustomScrollBehavior(),
+            child: Expanded(
+              child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: 15,
+                  itemBuilder: ((context, index) {
+                    return ListTile(
+                      title: Row(
+                        children: [
+                          Text(
+                            "Ivan Ivić",
+                            style: const TextStyle(
+                                color: primaryColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900),
+                          ),
+                        ],
+                      ),
+                      trailing: Text(
+                        "25 ◉",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                    );
+                  })),
+            ),
+          ),
+        ),
+      )
     ]));
   }
 

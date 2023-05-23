@@ -169,7 +169,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                 )
               ],
             ),
-          )
+          ),
         ],
       ),
     );
