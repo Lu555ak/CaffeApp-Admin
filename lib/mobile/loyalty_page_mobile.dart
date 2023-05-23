@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import '../custom/confirm_button.dart';
 import '../custom/listview_add_button.dart';
+import '../custom/road_map.dart';
 import '../custom/small_icon_button.dart';
 
 class LoyaltyPageMobile extends StatefulWidget {
@@ -20,9 +21,7 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
   final formulaEditPointsControler = TextEditingController();
   final ScrollController scrollController = ScrollController();
   final roadMapControler = TextEditingController();
-  int roadMapValue = 0;
-
-  String? _result;
+  final List<int> roadmap = [1, 0, 0, 2, 0, 0, 0, 3, 0, 4, 0, 0, 0, 0, 0, 5];
 
   @override
   void dispose() {
@@ -68,73 +67,14 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
           ],
         ),
       ),
-      SizedBox(
-        height: 150,
-        child: ScrollConfiguration(
-          behavior: CustomScrollBehavior(),
-          child: ListView.builder(
-              controller: scrollController,
-              scrollDirection: Axis.horizontal,
-              itemCount: roadMapValue,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(25.0),
-                  child: InkWell(
-                    onTap: () {
-                      _AddRoadMapItem();
-                    },
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: secondaryColor,
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text(
-                          "142",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 65),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }),
-        ),
-      ),
-      SizedBox(
-        height: 50,
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text(
-            "Road Map Days: ",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-          ),
-          SizedBox(
-            width: 30,
-            child: TextFormField(
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(3),
-              ],
-              keyboardType: TextInputType.number,
-              controller: roadMapControler,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
-              decoration: const InputDecoration(
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                hintText: '-',
-              ),
-              autocorrect: false,
-              onChanged: (value) {
-                setState(() {
-                  roadMapValue = int.parse(value);
-                });
-              },
-            ),
-          ),
-        ]),
-      ),
+      Padding(
+          padding: EdgeInsets.only(left: 15.0, bottom: 10, top: 10),
+          child: Text(
+            "R O A D   M A P",
+            style: TextStyle(
+                color: primaryColor, fontSize: 24, fontWeight: FontWeight.w900),
+          )),
+      RoadMap(roadmap: roadmap)
     ]));
   }
 
@@ -219,119 +159,6 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
             ),
           );
         });
-  }
-
-  void _AddRoadMapItem() {
-    showModalBottomSheet(
-        context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
-        builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(25),
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  const Text(
-                    "Road map item #1",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                  ),
-                  Text(_result ?? '', style: TextStyle(fontSize: 18)),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(primaryColor),
-                    ),
-                    onPressed: () async {
-                      var result = await showSearch<String>(
-                        context: context,
-                        delegate: CustomDelegate(),
-                      );
-                      setState(() => _result = result);
-                      Navigator.pop(context);
-                    },
-                    child: Text('Search'),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-}
-
-class CustomDelegate extends SearchDelegate<String> {
-  List<String> data = [
-    'A',
-    'B',
-    'C',
-    'A',
-    'B',
-    'C',
-    'A',
-    'B',
-    'C',
-    'A',
-    'B',
-    'C',
-    'A',
-    'B',
-    'C',
-    'A',
-    'B',
-    'C',
-    'A',
-    'B',
-    'C',
-    'A',
-    'B',
-    'C'
-  ];
-
-  @override
-  List<Widget> buildActions(BuildContext context) => [
-        IconButton(
-            icon: Icon(
-              Icons.clear,
-              color: primaryColor,
-            ),
-            onPressed: () => query = '')
-      ];
-
-  @override
-  Widget buildLeading(BuildContext context) => IconButton(
-      icon: Icon(
-        Icons.chevron_left,
-        color: primaryColor,
-      ),
-      onPressed: () => close(context, ''));
-
-  @override
-  Widget buildResults(BuildContext context) => Container();
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    var listToShow;
-    if (query.isNotEmpty)
-      listToShow =
-          data.where((e) => e.contains(query) && e.startsWith(query)).toList();
-    else
-      listToShow = data;
-
-    return ListView.builder(
-      itemCount: listToShow.length,
-      itemBuilder: (_, i) {
-        var item = listToShow[i];
-        return ListTile(
-          tileColor: primaryColor,
-          hoverColor: subColor2,
-          title: Text(
-            item,
-            style: TextStyle(color: secondaryColor),
-          ),
-          onTap: () => close(context, item),
-        );
-      },
-    );
   }
 }
 
