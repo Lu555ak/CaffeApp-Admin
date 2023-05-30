@@ -11,6 +11,8 @@ class Menu {
 
   int get getMenuLength => _menu.length;
   MenuItem getMenuItemAt(int index) => _menu[index];
+  MenuItem getMenuItemWithName(String name) =>
+      _menu[_menu.indexWhere((element) => element.getName == name)];
   void removeMenuItemAt(int index) => _menu.removeAt(index);
   void addMenuItem(MenuItem menuItem) => _menu.add(menuItem);
 

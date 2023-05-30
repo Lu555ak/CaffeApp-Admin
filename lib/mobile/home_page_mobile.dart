@@ -1,3 +1,4 @@
+import 'package:caffe_app/models/menu_model.dart';
 import 'package:caffe_app/utility/constants.dart';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -6,7 +7,7 @@ import 'package:flutter/material.dart';
 
 import 'package:caffe_app/custom/active_order_widget.dart';
 
-import 'dart:convert';
+import 'package:caffe_app/custom/menu_item.dart';
 
 class HomePageMobile extends StatefulWidget {
   const HomePageMobile({super.key});
@@ -93,7 +94,9 @@ class _HomePageMobileState extends State<HomePageMobile> {
                                 .remove();
                           });
                         },
-                        showOrder: () {},
+                        showOrder: () {
+                          _showOrderInfo(orders[keys[index]]["cart"]);
+                        },
                         table: orders[keys[index]]["table"],
                         acceptedMode: orders[keys[index]]["accepted"],
                       ),
@@ -108,7 +111,9 @@ class _HomePageMobileState extends State<HomePageMobile> {
     );
   }
 
-  void showOrderInfo() {
+  void _showOrderInfo(Map<dynamic, dynamic> orders) {
+    var keys = orders.keys.toList();
+
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -118,53 +123,33 @@ class _HomePageMobileState extends State<HomePageMobile> {
             padding: const EdgeInsets.all(25),
             child: SingleChildScrollView(
               child: Column(
-                children: const [
-                  ListTile(
-                    leading: FittedBox(
-                      child: Icon(
-                        Icons.table_restaurant_rounded,
+                children: [
+                  const Text(
+                    "O R D E R",
+                    style: TextStyle(
                         color: primaryColor,
-                        size: 40,
-                      ),
-                    ),
-                    title: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "23",
-                        style: TextStyle(
-                            color: primaryColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 30),
-                      ),
-                    ),
+                        fontSize: 25,
+                        fontWeight: FontWeight.w500),
                   ),
-                  Divider(
+                  const Divider(
                     color: primaryColor,
+                    indent: 10,
+                    endIndent: 10,
+                    thickness: 2,
                   ),
                   SizedBox(
-                    width: double.infinity,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Order: ",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            color: primaryColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18),
-                      ),
+                    height: 300,
+                    child: ListView.builder(
+                      itemCount: keys.length,
+                      itemBuilder: (context, index) {
+                        return MenuItemWidget(
+                            menuItem: Menu().getMenuItemWithName(keys[index]),
+                            cartMode: true,
+                            cartAmount: orders[keys[index]],
+                            onPress: () {});
+                      },
                     ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      "Empty!",
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(color: primaryColor, fontSize: 15),
-                    ),
-                  ),
+                  )
                 ],
               ),
             ),
