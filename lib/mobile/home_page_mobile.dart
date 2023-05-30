@@ -11,6 +11,7 @@ class HomePageMobile extends StatefulWidget {
 
 class _HomePageMobileState extends State<HomePageMobile> {
   final ScrollController scrollController = ScrollController();
+  bool light = false;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +58,7 @@ class _HomePageMobileState extends State<HomePageMobile> {
                               width: 150,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                children: const [
+                                children: [
                                   Icon(
                                     Icons.table_restaurant_rounded,
                                     color: subColor2,
@@ -66,6 +67,10 @@ class _HomePageMobileState extends State<HomePageMobile> {
                                   Text(
                                     "23",
                                     style: TextStyle(fontSize: 25),
+                                  ),
+                                  const Divider(
+                                    indent: 12.5,
+                                    endIndent: 12.5,
                                   ),
                                 ],
                               ),

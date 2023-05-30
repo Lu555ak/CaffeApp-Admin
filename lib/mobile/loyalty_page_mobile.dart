@@ -21,7 +21,7 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
   final formulaEditPointsControler = TextEditingController();
   final ScrollController scrollController = ScrollController();
   final roadMapControler = TextEditingController();
-  final List<int> roadmap = [1, 0, 0, 2, 0, 0, 0, 3, 0, 4, 0, 0, 0, 0, 0, 5];
+  final List<int> roadmap = [];
 
   @override
   void dispose() {
@@ -68,7 +68,7 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
         ),
       ),
       const Padding(
-          padding: EdgeInsets.only(left: 15.0, bottom: 10, top: 10),
+          padding: EdgeInsets.all(10),
           child: Text(
             "R O A D   M A P",
             style: TextStyle(
@@ -76,23 +76,23 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
           )),
       RoadMap(roadmap: roadmap),
       const Padding(
-          padding: EdgeInsets.only(left: 15.0, bottom: 10, top: 10),
+          padding: EdgeInsets.all(10),
           child: Text(
             "L O Y A L  C U S T O M E R S",
             style: TextStyle(
-                color: primaryColor, fontSize: 24, fontWeight: FontWeight.w900),
+                color: primaryColor, fontSize: 20, fontWeight: FontWeight.w900),
           )),
       Container(
-        height: 500,
+        height: 250,
         child: Padding(
-          padding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0),
+          padding: const EdgeInsets.all(15),
           child: ScrollConfiguration(
             behavior: CustomScrollBehavior(),
             child: Expanded(
               child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  itemCount: 15,
+                  itemCount: 0,
                   itemBuilder: ((context, index) {
                     return ListTile(
                       title: Row(
@@ -115,6 +115,123 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
                   })),
             ),
           ),
+        ),
+      ),
+      const Padding(
+          padding: EdgeInsets.all(10),
+          child: Text(
+            "F R E E  S T U F F",
+            style: TextStyle(
+                color: primaryColor, fontSize: 20, fontWeight: FontWeight.w900),
+          )),
+      Container(
+        height: 300,
+        child: ScrollConfiguration(
+          behavior: CustomScrollBehavior(),
+          child: GridView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: 1,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1,
+                childAspectRatio: MediaQuery.of(context).size.width /
+                    (MediaQuery.of(context).size.height / 5),
+              ),
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return Padding(
+                    padding: const EdgeInsets.all(25.0),
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {});
+                      },
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: secondaryColor,
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                        child: const FittedBox(
+                            child: Icon(
+                          Icons.add_rounded,
+                          color: subColor,
+                        )),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(5.0),
+                      decoration: const BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      ),
+                      child: Column(children: [
+                        InkWell(
+                          onTap: () {},
+                          child: Container(
+                            padding: const EdgeInsets.all(5.0),
+                            decoration: const BoxDecoration(
+                              color: secondaryColor,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                            ),
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Flexible(
+                                    child: FittedBox(
+                                      child: Icon(
+                                        Icons.emoji_food_beverage_rounded,
+                                        color: primaryColor,
+                                        size: 40,
+                                      ),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Text(
+                                        "1",
+                                        style: const TextStyle(
+                                            color: primaryColor,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 50),
+                                      ),
+                                    ),
+                                  ),
+                                ]),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(5.0),
+                          decoration: const BoxDecoration(
+                            color: primaryColor,
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                          ),
+                          child: ListTile(
+                            title: Text(
+                              "Jelen 0.5",
+                              style: const TextStyle(
+                                  color: secondaryColor,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15),
+                            ),
+                            trailing: Text(
+                              "25 ◉",
+                              style: const TextStyle(
+                                  color: shinyColor,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15),
+                            ),
+                          ),
+                        ),
+                      ]),
+                    ),
+                  );
+                }
+              }),
         ),
       )
     ]));

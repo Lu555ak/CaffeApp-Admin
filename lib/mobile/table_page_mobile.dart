@@ -54,7 +54,8 @@ class _TablePageMobileState extends State<TablePageMobile> {
               physics: const NeverScrollableScrollPhysics(),
               itemCount: Tables().getTableCount() + 1,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2),
+                crossAxisCount: 2,
+              ),
               itemBuilder: (context, index) {
                 if (index == Tables().getTableCount()) {
                   return Padding(
