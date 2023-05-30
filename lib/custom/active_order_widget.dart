@@ -23,8 +23,17 @@ class ActiveOrderWidget extends StatelessWidget {
       height: 150,
       width: 150,
       decoration: BoxDecoration(
-          color: (acceptedMode) ? primaryColor : subColor2,
-          borderRadius: const BorderRadius.all(Radius.circular(5))),
+        color: (acceptedMode) ? primaryColor : subColor2,
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
+        boxShadow: [
+          BoxShadow(
+            color: subColor2.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(-5, 5),
+          ),
+        ],
+      ),
       child: Column(
         children: [
           Padding(

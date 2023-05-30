@@ -14,7 +14,8 @@ void confirmDeleteWindow(context, String text, Function onPressed) {
               children: [
                 Text(
                   text,
-                  style: const TextStyle(fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w500, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
                 TextButton(

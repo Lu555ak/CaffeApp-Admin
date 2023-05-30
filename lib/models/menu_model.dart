@@ -16,8 +16,17 @@ class Menu {
   void removeMenuItemAt(int index) => _menu.removeAt(index);
   void addMenuItem(MenuItem menuItem) => _menu.add(menuItem);
 
+  bool nameExists(String name) {
+    for (var element in _menu) {
+      if (element.getName == name) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   Future saveToDatabase() async {
-    /*final instance = FirebaseFirestore.instance;
+    final instance = FirebaseFirestore.instance;
     final batch = instance.batch();
     var collection = instance.collection("menu");
     var snapshots = await collection.get();
@@ -28,7 +37,7 @@ class Menu {
 
     for (var menuItem in _menu) {
       await FirebaseFirestore.instance.collection("menu").add(menuItem.toMap());
-    }*/
+    }
   }
 
   Future loadFromDatabase() async {

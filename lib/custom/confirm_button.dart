@@ -2,35 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:caffe_app/utility/constants.dart';
 
 class ConfirmButton extends StatelessWidget {
-  const ConfirmButton({super.key, required this.onPress});
+  const ConfirmButton(
+      {super.key, required this.onPress, this.alignCenter = true});
   final Function onPress;
+  final bool alignCenter;
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment:
+          (alignCenter) ? MainAxisAlignment.center : MainAxisAlignment.start,
       children: <Widget>[
-        Align(
-            alignment: Alignment.centerLeft,
-            child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(subColor2),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancel'))),
+        ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(subColor2),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel')),
         Padding(
           padding: const EdgeInsets.only(left: 15.0),
-          child: Align(
-              alignment: Alignment.centerLeft,
-              child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(primaryColor),
-                  ),
-                  onPressed: () {
-                    onPress();
-                  },
-                  child: const Text('Confirm'))),
+          child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(primaryColor),
+              ),
+              onPressed: () {
+                onPress();
+              },
+              child: const Text('Confirm')),
         ),
       ],
     );

@@ -223,6 +223,9 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                             ),
                             autocorrect: false,
                             validator: (value) {
+                              if (Menu().nameExists(value ?? "")) {
+                                return 'Item with that name already exists!';
+                              }
                               if (value == null || value.isEmpty) {
                                 return 'Please enter a name!';
                               }
@@ -300,6 +303,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                               Flexible(
                                 flex: 5,
                                 child: ConfirmButton(
+                                  alignCenter: false,
                                   onPress: () {
                                     if (_showItemFormKey.currentState!
                                         .validate()) {

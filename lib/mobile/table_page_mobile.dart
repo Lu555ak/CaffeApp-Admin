@@ -187,7 +187,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                         child: Icon(
                           Icons.table_restaurant_rounded,
                           color: primaryColor,
-                          size: 40,
+                          size: 50,
                         ),
                       ),
                       title: FittedBox(
@@ -198,42 +198,59 @@ class _TablePageMobileState extends State<TablePageMobile> {
                           style: const TextStyle(
                               color: primaryColor,
                               fontWeight: FontWeight.w500,
-                              fontSize: 30),
+                              fontSize: 44),
                         ),
                       ),
                     ),
                     const Divider(
                       color: primaryColor,
-                    ),
-                    const SizedBox(
-                      width: double.infinity,
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Description: ",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              color: primaryColor,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18),
-                        ),
-                      ),
+                      thickness: 3,
                     ),
                     SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        table.getDescription(),
-                        textAlign: TextAlign.justify,
-                        style:
-                            const TextStyle(color: primaryColor, fontSize: 15),
-                      ),
-                    ),
-                    QrImageView(
-                      data: table.generateQRCodeData(),
-                      version: QrVersions.auto,
-                      size: 100,
-                    )
+                        height: 150,
+                        child: Row(
+                          children: [
+                            Flexible(
+                              flex: 1,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    const SizedBox(
+                                      width: double.infinity,
+                                      child: Text(
+                                        "Description: ",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            color: primaryColor,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 20),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: Text(
+                                        table.getDescription(),
+                                        textAlign: TextAlign.justify,
+                                        style: const TextStyle(
+                                            color: primaryColor, fontSize: 16),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                                fit: FlexFit.tight,
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: QrImageView(
+                                    data: table.generateQRCodeData(),
+                                    version: QrVersions.auto,
+                                  ),
+                                ))
+                          ],
+                        )),
                   ],
                 ),
               ),
