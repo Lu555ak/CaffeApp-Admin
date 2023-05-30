@@ -96,6 +96,6 @@ class CaffeTable {
   }
 
   String generateQRCodeData() {
-    return "CaffeAppTable: $_id";
+    return "{'CaffeAppTable' : $_id}";
   }
 }
