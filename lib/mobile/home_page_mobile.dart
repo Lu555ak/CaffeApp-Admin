@@ -1,6 +1,12 @@
 import 'package:caffe_app/utility/constants.dart';
-import 'package:caffe_app/custom/custom_scroll_behavior.dart';
+
+import 'package:firebase_database/firebase_database.dart';
+
 import 'package:flutter/material.dart';
+
+import 'package:caffe_app/custom/active_order_widget.dart';
+
+import 'dart:convert';
 
 class HomePageMobile extends StatefulWidget {
   const HomePageMobile({super.key});
@@ -10,7 +16,10 @@ class HomePageMobile extends StatefulWidget {
 }
 
 class _HomePageMobileState extends State<HomePageMobile> {
+  int activeOrderCount = 0;
   final ScrollController scrollController = ScrollController();
+
+  var ordersRef = FirebaseDatabase.instance.ref().child('orders');
 
   @override
   Widget build(BuildContext context) {
@@ -25,123 +34,74 @@ class _HomePageMobileState extends State<HomePageMobile> {
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(25.0),
                   bottomRight: Radius.circular(25.0))),
-          child: const Text(
-            "ACTIVE ORDERS: ",
-            style: TextStyle(
+          child: Text(
+            "ACTIVE ORDERS: $activeOrderCount",
+            style: const TextStyle(
                 color: secondaryColor,
                 fontWeight: FontWeight.w600,
                 fontSize: 15),
           ),
         ),
         SizedBox(
-          height: 230,
-          child: ScrollConfiguration(
-            behavior: CustomScrollBehavior(),
-            child: ListView.builder(
-                controller: scrollController,
-                scrollDirection: Axis.horizontal,
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(25.0),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: secondaryColor,
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
+          height: 180,
+          child: StreamBuilder(
+            stream: ordersRef.onValue,
+            builder: (context, snapshot) {
+              activeOrderCount = snapshot.data?.snapshot.children.length ?? 0;
+              var data = snapshot.data?.snapshot.value;
+              if (data == null) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      SizedBox(
+                          height: 50,
+                          width: 50,
+                          child: CircularProgressIndicator(
+                            color: primaryColor,
+                          )),
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: Text("Waiting for orders!"),
+                      )
+                    ],
+                  ),
+                );
+              } else {
+                var orders = data as Map;
+                var keys = orders.keys.toList();
+
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: activeOrderCount,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: ActiveOrderWidget(
+                        onAccepted: () {
+                          setState(() {
+                            FirebaseDatabase.instance
+                                .ref("orders/${keys[index]}/accepted")
+                                .set(true);
+                          });
+                        },
+                        onCompleted: () {
+                          setState(() {
+                            FirebaseDatabase.instance
+                                .ref("orders/${keys[index]}")
+                                .remove();
+                          });
+                        },
+                        showOrder: () {},
+                        table: orders[keys[index]]["table"],
+                        acceptedMode: orders[keys[index]]["accepted"],
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              width: 150,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: const [
-                                  Icon(
-                                    Icons.table_restaurant_rounded,
-                                    color: subColor2,
-                                    size: 35,
-                                  ),
-                                  Text(
-                                    "23",
-                                    style: TextStyle(fontSize: 25),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Divider(
-                              color: primaryColor,
-                              indent: 20,
-                              endIndent: 20,
-                            ),
-                            SizedBox(
-                              width: 150,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  showOrderInfo();
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all(primaryColor),
-                                ),
-                                child: const Text('VIEW MORE'),
-                              ),
-                            ),
-                            const Divider(
-                              color: primaryColor,
-                              indent: 20,
-                              endIndent: 20,
-                            ),
-                            Row(
-                              children: [
-                                const Divider(
-                                  color: primaryColor,
-                                  indent: 5,
-                                  endIndent: 5,
-                                ),
-                                const Icon(
-                                  Icons.access_time_filled,
-                                  color: subColor2,
-                                  size: 33.5,
-                                ),
-                                const Text(" 2s"),
-                                const Divider(
-                                  color: primaryColor,
-                                  indent: 5,
-                                  endIndent: 5,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 40),
-                                  child: ElevatedButton(
-                                    onPressed: () {},
-                                    style: ButtonStyle(
-                                      shape: MaterialStateProperty.all(
-                                          const CircleBorder()),
-                                      padding: MaterialStateProperty.all(
-                                          const EdgeInsets.all(10)),
-                                      backgroundColor:
-                                          MaterialStateProperty.all(subColor2),
-                                      overlayColor: MaterialStateProperty
-                                          .resolveWith<Color?>((states) {
-                                        if (states
-                                            .contains(MaterialState.pressed)) {
-                                          return subColor;
-                                        }
-                                        return null;
-                                      }),
-                                    ),
-                                    child: const Icon(Icons.check),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }),
+                    );
+                  },
+                );
+              }
+            },
           ),
         ),
       ],

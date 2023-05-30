@@ -61,7 +61,7 @@ class Tables {
   }
 
   Future loadFromDatabase() async {
-    /*await FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection("tables")
         .get()
         .then((snapshot) {
@@ -69,7 +69,7 @@ class Tables {
         addTable(
             CaffeTable(element.data()["id"], element.data()["description"]));
       }
-    });*/
+    });
   }
 }
 

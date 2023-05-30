@@ -52,6 +52,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '857911351350',
     projectId: 'caffeapp-zavrsni',
     authDomain: 'caffeapp-zavrsni.firebaseapp.com',
+    databaseURL: 'https://caffeapp-zavrsni-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'caffeapp-zavrsni.appspot.com',
     measurementId: 'G-7BKX41TB69',
   );
@@ -61,6 +62,7 @@ class DefaultFirebaseOptions {
     appId: '1:857911351350:android:6fe64def271a24c39fe097',
     messagingSenderId: '857911351350',
     projectId: 'caffeapp-zavrsni',
+    databaseURL: 'https://caffeapp-zavrsni-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'caffeapp-zavrsni.appspot.com',
   );
 
@@ -69,6 +71,7 @@ class DefaultFirebaseOptions {
     appId: '1:857911351350:ios:dc599f8745e5730d9fe097',
     messagingSenderId: '857911351350',
     projectId: 'caffeapp-zavrsni',
+    databaseURL: 'https://caffeapp-zavrsni-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'caffeapp-zavrsni.appspot.com',
     iosClientId: '857911351350-g05j84kjv8hfntvnklg37nj6gnrsbenu.apps.googleusercontent.com',
     iosBundleId: 'com.example.caffeApp',

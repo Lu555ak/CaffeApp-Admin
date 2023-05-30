@@ -325,7 +325,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                               featuredSwitch));
                                         });
                                       }
-                                      Menu().saveToFirestore();
+                                      Menu().saveToDatabase();
                                       Navigator.pop(context);
                                     }
                                   },
@@ -344,7 +344,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                                 () {
                                               setState(() {
                                                 Menu().removeMenuItemAt(index);
-                                                Menu().saveToFirestore();
+                                                Menu().saveToDatabase();
                                                 Navigator.pop(context);
                                               });
                                             });

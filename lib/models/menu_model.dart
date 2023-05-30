@@ -14,7 +14,7 @@ class Menu {
   void removeMenuItemAt(int index) => _menu.removeAt(index);
   void addMenuItem(MenuItem menuItem) => _menu.add(menuItem);
 
-  Future saveToFirestore() async {
+  Future saveToDatabase() async {
     /*final instance = FirebaseFirestore.instance;
     final batch = instance.batch();
     var collection = instance.collection("menu");
@@ -30,12 +30,12 @@ class Menu {
   }
 
   Future loadFromDatabase() async {
-    /*await FirebaseFirestore.instance.collection("menu").get().then((snapshot) {
+    await FirebaseFirestore.instance.collection("menu").get().then((snapshot) {
       for (var menuItem in snapshot.docs) {
         addMenuItem(MenuItem(menuItem["name"], menuItem["price"],
             menuItem["discount"], menuItem["featured"]));
       }
-    });*/
+    });
   }
 }
 
