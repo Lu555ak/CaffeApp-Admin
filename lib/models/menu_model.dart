@@ -25,6 +25,10 @@ class Menu {
     return false;
   }
 
+  List<MenuItem> creditMenuItems() {
+    return _menu.where((element) => element.getCreditPrice > 0).toList();
+  }
+
   Future saveToDatabase() async {
     final instance = FirebaseFirestore.instance;
     final batch = instance.batch();
@@ -43,8 +47,12 @@ class Menu {
   Future loadFromDatabase() async {
     await FirebaseFirestore.instance.collection("menu").get().then((snapshot) {
       for (var menuItem in snapshot.docs) {
-        addMenuItem(MenuItem(menuItem["name"], menuItem["price"],
-            menuItem["discount"], menuItem["featured"]));
+        addMenuItem(MenuItem(
+            menuItem["name"],
+            menuItem["price"],
+            menuItem["discount"],
+            menuItem["featured"],
+            menuItem["creditPrice"]));
       }
     });
   }
@@ -56,9 +64,11 @@ class MenuItem {
   late double _priceDiscount;
   int _discount;
   bool _featured;
+  int _creditPrice;
   final List<String> _categories = [];
 
-  MenuItem(this._name, this._price, this._discount, this._featured) {
+  MenuItem(this._name, this._price, this._discount, this._featured,
+      this._creditPrice) {
     _priceDiscount = _price * (1 - _discount / 100);
   }
 
@@ -67,6 +77,7 @@ class MenuItem {
   double get getPriceDiscount => _priceDiscount;
   int get getDiscount => _discount;
   bool get getFeatured => _featured;
+  int get getCreditPrice => _creditPrice;
 
   set setName(String name) => _name = name;
   set setPrice(double price) => (price >= 0) ? _price = price : _price = 0;
@@ -76,6 +87,7 @@ class MenuItem {
   }
 
   set setFeatured(bool featured) => _featured = featured;
+  set setCreditPrice(int creditPrice) => _creditPrice = creditPrice;
 
   int get getCategoryLength => _categories.length;
   String getCategoryAt(int index) => _categories[index];
@@ -87,5 +99,6 @@ class MenuItem {
         'price': _price,
         'discount': _discount,
         'featured': _featured,
+        'creditPrice': _creditPrice
       };
 }

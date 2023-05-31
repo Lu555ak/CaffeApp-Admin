@@ -96,7 +96,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                           child: Container(
                             padding: const EdgeInsets.all(5.0),
                             decoration: const BoxDecoration(
-                              color: subColor2,
+                              color: primaryColor,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5)),
                             ),

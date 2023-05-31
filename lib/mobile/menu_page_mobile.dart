@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:caffe_app/models/menu_model.dart';
 import 'package:caffe_app/custom/confirm_button.dart';
-import 'package:caffe_app/custom/small_icon_button.dart';
+
 import 'package:caffe_app/custom/confirm_delete_window.dart';
 import 'package:caffe_app/custom/circle_icon_button.dart';
 import 'package:caffe_app/custom/listview_add_button.dart';
@@ -20,6 +20,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
   final _createCategoryNameController = TextEditingController();
   final _showItemNameControler = TextEditingController();
   final _showItemPriceControler = TextEditingController();
+  final _showItemCreditPriceControler = TextEditingController();
 
   final _searchBarController = TextEditingController();
 
@@ -178,6 +179,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
   void _showItem(int index, bool editMode) {
     _showItemNameControler.text = "";
     _showItemPriceControler.text = "";
+    _showItemCreditPriceControler.text = "";
     double discountSlider = 0;
     bool featuredSwitch = false;
 
@@ -185,6 +187,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
       MenuItem menuItem = Menu().getMenuItemAt(index);
       _showItemNameControler.text = menuItem.getName;
       _showItemPriceControler.text = menuItem.getPrice.toString();
+      _showItemCreditPriceControler.text = menuItem.getCreditPrice.toString();
       discountSlider = menuItem.getDiscount.toDouble();
       featuredSwitch = menuItem.getFeatured;
     }
@@ -223,7 +226,8 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                             ),
                             autocorrect: false,
                             validator: (value) {
-                              if (Menu().nameExists(value ?? "")) {
+                              if (Menu().nameExists(value ?? "") &&
+                                  editMode == false) {
                                 return 'Item with that name already exists!';
                               }
                               if (value == null || value.isEmpty) {
@@ -256,6 +260,26 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                               }
                               return null;
                             },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15, right: 15),
+                          child: TextFormField(
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d+\.?\d{0,2}')),
+                            ],
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
+                            controller: _showItemCreditPriceControler,
+                            textAlign: TextAlign.left,
+                            decoration: const InputDecoration(
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              hintText:
+                                  'Credit price (if 0 it will not be used)',
+                            ),
+                            autocorrect: false,
                           ),
                         ),
                         Text(
@@ -318,6 +342,9 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                           menuItem.setDiscount =
                                               discountSlider.toInt();
                                           menuItem.setFeatured = featuredSwitch;
+                                          menuItem.setCreditPrice = int.parse(
+                                              _showItemCreditPriceControler
+                                                  .text);
                                         });
                                       } else {
                                         setState(() {
@@ -326,7 +353,10 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                               double.parse(
                                                   _showItemPriceControler.text),
                                               discountSlider.toInt(),
-                                              featuredSwitch));
+                                              featuredSwitch,
+                                              int.parse(
+                                                  _showItemCreditPriceControler
+                                                      .text)));
                                         });
                                       }
                                       Menu().saveToDatabase();

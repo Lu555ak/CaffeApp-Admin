@@ -1,13 +1,15 @@
 import 'dart:ui';
 
+import 'package:caffe_app/models/menu_model.dart';
 import 'package:caffe_app/utility/constants.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../custom/confirm_button.dart';
-import '../custom/listview_add_button.dart';
-import '../custom/road_map.dart';
-import '../custom/small_icon_button.dart';
+import 'package:caffe_app/custom/credits_shop_component.dart';
+
+import 'package:caffe_app/custom/credits_display.dart';
 
 class LoyaltyPageMobile extends StatefulWidget {
   const LoyaltyPageMobile({super.key});
@@ -17,16 +19,20 @@ class LoyaltyPageMobile extends StatefulWidget {
 }
 
 class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
-  final formulaEditPriceControler = TextEditingController();
-  final formulaEditPointsControler = TextEditingController();
+  final _pointsEuroAmountController = TextEditingController();
+  final _pointsCreditAmountController = TextEditingController();
   final ScrollController scrollController = ScrollController();
   final roadMapControler = TextEditingController();
   final List<int> roadmap = [];
+  final _showPointFormKey = GlobalKey<FormState>();
+
+  int pointsEuroAmount = 1;
+  int pointsCreditAmount = 1;
 
   @override
   void dispose() {
-    formulaEditPriceControler.dispose();
-    formulaEditPointsControler.dispose();
+    _pointsEuroAmountController.dispose();
+    _pointsCreditAmountController.dispose();
     super.dispose();
   }
 
@@ -34,47 +40,33 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         child: Column(children: [
-      Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(15),
-        decoration: const BoxDecoration(
-            color: subColor2,
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(25.0),
-                bottomRight: Radius.circular(25.0))),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "FORMULA: ",
-              style: const TextStyle(
-                  color: secondaryColor,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15),
-            ),
-            Text(
-              "1 € = 1 ◉",
-              style: const TextStyle(
-                  color: shinyColor, fontWeight: FontWeight.w800, fontSize: 15),
-            ),
-            SmallIconButton(
-                iconData: Icons.edit,
-                iconColor: secondaryColor,
-                iconSize: 25,
-                onTap: () {
-                  _formulaEdit();
-                }),
-          ],
+      CreditsDisplay(
+          euroAmount: pointsEuroAmount,
+          creditsAmount: pointsCreditAmount,
+          onClick: () {
+            _formulaEdit();
+          }),
+      const Padding(
+          padding: EdgeInsets.only(top: 20),
+          child: Text(
+            "C R E D I T   S H O P",
+            style: TextStyle(
+                color: primaryColor, fontSize: 25, fontWeight: FontWeight.w900),
+          )),
+      Padding(
+        padding: const EdgeInsets.only(top: 5, bottom: 10),
+        child: SizedBox(
+          height: 175,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: Menu().creditMenuItems().length,
+            itemBuilder: (context, index) {
+              return CreditsShopComponent(
+                  item: Menu().creditMenuItems()[index]);
+            },
+          ),
         ),
       ),
-      const Padding(
-          padding: EdgeInsets.all(10),
-          child: Text(
-            "R O A D   M A P",
-            style: TextStyle(
-                color: primaryColor, fontSize: 24, fontWeight: FontWeight.w900),
-          )),
-      RoadMap(roadmap: roadmap),
       const Padding(
           padding: EdgeInsets.all(10),
           child: Text(
@@ -117,204 +109,120 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
           ),
         ),
       ),
-      const Padding(
-          padding: EdgeInsets.all(10),
-          child: Text(
-            "F R E E  S T U F F",
-            style: TextStyle(
-                color: primaryColor, fontSize: 20, fontWeight: FontWeight.w900),
-          )),
-      Container(
-        height: 300,
-        child: ScrollConfiguration(
-          behavior: CustomScrollBehavior(),
-          child: GridView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: 1,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1,
-                childAspectRatio: MediaQuery.of(context).size.width /
-                    (MediaQuery.of(context).size.height / 5),
-              ),
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return Padding(
-                    padding: const EdgeInsets.all(25.0),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {});
-                      },
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: secondaryColor,
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ),
-                        child: const FittedBox(
-                            child: Icon(
-                          Icons.add_rounded,
-                          color: subColor,
-                        )),
-                      ),
-                    ),
-                  );
-                } else {
-                  return Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(5.0),
-                      decoration: const BoxDecoration(
-                        color: primaryColor,
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      ),
-                      child: Column(children: [
-                        InkWell(
-                          onTap: () {},
-                          child: Container(
-                            padding: const EdgeInsets.all(5.0),
-                            decoration: const BoxDecoration(
-                              color: secondaryColor,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                            ),
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Flexible(
-                                    child: FittedBox(
-                                      child: Icon(
-                                        Icons.emoji_food_beverage_rounded,
-                                        color: primaryColor,
-                                        size: 40,
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: Text(
-                                        "1",
-                                        style: const TextStyle(
-                                            color: primaryColor,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 50),
-                                      ),
-                                    ),
-                                  ),
-                                ]),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(5.0),
-                          decoration: const BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                          ),
-                          child: ListTile(
-                            title: Text(
-                              "Jelen 0.5",
-                              style: const TextStyle(
-                                  color: secondaryColor,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 15),
-                            ),
-                            trailing: Text(
-                              "25 ◉",
-                              style: const TextStyle(
-                                  color: shinyColor,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 15),
-                            ),
-                          ),
-                        ),
-                      ]),
-                    ),
-                  );
-                }
-              }),
-        ),
-      )
     ]));
   }
 
   void _formulaEdit() {
-    formulaEditPriceControler.text = "";
-    formulaEditPointsControler.text = "";
+    _pointsEuroAmountController.text = pointsEuroAmount.toString();
+    _pointsCreditAmountController.text = pointsCreditAmount.toString();
 
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(25),
-            child: SingleChildScrollView(
-              child: Column(children: [
-                const Text(
-                  "Edit formula.",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                ),
-                SizedBox(
-                  height: 50,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 22,
-                          child: TextFormField(
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                              LengthLimitingTextInputFormatter(2),
-                            ],
-                            keyboardType: TextInputType.number,
-                            controller: formulaEditPriceControler,
-                            textAlign: TextAlign.center,
-                            decoration: const InputDecoration(
-                              enabledBorder: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              hintText: '-',
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+              padding: const EdgeInsets.all(25),
+              child: SingleChildScrollView(
+                child: Column(children: [
+                  const Text(
+                    "Edit formula.",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  ),
+                  Form(
+                    key: _showPointFormKey,
+                    child: SizedBox(
+                      height: 50,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 22,
+                              child: TextFormField(
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(2),
+                                ],
+                                keyboardType: TextInputType.number,
+                                controller: _pointsEuroAmountController,
+                                textAlign: TextAlign.center,
+                                decoration: const InputDecoration(
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  hintText: '-',
+                                ),
+                                autocorrect: false,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter a price!';
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
-                            autocorrect: false,
-                          ),
-                        ),
-                        Text(
-                          "€ = ",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(
-                          width: 22,
-                          child: TextFormField(
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                              LengthLimitingTextInputFormatter(2),
-                            ],
-                            keyboardType: TextInputType.number,
-                            controller: formulaEditPointsControler,
-                            textAlign: TextAlign.center,
-                            decoration: const InputDecoration(
-                              enabledBorder: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              hintText: '-',
+                            const Text(
+                              "€ = ",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w500),
                             ),
-                            autocorrect: false,
-                          ),
-                        ),
-                        Text(
-                          "◉",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w500),
-                        ),
-                      ]),
-                ),
-                ConfirmButton(onPress: () {
-                  setState(() {
-                    if (formulaEditPriceControler.text != "") {}
-                    if (formulaEditPointsControler.text != "") {}
-                    Navigator.of(context).pop();
-                  });
-                })
-              ]),
+                            SizedBox(
+                              width: 22,
+                              child: TextFormField(
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(2),
+                                ],
+                                keyboardType: TextInputType.number,
+                                controller: _pointsCreditAmountController,
+                                textAlign: TextAlign.center,
+                                decoration: const InputDecoration(
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  hintText: '-',
+                                ),
+                                autocorrect: false,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter a price!';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const Icon(
+                              Icons.circle,
+                              color: primaryColor,
+                              size: 15,
+                            )
+                          ]),
+                    ),
+                  ),
+                  ConfirmButton(onPress: () {
+                    if (_showPointFormKey.currentState!.validate()) {
+                      setState(() async {
+                        pointsEuroAmount =
+                            int.parse(_pointsEuroAmountController.text);
+                        pointsCreditAmount =
+                            int.parse(_pointsCreditAmountController.text);
+
+                        final DatabaseReference orderRef =
+                            FirebaseDatabase.instance.ref("loyalty");
+                        await orderRef.set({
+                          "euroRate":
+                              int.parse(_pointsEuroAmountController.text),
+                          "creditsRate":
+                              int.parse(_pointsCreditAmountController.text)
+                        });
+                      });
+                      Navigator.pop(context);
+                    }
+                  })
+                ]),
+              ),
             ),
           );
         });
