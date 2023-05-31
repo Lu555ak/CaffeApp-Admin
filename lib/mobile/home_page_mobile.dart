@@ -18,6 +18,7 @@ class HomePageMobile extends StatefulWidget {
 
 class _HomePageMobileState extends State<HomePageMobile> {
   int activeOrderCount = 0;
+
   final ScrollController scrollController = ScrollController();
 
   var ordersRef = FirebaseDatabase.instance.ref().child('orders');
@@ -28,21 +29,25 @@ class _HomePageMobileState extends State<HomePageMobile> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(15),
-          decoration: const BoxDecoration(
-              color: subColor2,
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(25.0),
-                  bottomRight: Radius.circular(25.0))),
-          child: Text(
-            "ACTIVE ORDERS: $activeOrderCount",
-            style: const TextStyle(
-                color: secondaryColor,
-                fontWeight: FontWeight.w600,
-                fontSize: 15),
-          ),
-        ),
+            width: double.infinity,
+            padding: const EdgeInsets.all(15),
+            decoration: const BoxDecoration(
+                color: subColor2,
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(25.0),
+                    bottomRight: Radius.circular(25.0))),
+            child: StreamBuilder(
+              stream: ordersRef.onValue,
+              builder: (context, snapshot) {
+                return Text(
+                  "ACTIVE ORDERS: ${snapshot.data?.snapshot.children.length ?? 0}",
+                  style: const TextStyle(
+                      color: secondaryColor,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15),
+                );
+              },
+            )),
         SizedBox(
           height: 180,
           child: StreamBuilder(
@@ -95,7 +100,9 @@ class _HomePageMobileState extends State<HomePageMobile> {
                           });
                         },
                         showOrder: () {
-                          _showOrderInfo(orders[keys[index]]["cart"]);
+                          Map<dynamic, dynamic> emptyMap = {};
+                          _showOrderInfo(orders[keys[index]]["cart"],
+                              orders[keys[index]]["creditCart"] ?? emptyMap);
                         },
                         table: orders[keys[index]]["table"],
                         acceptedMode: orders[keys[index]]["accepted"],
@@ -111,8 +118,10 @@ class _HomePageMobileState extends State<HomePageMobile> {
     );
   }
 
-  void _showOrderInfo(Map<dynamic, dynamic> orders) {
+  void _showOrderInfo(
+      Map<dynamic, dynamic> orders, Map<dynamic, dynamic> creditOrder) {
     var keys = orders.keys.toList();
+    var creditKeys = creditOrder.keys.toList();
 
     showModalBottomSheet(
         context: context,
@@ -137,19 +146,50 @@ class _HomePageMobileState extends State<HomePageMobile> {
                     endIndent: 10,
                     thickness: 2,
                   ),
-                  SizedBox(
-                    height: 300,
-                    child: ListView.builder(
-                      itemCount: keys.length,
-                      itemBuilder: (context, index) {
-                        return MenuItemWidget(
-                            menuItem: Menu().getMenuItemWithName(keys[index]),
-                            cartMode: true,
-                            cartAmount: orders[keys[index]],
-                            onPress: () {});
-                      },
-                    ),
-                  )
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: keys.length,
+                    itemBuilder: (context, index) {
+                      return MenuItemWidget(
+                          menuItem: Menu().getMenuItemWithName(keys[index]),
+                          cartMode: true,
+                          cartAmount: orders[keys[index]],
+                          onPress: () {});
+                    },
+                  ),
+                  (creditOrder.isNotEmpty)
+                      ? Column(
+                          children: [
+                            const Text(
+                              "C R E D I T   O R D E R",
+                              style: TextStyle(
+                                  color: primaryColor,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            const Divider(
+                              color: primaryColor,
+                              indent: 10,
+                              endIndent: 10,
+                              thickness: 2,
+                            ),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: creditKeys.length,
+                              itemBuilder: (context, index) {
+                                return MenuItemWidget(
+                                    menuItem: Menu()
+                                        .getMenuItemWithName(creditKeys[index]),
+                                    cartMode: true,
+                                    cartAmount: creditOrder[creditKeys[index]],
+                                    onPress: () {});
+                              },
+                            )
+                          ],
+                        )
+                      : Container()
                 ],
               ),
             ),
