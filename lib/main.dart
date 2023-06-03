@@ -29,19 +29,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Stack(children: const [
-        Background(
-          color: subColor,
-          opacity: 0.75,
-        ),
-        //LoginPage(),
-        CaffeApp(
-          mobileLayout: LayoutMobile(),
-          desktopLayout: LayoutDesktop(),
-        ),
-      ]),
+      home: CaffeApp(
+        mobileLayout: LayoutMobile(),
+        desktopLayout: LayoutDesktop(),
+      ),
     );
   }
 }
@@ -50,8 +43,7 @@ class CaffeApp extends StatelessWidget {
   final Widget mobileLayout;
   final Widget desktopLayout;
 
-  const CaffeApp(
-      {super.key, required this.mobileLayout, required this.desktopLayout});
+  const CaffeApp({super.key, required this.mobileLayout, required this.desktopLayout});
 
   @override
   Widget build(BuildContext context) {

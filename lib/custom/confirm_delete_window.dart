@@ -4,8 +4,7 @@ import 'package:caffe_app/utility/constants.dart';
 void confirmDeleteWindow(context, String text, Function onPressed) {
   showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
       builder: (context) {
         return Container(
           padding: const EdgeInsets.all(25),
@@ -14,14 +13,11 @@ void confirmDeleteWindow(context, String text, Function onPressed) {
               children: [
                 Text(
                   text,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w500, fontSize: 18),
+                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
                 TextButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          const Color.fromARGB(255, 136, 51, 51))),
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(dangerColor)),
                   onPressed: () {
                     onPressed();
                     Navigator.pop(context);

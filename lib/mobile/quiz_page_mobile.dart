@@ -64,15 +64,10 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
           padding: const EdgeInsets.all(15),
           decoration: const BoxDecoration(
               color: subColor2,
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(25.0),
-                  bottomRight: Radius.circular(25.0))),
+              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25.0), bottomRight: Radius.circular(25.0))),
           child: Text(
             "QUIZES: ${Quizzes().getQuizCount()}",
-            style: const TextStyle(
-                color: secondaryColor,
-                fontWeight: FontWeight.w600,
-                fontSize: 15),
+            style: const TextStyle(color: secondaryColor, fontWeight: FontWeight.w600, fontSize: 15),
           ),
         ),
         Padding(
@@ -89,9 +84,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                       return Padding(
                         padding: const EdgeInsets.all(8),
                         child: Theme(
-                          data: ThemeData(
-                              colorScheme: ColorScheme.fromSwatch()
-                                  .copyWith(primary: secondaryColor)),
+                          data: ThemeData(colorScheme: ColorScheme.fromSwatch().copyWith(primary: secondaryColor)),
                           child: Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
@@ -101,27 +94,20 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                               backgroundColor: primaryColor,
                               title: Text(
                                 "Quiz: ${Quizzes().getQuizAt(index).getName()} ",
-                                style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w700),
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                               ),
-                              subtitle: Text(
-                                  Quizzes().getQuizAt(index).getTopic(),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w400)),
+                              subtitle: Text(Quizzes().getQuizAt(index).getTopic(),
+                                  style: const TextStyle(fontWeight: FontWeight.w400)),
                               children: [
                                 // Question list
                                 ReorderableListView.builder(
                                     scrollDirection: Axis.vertical,
                                     shrinkWrap: true,
                                     buildDefaultDragHandles: false,
-                                    itemCount: Quizzes()
-                                        .getQuizAt(index)
-                                        .getQuestionCount(),
+                                    itemCount: Quizzes().getQuizAt(index).getQuestionCount(),
                                     onReorder: (oldIndex, newIndex) {
                                       setState(() {
-                                        Quizzes()
-                                            .getQuizAt(index)
-                                            .swapQuestions(oldIndex, newIndex);
+                                        Quizzes().getQuizAt(index).swapQuestions(oldIndex, newIndex);
                                       });
                                     },
                                     itemBuilder: (context, i) {
@@ -135,28 +121,21 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                                           },
                                           title: Text(
                                             "#${i + 1}: ${Quizzes().getQuizAt(index).getQuestionAt(i).getQuestion()}",
-                                            style: const TextStyle(
-                                                color: secondaryColor,
-                                                fontWeight: FontWeight.w600),
+                                            style: const TextStyle(color: secondaryColor, fontWeight: FontWeight.w600),
                                           ),
                                           selectedTileColor: secondaryColor,
                                           trailing: Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               SmallIconButton(
-                                                  iconData:
-                                                      Icons.delete_rounded,
+                                                  iconData: Icons.delete_rounded,
                                                   iconColor: dangerColor,
                                                   iconSize: 25,
                                                   onTap: () {
-                                                    confirmDeleteWindow(context,
-                                                        "Are you sure you want to delete this item?",
-                                                        () {
+                                                    confirmDeleteWindow(
+                                                        context, "Are you sure you want to delete this item?", () {
                                                       setState(() {
-                                                        Quizzes()
-                                                            .getQuizAt(index)
-                                                            .removeQuestionAt(
-                                                                i);
+                                                        Quizzes().getQuizAt(index).removeQuestionAt(i);
                                                       });
                                                     });
                                                   })
@@ -166,7 +145,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                                       );
                                     }),
                                 Padding(
-                                  padding: const EdgeInsets.all(padding1),
+                                  padding: const EdgeInsets.all(15.0),
                                   child: Row(
                                     children: [
                                       Flexible(
@@ -179,8 +158,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                                       Flexible(
                                           flex: 1,
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 8),
+                                            padding: const EdgeInsets.only(left: 8),
                                             child: SmallIconButton(
                                                 iconData: Icons.edit_rounded,
                                                 iconColor: secondaryColor,
@@ -191,18 +169,15 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                                       Flexible(
                                           flex: 1,
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 8),
+                                            padding: const EdgeInsets.only(left: 8),
                                             child: SmallIconButton(
                                                 iconData: Icons.delete_rounded,
                                                 iconColor: dangerColor,
                                                 onTap: () {
-                                                  confirmDeleteWindow(context,
-                                                      "Are you sure you want to delete this quiz?",
-                                                      () {
+                                                  confirmDeleteWindow(
+                                                      context, "Are you sure you want to delete this quiz?", () {
                                                     setState(() {
-                                                      Quizzes()
-                                                          .removeQuizAt(index);
+                                                      Quizzes().removeQuizAt(index);
                                                     });
                                                   });
                                                 }),
@@ -217,7 +192,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                       );
                     }),
                 Padding(
-                  padding: const EdgeInsets.all(padding1),
+                  padding: const EdgeInsets.all(15.0),
                   child: ListViewAddButton(onTap: () {
                     _showQuiz(-1, false);
                   }),
@@ -240,20 +215,17 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
           return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
               padding: const EdgeInsets.all(25),
               child: SingleChildScrollView(
                 child: Column(children: [
                   Text(
                     (editQuiz) ? "Edit quiz." : "Create new quiz.",
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.w700),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
                   Form(
                     key: _formKeyName,
@@ -294,19 +266,13 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                     ),
                   ),
                   ConfirmButton(onPress: () {
-                    if (_formKeyName.currentState!.validate() &&
-                        _formKeyTopic.currentState!.validate()) {
+                    if (_formKeyName.currentState!.validate() && _formKeyTopic.currentState!.validate()) {
                       setState(() {
                         if (editQuiz) {
-                          Quizzes()
-                              .getQuizAt(index)
-                              .setName(createQuizNameControler.text);
-                          Quizzes()
-                              .getQuizAt(index)
-                              .setTopic(createQuizTopicControler.text);
+                          Quizzes().getQuizAt(index).setName(createQuizNameControler.text);
+                          Quizzes().getQuizAt(index).setTopic(createQuizTopicControler.text);
                         } else {
-                          Quizzes().addQuiz(Quiz(createQuizNameControler.text,
-                              createQuizTopicControler.text));
+                          Quizzes().addQuiz(Quiz(createQuizNameControler.text, createQuizTopicControler.text));
                         }
                         Navigator.of(context).pop();
                       });
@@ -325,14 +291,9 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
 
     defaultQuizQuestions();
     if (editQuestion) {
-      String type =
-          Quizzes().getQuizAt(index).getQuestionAt(currentQuestion).getType();
-      QuizQuestion question =
-          Quizzes().getQuizAt(index).getQuestionAt(currentQuestion);
-      createQuestionQuestionControler.text = Quizzes()
-          .getQuizAt(index)
-          .getQuestionAt(currentQuestion)
-          .getQuestion();
+      String type = Quizzes().getQuizAt(index).getQuestionAt(currentQuestion).getType();
+      QuizQuestion question = Quizzes().getQuizAt(index).getQuestionAt(currentQuestion);
+      createQuestionQuestionControler.text = Quizzes().getQuizAt(index).getQuestionAt(currentQuestion).getQuestion();
 
       if (type == "QuizQuestionTrueFalse") {
         questionTrueFalse = question as QuizQuestionTrueFalse;
@@ -342,8 +303,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
         currentTabIndex = 1;
         for (int i = 0; i < questionMultiple.answerCount(); i++) {
           multipleAnswerControllers.add(TextEditingController());
-          multipleAnswerControllers[i].text =
-              questionMultiple.getAnswerAt(i).statement;
+          multipleAnswerControllers[i].text = questionMultiple.getAnswerAt(i).statement;
           multipleAnswerForm.add(GlobalKey<FormState>());
         }
       } else if (type == "QuizQuestionFillIn") {
@@ -360,22 +320,19 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
           return StatefulBuilder(
             builder: (context, setStateInner) {
               return Padding(
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: Container(
                   padding: const EdgeInsets.all(25),
                   child: SingleChildScrollView(
                     child: Column(children: [
                       const Text(
                         "Create new question.",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w700),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                       ),
                       Form(
                         key: _formKeyQuestion,
@@ -403,10 +360,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                           child: Text(
                             textAlign: TextAlign.left,
                             warningText,
-                            style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.red),
+                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.red),
                           ),
                         ),
                       ),
@@ -419,8 +373,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                         child: DefaultTabController(
                           length: 3,
                           initialIndex: currentTabIndex,
-                          child:
-                              Column(mainAxisSize: MainAxisSize.min, children: [
+                          child: Column(mainAxisSize: MainAxisSize.min, children: [
                             TabBar(
                               labelColor: secondaryColor,
                               dividerColor: secondaryColor,
@@ -456,19 +409,15 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                       ConfirmButton(onPress: () {
                         if (_formKeyQuestion.currentState!.validate()) {
                           if (currentTabIndex == 0) {
-                            questionTrueFalse.setQuestion(
-                                createQuestionQuestionControler.text);
+                            questionTrueFalse.setQuestion(createQuestionQuestionControler.text);
                             setStateInner(() {
                               warningText = "";
                             });
                             setState(() {
                               if (editQuestion) {
-                                Quizzes().getQuizAt(index).setQuestionAt(
-                                    currentQuestion, questionTrueFalse);
+                                Quizzes().getQuizAt(index).setQuestionAt(currentQuestion, questionTrueFalse);
                               } else {
-                                Quizzes()
-                                    .getQuizAt(index)
-                                    .addQuestion(questionTrueFalse);
+                                Quizzes().getQuizAt(index).addQuestion(questionTrueFalse);
                               }
                             });
                             Navigator.of(context).pop();
@@ -481,8 +430,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                                 flagItemsFilled = false;
                               }
                             }
-                            for (var question
-                                in questionMultiple.getAnswers()) {
+                            for (var question in questionMultiple.getAnswers()) {
                               if (question.isCorrect == true) {
                                 flagOneTrue = true;
                               }
@@ -493,25 +441,20 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                               });
                             } else if (flagOneTrue == false) {
                               setStateInner(() {
-                                warningText =
-                                    "Please mark at least 1 answer as correct.";
+                                warningText = "Please mark at least 1 answer as correct.";
                               });
                             } else if (flagItemsFilled == true &&
                                 flagOneTrue == true &&
                                 questionMultiple.answerCount() > 1) {
-                              questionMultiple.setQuestion(
-                                  createQuestionQuestionControler.text);
+                              questionMultiple.setQuestion(createQuestionQuestionControler.text);
                               setStateInner(() {
                                 warningText = "";
                               });
                               setState(() {
                                 if (editQuestion) {
-                                  Quizzes().getQuizAt(index).setQuestionAt(
-                                      currentQuestion, questionMultiple);
+                                  Quizzes().getQuizAt(index).setQuestionAt(currentQuestion, questionMultiple);
                                 } else {
-                                  Quizzes()
-                                      .getQuizAt(index)
-                                      .addQuestion(questionMultiple);
+                                  Quizzes().getQuizAt(index).addQuestion(questionMultiple);
                                 }
                               });
                               Navigator.of(context).pop();
@@ -529,21 +472,16 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                               setStateInner(() {
                                 warningText = "Please add at least 1 answer.";
                               });
-                            } else if (flagItemsFilled == true &&
-                                questionFillIn.answerCount() > 0) {
-                              questionFillIn.setQuestion(
-                                  createQuestionQuestionControler.text);
+                            } else if (flagItemsFilled == true && questionFillIn.answerCount() > 0) {
+                              questionFillIn.setQuestion(createQuestionQuestionControler.text);
                               setStateInner(() {
                                 warningText = "";
                               });
                               setState(() {
                                 if (editQuestion) {
-                                  Quizzes().getQuizAt(index).setQuestionAt(
-                                      currentQuestion, questionFillIn);
+                                  Quizzes().getQuizAt(index).setQuestionAt(currentQuestion, questionFillIn);
                                 } else {
-                                  Quizzes()
-                                      .getQuizAt(index)
-                                      .addQuestion(questionFillIn);
+                                  Quizzes().getQuizAt(index).addQuestion(questionFillIn);
                                 }
                               });
                               Navigator.of(context).pop();
@@ -569,10 +507,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
             children: [
               const Text(
                 "TRUE / FALSE",
-                style: TextStyle(
-                    color: secondaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700),
+                style: TextStyle(color: secondaryColor, fontSize: 18, fontWeight: FontWeight.w700),
               ),
               Center(
                 child: Column(
@@ -580,10 +515,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                     ListTile(
                       title: const Text(
                         "True",
-                        style: TextStyle(
-                            color: secondaryColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400),
+                        style: TextStyle(color: secondaryColor, fontSize: 16, fontWeight: FontWeight.w400),
                       ),
                       leading: Radio(
                         activeColor: secondaryColor,
@@ -599,10 +531,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                     ListTile(
                       title: const Text(
                         "False",
-                        style: TextStyle(
-                            color: secondaryColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400),
+                        style: TextStyle(color: secondaryColor, fontSize: 16, fontWeight: FontWeight.w400),
                       ),
                       leading: Radio(
                         activeColor: secondaryColor,
@@ -634,10 +563,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
             children: [
               const Text(
                 "MULTIPLE CHOICE",
-                style: TextStyle(
-                    color: secondaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700),
+                style: TextStyle(color: secondaryColor, fontSize: 18, fontWeight: FontWeight.w700),
               ),
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -650,8 +576,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                         value: questionMultiple.getAnswerAt(index).isCorrect,
                         onChanged: (newValue) {
                           setState(() {
-                            questionMultiple.getAnswerAt(index).isCorrect =
-                                newValue!;
+                            questionMultiple.getAnswerAt(index).isCorrect = newValue!;
                           });
                         },
                         activeColor: secondaryColor,
@@ -667,10 +592,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                             focusedBorder: InputBorder.none,
                             enabledBorder: InputBorder.none,
                             hintText: 'Answer',
-                            hintStyle: TextStyle(
-                                color: subColor2,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400),
+                            hintStyle: TextStyle(color: subColor2, fontSize: 16, fontWeight: FontWeight.w400),
                           ),
                           controller: multipleAnswerControllers[index],
                           autocorrect: false,
@@ -681,13 +603,9 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                             return null;
                           },
                           onChanged: (value) {
-                            questionMultiple.getAnswerAt(index).statement =
-                                multipleAnswerControllers[index].text;
+                            questionMultiple.getAnswerAt(index).statement = multipleAnswerControllers[index].text;
                           },
-                          style: const TextStyle(
-                              color: secondaryColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400),
+                          style: const TextStyle(color: secondaryColor, fontSize: 16, fontWeight: FontWeight.w400),
                         ),
                       ),
                       trailing: SmallIconButton(
@@ -695,9 +613,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                           iconColor: dangerColor,
                           iconSize: 25,
                           onTap: () {
-                            confirmDeleteWindow(context,
-                                "Are you sure you want to delete this answer?",
-                                () {
+                            confirmDeleteWindow(context, "Are you sure you want to delete this answer?", () {
                               setState(() {
                                 multipleAnswerForm.removeAt(index);
                                 multipleAnswerControllers.removeAt(index);
@@ -708,7 +624,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                 },
               ),
               Padding(
-                padding: const EdgeInsets.all(padding1),
+                padding: const EdgeInsets.all(15.0),
                 child: ListViewAddButton(
                   onTap: () {
                     setState(() {
@@ -738,10 +654,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
             children: [
               const Text(
                 "FILL IN",
-                style: TextStyle(
-                    color: secondaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700),
+                style: TextStyle(color: secondaryColor, fontSize: 18, fontWeight: FontWeight.w700),
               ),
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -760,10 +673,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                             focusedBorder: InputBorder.none,
                             enabledBorder: InputBorder.none,
                             hintText: 'Answer',
-                            hintStyle: TextStyle(
-                                color: subColor2,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400),
+                            hintStyle: TextStyle(color: subColor2, fontSize: 16, fontWeight: FontWeight.w400),
                           ),
                           controller: fillInAnswerControllers[index],
                           autocorrect: false,
@@ -774,13 +684,9 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                             return null;
                           },
                           onChanged: (value) {
-                            questionFillIn.setAnswerAt(
-                                index, fillInAnswerControllers[index].text);
+                            questionFillIn.setAnswerAt(index, fillInAnswerControllers[index].text);
                           },
-                          style: const TextStyle(
-                              color: secondaryColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400),
+                          style: const TextStyle(color: secondaryColor, fontSize: 16, fontWeight: FontWeight.w400),
                         ),
                       ),
                       trailing: SmallIconButton(
@@ -788,9 +694,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                           iconColor: dangerColor,
                           iconSize: 25,
                           onTap: () {
-                            confirmDeleteWindow(context,
-                                "Are you sure you want to delete this answer?",
-                                () {
+                            confirmDeleteWindow(context, "Are you sure you want to delete this answer?", () {
                               setState(() {
                                 fillInAnswerForm.removeAt(index);
                                 fillInAnswerControllers.removeAt(index);
@@ -801,7 +705,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                 },
               ),
               Padding(
-                padding: const EdgeInsets.all(padding1),
+                padding: const EdgeInsets.all(15.0),
                 child: ListViewAddButton(
                   onTap: () {
                     setState(() {
@@ -828,10 +732,7 @@ class _QuizPageMobileState extends State<QuizPageMobile> {
                 ),
                 title: const Text(
                   "Case sensitive",
-                  style: TextStyle(
-                      color: secondaryColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
+                  style: TextStyle(color: secondaryColor, fontSize: 16, fontWeight: FontWeight.w400),
                 ),
               )
             ],

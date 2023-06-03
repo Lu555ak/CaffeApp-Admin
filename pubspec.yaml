@@ -41,6 +41,7 @@ dependencies:
   cloud_firestore: ^4.7.1
   firebase_database: ^10.2.1
   qr_flutter: ^4.1.0
+  screenshot: ^2.1.0
 
 
 dev_dependencies:

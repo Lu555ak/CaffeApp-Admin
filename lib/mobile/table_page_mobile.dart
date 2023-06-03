@@ -35,17 +35,22 @@ class _TablePageMobileState extends State<TablePageMobile> {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(15),
-            decoration: const BoxDecoration(
-                color: subColor2,
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(25.0),
-                    bottomRight: Radius.circular(25.0))),
+            decoration: BoxDecoration(
+              color: subColor,
+              borderRadius:
+                  const BorderRadius.only(bottomLeft: Radius.circular(25.0), bottomRight: Radius.circular(25.0)),
+              boxShadow: [
+                BoxShadow(
+                  color: subColor2.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: const Offset(-5, 5),
+                ),
+              ],
+            ),
             child: Text(
               "ACTIVE TABLES: ${Tables().getTableCount()}",
-              style: const TextStyle(
-                  color: secondaryColor,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15),
+              style: const TextStyle(color: subColor2, fontWeight: FontWeight.w600, fontSize: 20),
             ),
           ),
           GridView.builder(
@@ -53,9 +58,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: Tables().getTableCount() + 1,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-              ),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
               itemBuilder: (context, index) {
                 if (index == Tables().getTableCount()) {
                   return Padding(
@@ -81,12 +84,20 @@ class _TablePageMobileState extends State<TablePageMobile> {
                   );
                 } else {
                   return Padding(
-                    padding: const EdgeInsets.all(14.0),
+                    padding: const EdgeInsets.all(25.0),
                     child: Container(
                       padding: const EdgeInsets.all(5.0),
-                      decoration: const BoxDecoration(
-                        color: secondaryColor,
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      decoration: BoxDecoration(
+                        color: subColor,
+                        borderRadius: const BorderRadius.all(Radius.circular(5)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: subColor2.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 5,
+                            offset: const Offset(-5, 5),
+                          ),
+                        ],
                       ),
                       child: Row(children: [
                         InkWell(
@@ -97,38 +108,29 @@ class _TablePageMobileState extends State<TablePageMobile> {
                             padding: const EdgeInsets.all(5.0),
                             decoration: const BoxDecoration(
                               color: primaryColor,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
+                              borderRadius: BorderRadius.all(Radius.circular(5)),
                             ),
-                            child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  const Flexible(
-                                    child: FittedBox(
-                                      child: Icon(
-                                        Icons.table_restaurant_outlined,
-                                        color: secondaryColor,
-                                        size: 40,
-                                      ),
-                                    ),
+                            child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                              const Flexible(
+                                child: FittedBox(
+                                  child: Icon(
+                                    Icons.table_restaurant_outlined,
+                                    color: secondaryColor,
+                                    size: 40,
                                   ),
-                                  Flexible(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: Text(
-                                        Tables()
-                                            .getTable(index)
-                                            .getId()
-                                            .toString(),
-                                        style: const TextStyle(
-                                            color: secondaryColor,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 50),
-                                      ),
-                                    ),
+                                ),
+                              ),
+                              Flexible(
+                                child: FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: Text(
+                                    Tables().getTable(index).getId().toString(),
+                                    style: const TextStyle(
+                                        color: secondaryColor, fontWeight: FontWeight.w500, fontSize: 50),
                                   ),
-                                ]),
+                                ),
+                              ),
+                            ]),
                           ),
                         ),
                         Expanded(
@@ -137,7 +139,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                             children: [
                               SmallIconButton(
                                   iconData: Icons.edit_rounded,
-                                  iconColor: primaryColor,
+                                  iconColor: subColor2,
                                   onTap: () {
                                     _createTableSheet(index, true);
                                   }),
@@ -145,9 +147,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                                   iconData: Icons.delete_rounded,
                                   iconColor: dangerColor,
                                   onTap: () {
-                                    confirmDeleteWindow(context,
-                                        "Are you sure you want to delete this table?",
-                                        () {
+                                    confirmDeleteWindow(context, "Are you sure you want to delete this table?", () {
                                       setState(() {
                                         Tables().removeTable(index);
                                       });
@@ -171,12 +171,10 @@ class _TablePageMobileState extends State<TablePageMobile> {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
           return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
               padding: const EdgeInsets.all(25),
               child: SingleChildScrollView(
@@ -186,7 +184,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                       leading: const FittedBox(
                         child: Icon(
                           Icons.table_restaurant_rounded,
-                          color: primaryColor,
+                          color: subColor2,
                           size: 50,
                         ),
                       ),
@@ -195,15 +193,12 @@ class _TablePageMobileState extends State<TablePageMobile> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           table.getId().toString(),
-                          style: const TextStyle(
-                              color: primaryColor,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 44),
+                          style: const TextStyle(color: subColor2, fontWeight: FontWeight.w500, fontSize: 44),
                         ),
                       ),
                     ),
                     const Divider(
-                      color: primaryColor,
+                      color: subColor2,
                       thickness: 3,
                     ),
                     SizedBox(
@@ -221,10 +216,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                                       child: Text(
                                         "Description: ",
                                         textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                            color: primaryColor,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 20),
+                                        style: TextStyle(color: subColor2, fontWeight: FontWeight.w500, fontSize: 20),
                                       ),
                                     ),
                                     SizedBox(
@@ -232,8 +224,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                                       child: Text(
                                         table.getDescription(),
                                         textAlign: TextAlign.justify,
-                                        style: const TextStyle(
-                                            color: primaryColor, fontSize: 16),
+                                        style: const TextStyle(color: subColor2, fontSize: 16),
                                       ),
                                     ),
                                   ],
@@ -265,19 +256,16 @@ class _TablePageMobileState extends State<TablePageMobile> {
 
     if (editTable == true) {
       _tableIdController.text = Tables().getTable(index).getId().toString();
-      _tableDescriptionController.text =
-          Tables().getTable(index).getDescription();
+      _tableDescriptionController.text = Tables().getTable(index).getDescription();
     }
 
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
           return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
               padding: const EdgeInsets.all(25),
               child: SingleChildScrollView(
@@ -285,8 +273,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                   children: [
                     Text(
                       (editTable) ? "Edit table." : "Create table.",
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.w700),
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                     ),
                     Form(
                       key: _formKeyId,
@@ -294,8 +281,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                         ],
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         controller: _tableIdController,
                         textAlign: TextAlign.center,
                         decoration: const InputDecoration(
@@ -307,13 +293,10 @@ class _TablePageMobileState extends State<TablePageMobile> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter a valid ID!';
-                          } else if (int.parse(value) < 1 ||
-                              int.parse(value) > 999) {
+                          } else if (int.parse(value) < 1 || int.parse(value) > 999) {
                             return 'Please enter an ID between 1 - 999!';
                           } else if (Tables().idExists(int.parse(value))) {
-                            if (editTable &&
-                                int.parse(value) ==
-                                    Tables().getTable(index).getId()) {
+                            if (editTable && int.parse(value) == Tables().getTable(index).getId()) {
                               return null;
                             } else {
                               return 'This ID is already in use!';
@@ -344,21 +327,16 @@ class _TablePageMobileState extends State<TablePageMobile> {
                       ),
                     ),
                     ConfirmButton(onPress: () {
-                      if (_formKeyId.currentState!.validate() &&
-                          _formKeyDescription.currentState!.validate()) {
+                      if (_formKeyId.currentState!.validate() && _formKeyDescription.currentState!.validate()) {
                         if (editTable) {
                           setState(() {
-                            Tables()
-                                .getTable(index)
-                                .setId(int.parse(_tableIdController.text));
-                            Tables().getTable(index).setDescription(
-                                _tableDescriptionController.text);
+                            Tables().getTable(index).setId(int.parse(_tableIdController.text));
+                            Tables().getTable(index).setDescription(_tableDescriptionController.text);
                           });
                         } else {
                           setState(() {
-                            Tables().addTable(CaffeTable(
-                                int.parse(_tableIdController.text),
-                                _tableDescriptionController.text));
+                            Tables().addTable(
+                                CaffeTable(int.parse(_tableIdController.text), _tableDescriptionController.text));
                           });
                         }
                         Tables().saveToDatabase();

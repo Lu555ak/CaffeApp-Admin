@@ -27,8 +27,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
   final _showItemFormKey = GlobalKey<FormState>();
 
   bool searchBarFilter(String input) {
-    String searchBarText =
-        _searchBarController.text.replaceAll(RegExp(r"\s+"), "").toLowerCase();
+    String searchBarText = _searchBarController.text.replaceAll(RegExp(r"\s+"), "").toLowerCase();
     String itemName = input.replaceAll(RegExp(r"\s+"), "").toLowerCase();
 
     if (searchBarText.isEmpty || itemName.contains(searchBarText)) {
@@ -58,8 +57,8 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                 labelText: "Search",
                 hintText: "Search",
                 prefixIcon: Icon(Icons.search),
-                prefixIconColor: primaryColor,
-                labelStyle: TextStyle(color: primaryColor),
+                prefixIconColor: subColor2,
+                labelStyle: TextStyle(color: subColor2),
                 enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(width: 2, color: subColor2),
                     borderRadius: BorderRadius.all(Radius.circular(15.0))),
@@ -74,8 +73,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
             ),
           ),
           Padding(
-            padding:
-                const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0),
+            padding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0),
             child: Column(
               children: [
                 ListView.builder(
@@ -84,70 +82,48 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: Menu().getMenuLength,
                     itemBuilder: ((context, index) {
-                      if (searchBarFilter(
-                          Menu().getMenuItemAt(index).getName)) {
+                      if (searchBarFilter(Menu().getMenuItemAt(index).getName)) {
                         return ListTile(
-                            title: Row(
+                            title: Wrap(
                               children: [
-                                Text(
-                                  Menu()
-                                      .getMenuItemAt(index)
-                                      .getName
-                                      .toUpperCase(),
-                                  style: const TextStyle(
-                                      color: primaryColor,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w900),
-                                ),
                                 Padding(
-                                    padding: const EdgeInsets.only(left: 15.0),
-                                    child: DiscountComponent(
-                                        discount: Menu()
-                                            .getMenuItemAt(index)
-                                            .getDiscount))
+                                  padding: const EdgeInsets.only(right: 15.0),
+                                  child: Text(
+                                    Menu().getMenuItemAt(index).getName.toUpperCase(),
+                                    style: const TextStyle(color: subColor2, fontSize: 18, fontWeight: FontWeight.w900),
+                                  ),
+                                ),
+                                DiscountComponent(discount: Menu().getMenuItemAt(index).getDiscount)
                               ],
                             ),
-                            subtitle: (Menu()
-                                        .getMenuItemAt(index)
-                                        .getDiscount ==
-                                    0)
+                            subtitle: (Menu().getMenuItemAt(index).getDiscount == 0)
                                 ? Text(
                                     "${Menu().getMenuItemAt(index).getPrice}€",
-                                    style: const TextStyle(
-                                        color: primaryColor,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400),
+                                    style: const TextStyle(color: subColor2, fontSize: 15, fontWeight: FontWeight.w400),
                                   )
                                 : Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Text(
-                                          "${Menu().getMenuItemAt(index).getPrice}€",
+                                      Text("${Menu().getMenuItemAt(index).getPrice}€",
                                           style: const TextStyle(
-                                              color: primaryColor,
+                                              color: subColor2,
                                               fontSize: 15,
                                               fontWeight: FontWeight.w400,
-                                              decoration:
-                                                  TextDecoration.lineThrough,
+                                              decoration: TextDecoration.lineThrough,
                                               decorationThickness: 3)),
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 8.0),
+                                        padding: const EdgeInsets.only(left: 8.0),
                                         child: Text(
                                             "${Menu().getMenuItemAt(index).getPriceDiscount.toStringAsFixed(2)}€",
                                             style: const TextStyle(
-                                                color: dangerColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w500)),
+                                                color: dangerColor, fontSize: 15, fontWeight: FontWeight.w500)),
                                       )
                                     ],
                                   ),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                (Menu().getMenuItemAt(index).getFeatured)
-                                    ? const Icon(Icons.star)
-                                    : Container(),
+                                (Menu().getMenuItemAt(index).getFeatured) ? const Icon(Icons.star) : Container(),
                                 CircleIconButton(
                                   onPress: () {
                                     _showItem(index, true);
@@ -160,7 +136,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                       }
                     })),
                 Padding(
-                  padding: const EdgeInsets.all(padding1),
+                  padding: const EdgeInsets.all(15.0),
                   child: ListViewAddButton(
                     boxColor: primaryColor,
                     onTap: () {
@@ -195,14 +171,12 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
           return StatefulBuilder(
             builder: (context, setStateInner) {
               return Padding(
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: Container(
                   padding: const EdgeInsets.all(25),
                   child: SingleChildScrollView(
@@ -211,8 +185,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                       child: Column(children: [
                         Text(
                           (!editMode) ? "Create new item." : "Edit item.",
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w700),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 15, right: 15),
@@ -226,8 +199,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                             ),
                             autocorrect: false,
                             validator: (value) {
-                              if (Menu().nameExists(value ?? "") &&
-                                  editMode == false) {
+                              if (Menu().nameExists(value ?? "") && editMode == false) {
                                 return 'Item with that name already exists!';
                               }
                               if (value == null || value.isEmpty) {
@@ -241,11 +213,9 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                           padding: const EdgeInsets.only(left: 15, right: 15),
                           child: TextFormField(
                             inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d+\.?\d{0,2}')),
+                              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
                             ],
-                            keyboardType: const TextInputType.numberWithOptions(
-                                decimal: true),
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
                             controller: _showItemPriceControler,
                             textAlign: TextAlign.left,
                             decoration: const InputDecoration(
@@ -266,18 +236,15 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                           padding: const EdgeInsets.only(left: 15, right: 15),
                           child: TextFormField(
                             inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d+\.?\d{0,2}')),
+                              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
                             ],
-                            keyboardType: const TextInputType.numberWithOptions(
-                                decimal: true),
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
                             controller: _showItemCreditPriceControler,
                             textAlign: TextAlign.left,
                             decoration: const InputDecoration(
                               enabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
-                              hintText:
-                                  'Credit price (if 0 it will not be used)',
+                              hintText: 'Credit price (if 0 it will not be used)',
                             ),
                             autocorrect: false,
                           ),
@@ -292,7 +259,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                           divisions: 100,
                           activeColor: primaryColor,
                           secondaryActiveColor: subColor2,
-                          inactiveColor: subColor,
+                          inactiveColor: subColor2,
                           value: discountSlider,
                           onChanged: (value) {
                             setStateInner(() {
@@ -313,10 +280,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                           ),
                           title: const Text(
                             "Featured",
-                            style: TextStyle(
-                                color: primaryColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400),
+                            style: TextStyle(color: subColor2, fontSize: 16, fontWeight: FontWeight.w400),
                           ),
                         ),
                         Padding(
@@ -329,34 +293,24 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                 child: ConfirmButton(
                                   alignCenter: false,
                                   onPress: () {
-                                    if (_showItemFormKey.currentState!
-                                        .validate()) {
+                                    if (_showItemFormKey.currentState!.validate()) {
                                       if (editMode) {
                                         setState(() {
-                                          MenuItem menuItem =
-                                              Menu().getMenuItemAt(index);
-                                          menuItem.setName =
-                                              _showItemNameControler.text;
-                                          menuItem.setPrice = double.parse(
-                                              _showItemPriceControler.text);
-                                          menuItem.setDiscount =
-                                              discountSlider.toInt();
+                                          MenuItem menuItem = Menu().getMenuItemAt(index);
+                                          menuItem.setName = _showItemNameControler.text;
+                                          menuItem.setPrice = double.parse(_showItemPriceControler.text);
+                                          menuItem.setDiscount = discountSlider.toInt();
                                           menuItem.setFeatured = featuredSwitch;
-                                          menuItem.setCreditPrice = int.parse(
-                                              _showItemCreditPriceControler
-                                                  .text);
+                                          menuItem.setCreditPrice = int.parse(_showItemCreditPriceControler.text);
                                         });
                                       } else {
                                         setState(() {
                                           Menu().addMenuItem(MenuItem(
                                               _showItemNameControler.text,
-                                              double.parse(
-                                                  _showItemPriceControler.text),
+                                              double.parse(_showItemPriceControler.text),
                                               discountSlider.toInt(),
                                               featuredSwitch,
-                                              int.parse(
-                                                  _showItemCreditPriceControler
-                                                      .text)));
+                                              int.parse(_showItemCreditPriceControler.text)));
                                         });
                                       }
                                       Menu().saveToDatabase();
@@ -373,8 +327,7 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                           buttonColor: dangerColor,
                                           iconData: Icons.delete_rounded,
                                           onPress: () {
-                                            confirmDeleteWindow(context,
-                                                "Are you sure you want to delete this item?",
+                                            confirmDeleteWindow(context, "Are you sure you want to delete this item?",
                                                 () {
                                               setState(() {
                                                 Menu().removeMenuItemAt(index);

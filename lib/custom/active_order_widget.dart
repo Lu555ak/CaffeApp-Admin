@@ -23,7 +23,7 @@ class ActiveOrderWidget extends StatelessWidget {
       height: 150,
       width: 150,
       decoration: BoxDecoration(
-        color: (acceptedMode) ? primaryColor : subColor2,
+        color: (acceptedMode) ? secondaryColor : secondaryColor,
         borderRadius: const BorderRadius.all(Radius.circular(5)),
         boxShadow: [
           BoxShadow(
@@ -40,7 +40,7 @@ class ActiveOrderWidget extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Container(
               decoration: BoxDecoration(
-                  color: (acceptedMode) ? successColor : secondaryColor,
+                  color: (acceptedMode) ? successColor : subColor,
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
               height: 60,
               child: Padding(
@@ -82,7 +82,7 @@ class ActiveOrderWidget extends StatelessWidget {
                               },
                               icon: const Icon(
                                 Icons.list,
-                                color: secondaryColor,
+                                color: subColor2,
                                 size: 40,
                               )),
                         )
@@ -93,13 +93,10 @@ class ActiveOrderWidget extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: CircleIconButton(
-                      iconData: (acceptedMode)
-                          ? Icons.check_circle_outlined
-                          : Icons.check,
-                      iconColor: (acceptedMode) ? secondaryColor : subColor2,
-                      buttonColor:
-                          (acceptedMode) ? successColor : secondaryColor,
-                      pressColor: (acceptedMode) ? subColor : primaryColor,
+                      iconData: (acceptedMode) ? Icons.check_circle_outlined : Icons.check,
+                      iconColor: (acceptedMode) ? secondaryColor : subColor,
+                      buttonColor: (acceptedMode) ? successColor : primaryColor,
+                      pressColor: (acceptedMode) ? subColor : secondaryColor,
                       onPress: () {
                         if (acceptedMode) {
                           onCompleted();

@@ -21,7 +21,6 @@ class _LayoutMobileState extends State<LayoutMobile> {
     HomePageMobile(),
     MenuPageMobile(),
     TablePageMobile(),
-    QuizPageMobile(),
     LoyaltyPageMobile(),
     SettingsPageMobile()
   ];
@@ -31,15 +30,16 @@ class _LayoutMobileState extends State<LayoutMobile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: secondaryColor,
         appBar: AppBar(
-          backgroundColor: primaryColor,
+          elevation: 8,
+          backgroundColor: subColor,
           iconTheme: const IconThemeData(
-            color: secondaryColor,
+            color: subColor2,
           ),
           title: Text(
             appBarText,
-            style: const TextStyle(color: secondaryColor),
+            style: const TextStyle(color: subColor2),
           ),
         ),
         drawer: Drawer(
@@ -50,8 +50,7 @@ class _LayoutMobileState extends State<LayoutMobile> {
                 DrawerHeader(
                     decoration: BoxDecoration(
                       border: Border(
-                        bottom: Divider.createBorderSide(context,
-                            color: Colors.transparent),
+                        bottom: Divider.createBorderSide(context, color: Colors.transparent),
                       ),
                     ),
                     child: const Icon(
@@ -108,20 +107,6 @@ class _LayoutMobileState extends State<LayoutMobile> {
                       ),
                       ListTile(
                         leading: const Icon(
-                          Icons.quiz_rounded,
-                          color: primaryColor,
-                        ),
-                        title: const Text("Q U I Z"),
-                        onTap: () {
-                          setState(() {
-                            appBarText = "Q U I Z";
-                            currentPage = 3;
-                            Navigator.pop(context);
-                          });
-                        },
-                      ),
-                      ListTile(
-                        leading: const Icon(
                           Icons.loyalty_rounded,
                           color: primaryColor,
                         ),
@@ -129,21 +114,7 @@ class _LayoutMobileState extends State<LayoutMobile> {
                         onTap: () {
                           setState(() {
                             appBarText = "L O Y A L T Y";
-                            currentPage = 4;
-                            Navigator.pop(context);
-                          });
-                        },
-                      ),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.settings_rounded,
-                          color: primaryColor,
-                        ),
-                        title: const Text("S E T T I N G S"),
-                        onTap: () {
-                          setState(() {
-                            appBarText = "S E T T I N G S";
-                            currentPage = 5;
+                            currentPage = 3;
                             Navigator.pop(context);
                           });
                         },
