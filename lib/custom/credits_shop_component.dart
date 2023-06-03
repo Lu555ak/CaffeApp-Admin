@@ -12,11 +12,11 @@ class CreditsShopComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 15.0, top: 10.0, bottom: 10.0),
+      padding: const EdgeInsets.all(10.0),
       child: Container(
         width: 150,
         decoration: BoxDecoration(
-          color: primaryColor,
+          color: subColor,
           borderRadius: const BorderRadius.all(Radius.circular(25)),
           boxShadow: [
             BoxShadow(
@@ -37,9 +37,7 @@ class CreditsShopComponent extends StatelessWidget {
                     height: double.infinity,
                     decoration: const BoxDecoration(
                       color: secondaryColor,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          topRight: Radius.circular(15)),
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -49,10 +47,7 @@ class CreditsShopComponent extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             child: Text(
                               item.getName,
-                              style: const TextStyle(
-                                  color: primaryColor,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700),
+                              style: const TextStyle(color: subColor2, fontSize: 20, fontWeight: FontWeight.w700),
                             ),
                           ),
                           Expanded(
@@ -70,10 +65,7 @@ class CreditsShopComponent extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "Price:",
-                      style: TextStyle(
-                          color: secondaryColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700),
+                      style: TextStyle(color: subColor2, fontSize: 20, fontWeight: FontWeight.w700),
                     ),
                   ),
                   Align(
@@ -81,10 +73,7 @@ class CreditsShopComponent extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(item.getCreditPrice.toString(),
-                              style: const TextStyle(
-                                  color: shinyColor,
-                                  fontSize: 22.5,
-                                  fontWeight: FontWeight.w600)),
+                              style: const TextStyle(color: shinyColor, fontSize: 22.5, fontWeight: FontWeight.w600)),
                           const Icon(
                             Icons.circle,
                             color: shinyColor,

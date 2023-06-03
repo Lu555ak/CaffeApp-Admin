@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:caffe_app/utility/constants.dart';
 
 class CreditsDisplay extends StatelessWidget {
-  const CreditsDisplay(
-      {super.key,
-      required this.euroAmount,
-      required this.creditsAmount,
-      required this.onClick});
+  const CreditsDisplay({super.key, required this.euroAmount, required this.creditsAmount, required this.onClick});
 
   final int euroAmount;
   final int creditsAmount;
@@ -22,9 +18,7 @@ class CreditsDisplay extends StatelessWidget {
           padding: const EdgeInsets.all(15),
           decoration: const BoxDecoration(
               color: subColor2,
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(25.0),
-                  bottomRight: Radius.circular(25.0))),
+              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25.0), bottomRight: Radius.circular(25.0))),
         ),
         Center(
           child: Padding(
@@ -32,9 +26,7 @@ class CreditsDisplay extends StatelessWidget {
             child: Container(
               width: 350,
               height: 100,
-              decoration: const BoxDecoration(
-                  color: primaryColor,
-                  borderRadius: BorderRadius.all(Radius.circular(25))),
+              decoration: const BoxDecoration(color: subColor, borderRadius: BorderRadius.all(Radius.circular(25))),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -42,10 +34,7 @@ class CreditsDisplay extends StatelessWidget {
                     padding: EdgeInsets.only(left: 20.0),
                     child: Text(
                       "CREDITS",
-                      style: TextStyle(
-                          color: secondaryColor,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 30),
+                      style: TextStyle(color: subColor2, fontWeight: FontWeight.w600, fontSize: 30),
                     ),
                   ),
                   Padding(
@@ -56,33 +45,24 @@ class CreditsDisplay extends StatelessWidget {
                       },
                       child: Container(
                         height: 75,
-                        decoration: BoxDecoration(
-                            color: secondaryColor,
-                            border: Border.all(color: secondaryColor, width: 3),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15))),
+                        decoration: const BoxDecoration(
+                            color: primaryColor, borderRadius: BorderRadius.all(Radius.circular(15))),
                         child: Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: Row(
                             children: [
                               Text(
                                 "$euroAmount€",
-                                style: const TextStyle(
-                                    color: primaryColor,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 35),
+                                style: const TextStyle(color: subColor, fontWeight: FontWeight.w600, fontSize: 35),
                               ),
                               const Icon(
                                 Icons.arrow_right_rounded,
-                                color: primaryColor,
+                                color: subColor,
                                 size: 30,
                               ),
                               Text(
                                 creditsAmount.toString(),
-                                style: const TextStyle(
-                                    color: shinyColor,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 35),
+                                style: const TextStyle(color: shinyColor, fontWeight: FontWeight.w800, fontSize: 35),
                               ),
                               const Icon(
                                 Icons.circle,

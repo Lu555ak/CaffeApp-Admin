@@ -5,7 +5,9 @@ import 'package:caffe_app/models/tables_model.dart';
 import 'package:caffe_app/custom/confirm_delete_window.dart';
 import 'package:caffe_app/custom/small_icon_button.dart';
 import 'package:caffe_app/custom/confirm_button.dart';
+
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:screenshot/screenshot.dart';
 
 class TablePageMobile extends StatefulWidget {
   const TablePageMobile({super.key});
@@ -15,6 +17,7 @@ class TablePageMobile extends StatefulWidget {
 }
 
 class _TablePageMobileState extends State<TablePageMobile> {
+  final ScreenshotController screenshotController = ScreenshotController();
   final _tableIdController = TextEditingController();
   final _tableDescriptionController = TextEditingController();
   final _formKeyId = GlobalKey<FormState>();
@@ -71,13 +74,13 @@ class _TablePageMobileState extends State<TablePageMobile> {
                       },
                       child: Container(
                         decoration: const BoxDecoration(
-                          color: secondaryColor,
+                          color: subColor,
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
                         child: const FittedBox(
                             child: Icon(
                           Icons.add_rounded,
-                          color: subColor,
+                          color: primaryColor,
                         )),
                       ),
                     ),
@@ -235,9 +238,15 @@ class _TablePageMobileState extends State<TablePageMobile> {
                                 fit: FlexFit.tight,
                                 child: Align(
                                   alignment: Alignment.centerRight,
-                                  child: QrImageView(
-                                    data: table.generateQRCodeData(),
-                                    version: QrVersions.auto,
+                                  child: InkWell(
+                                    onTap: () {},
+                                    child: Screenshot(
+                                      controller: screenshotController,
+                                      child: QrImageView(
+                                        data: table.generateQRCodeData(),
+                                        version: QrVersions.auto,
+                                      ),
+                                    ),
                                   ),
                                 ))
                           ],

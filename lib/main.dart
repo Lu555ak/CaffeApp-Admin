@@ -1,6 +1,6 @@
 import 'package:caffe_app/models/tables_model.dart';
 import 'package:caffe_app/models/menu_model.dart';
-import 'package:caffe_app/utility/constants.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:caffe_app/desktop/layout_desktop.dart';
@@ -8,8 +8,6 @@ import 'package:caffe_app/mobile/layout_mobile.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
-import 'custom/background.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

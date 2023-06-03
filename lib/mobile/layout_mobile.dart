@@ -4,7 +4,7 @@ import 'package:caffe_app/utility/constants.dart';
 
 import 'package:caffe_app/mobile/home_page_mobile.dart';
 import 'package:caffe_app/mobile/menu_page_mobile.dart';
-import 'package:caffe_app/mobile/quiz_page_mobile.dart';
+
 import 'package:caffe_app/mobile/loyalty_page_mobile.dart';
 import 'package:caffe_app/mobile/settings_page_mobile.dart';
 import 'package:caffe_app/mobile/table_page_mobile.dart';
@@ -33,13 +33,13 @@ class _LayoutMobileState extends State<LayoutMobile> {
         backgroundColor: secondaryColor,
         appBar: AppBar(
           elevation: 8,
-          backgroundColor: subColor,
+          backgroundColor: primaryColor,
           iconTheme: const IconThemeData(
-            color: subColor2,
+            color: secondaryColor,
           ),
           title: Text(
             appBarText,
-            style: const TextStyle(color: subColor2),
+            style: const TextStyle(color: secondaryColor),
           ),
         ),
         drawer: Drawer(

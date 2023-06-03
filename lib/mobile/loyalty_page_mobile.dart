@@ -50,63 +50,18 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
           padding: EdgeInsets.only(top: 20),
           child: Text(
             "C R E D I T   S H O P",
-            style: TextStyle(
-                color: primaryColor, fontSize: 25, fontWeight: FontWeight.w900),
+            style: TextStyle(color: subColor2, fontSize: 25, fontWeight: FontWeight.w900),
           )),
       Padding(
-        padding: const EdgeInsets.only(top: 5, bottom: 10),
-        child: SizedBox(
-          height: 175,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: Menu().creditMenuItems().length,
-            itemBuilder: (context, index) {
-              return CreditsShopComponent(
-                  item: Menu().creditMenuItems()[index]);
-            },
-          ),
-        ),
-      ),
-      const Padding(
-          padding: EdgeInsets.all(10),
-          child: Text(
-            "L O Y A L  C U S T O M E R S",
-            style: TextStyle(
-                color: primaryColor, fontSize: 20, fontWeight: FontWeight.w900),
-          )),
-      Container(
-        height: 250,
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: ScrollConfiguration(
-            behavior: CustomScrollBehavior(),
-            child: Expanded(
-              child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: 0,
-                  itemBuilder: ((context, index) {
-                    return ListTile(
-                      title: Row(
-                        children: [
-                          Text(
-                            "Ivan Ivić",
-                            style: const TextStyle(
-                                color: primaryColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w900),
-                          ),
-                        ],
-                      ),
-                      trailing: Text(
-                        "25 ◉",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w500),
-                      ),
-                    );
-                  })),
-            ),
-          ),
+        padding: const EdgeInsets.only(right: 20.0, left: 20.0),
+        child: GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+          itemCount: Menu().creditMenuItems().length,
+          itemBuilder: (context, index) {
+            return CreditsShopComponent(item: Menu().creditMenuItems()[index]);
+          },
         ),
       ),
     ]));
@@ -119,12 +74,10 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
         builder: (context) {
           return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
               padding: const EdgeInsets.all(25),
               child: SingleChildScrollView(
@@ -137,87 +90,80 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
                     key: _showPointFormKey,
                     child: SizedBox(
                       height: 50,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 22,
-                              child: TextFormField(
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(2),
-                                ],
-                                keyboardType: TextInputType.number,
-                                controller: _pointsEuroAmountController,
-                                textAlign: TextAlign.center,
-                                decoration: const InputDecoration(
-                                  enabledBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  hintText: '-',
-                                ),
-                                autocorrect: false,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter a price!';
-                                  }
-                                  return null;
-                                },
-                              ),
+                      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                        SizedBox(
+                          width: 22,
+                          child: TextFormField(
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(2),
+                            ],
+                            keyboardType: TextInputType.number,
+                            controller: _pointsEuroAmountController,
+                            textAlign: TextAlign.center,
+                            decoration: const InputDecoration(
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              hintText: '-',
                             ),
-                            const Text(
-                              "€ = ",
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w500),
+                            autocorrect: false,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a price!';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        const Text(
+                          "€ = ",
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(
+                          width: 22,
+                          child: TextFormField(
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(2),
+                            ],
+                            keyboardType: TextInputType.number,
+                            controller: _pointsCreditAmountController,
+                            textAlign: TextAlign.center,
+                            decoration: const InputDecoration(
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              hintText: '-',
                             ),
-                            SizedBox(
-                              width: 22,
-                              child: TextFormField(
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(2),
-                                ],
-                                keyboardType: TextInputType.number,
-                                controller: _pointsCreditAmountController,
-                                textAlign: TextAlign.center,
-                                decoration: const InputDecoration(
-                                  enabledBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  hintText: '-',
-                                ),
-                                autocorrect: false,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter a price!';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            const Icon(
-                              Icons.circle,
-                              color: primaryColor,
-                              size: 15,
-                            )
-                          ]),
+                            autocorrect: false,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a price!';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        const Icon(
+                          Icons.circle,
+                          color: primaryColor,
+                          size: 15,
+                        )
+                      ]),
                     ),
                   ),
                   ConfirmButton(onPress: () {
                     if (_showPointFormKey.currentState!.validate()) {
-                      setState(() async {
-                        pointsEuroAmount =
-                            int.parse(_pointsEuroAmountController.text);
-                        pointsCreditAmount =
-                            int.parse(_pointsCreditAmountController.text);
-
-                        final DatabaseReference orderRef =
-                            FirebaseDatabase.instance.ref("loyalty");
-                        await orderRef.set({
-                          "euroRate":
-                              int.parse(_pointsEuroAmountController.text),
-                          "creditsRate":
-                              int.parse(_pointsCreditAmountController.text)
-                        });
+                      setState(() {
+                        pointsEuroAmount = int.parse(_pointsEuroAmountController.text);
+                        pointsCreditAmount = int.parse(_pointsCreditAmountController.text);
                       });
+                      () async {
+                        final DatabaseReference orderRef = FirebaseDatabase.instance.ref("loyalty");
+                        await orderRef.set({
+                          "euroRate": int.parse(_pointsEuroAmountController.text),
+                          "creditsRate": int.parse(_pointsCreditAmountController.text)
+                        });
+                      };
                       Navigator.pop(context);
                     }
                   })

@@ -64,11 +64,11 @@ class _HomePageMobileState extends State<HomePageMobile> {
                         child: Builder(
                           builder: (context) {
                             if (data == null) {
-                              return Center(
+                              return const Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: const [
+                                  children: [
                                     SizedBox(
                                         height: 50,
                                         width: 50,

@@ -10,7 +10,7 @@ class RoadMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 120,
       child: Row(
         children: [
@@ -23,16 +23,14 @@ class RoadMap extends StatelessWidget {
                 itemBuilder: (context, index) {
                   if (roadmap[index] != 0) {
                     return Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, bottom: 10, top: 10),
+                      padding: const EdgeInsets.only(left: 15.0, bottom: 10, top: 10),
                       child: Container(
                         width: 100,
                         height: 100,
                         decoration: BoxDecoration(
                           color: secondaryColor,
                           border: Border.all(color: primaryColor, width: 10),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(25)),
+                          borderRadius: const BorderRadius.all(Radius.circular(25)),
                           boxShadow: [
                             BoxShadow(
                               color: subColor2.withOpacity(0.5),
@@ -44,24 +42,20 @@ class RoadMap extends StatelessWidget {
                         ),
                         child: Center(
                             child: Text("${roadmap[index]}.",
-                                style: const TextStyle(
-                                    color: primaryColor,
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.w900))),
+                                style:
+                                    const TextStyle(color: primaryColor, fontSize: 40, fontWeight: FontWeight.w900))),
                       ),
                     );
                   } else {
                     return Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, bottom: 40, top: 40),
+                      padding: const EdgeInsets.only(left: 15.0, bottom: 40, top: 40),
                       child: Container(
                           width: 40,
                           height: 40,
                           decoration: BoxDecoration(
                             color: secondaryColor,
                             border: Border.all(color: primaryColor, width: 8),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(50)),
+                            borderRadius: const BorderRadius.all(Radius.circular(50)),
                             boxShadow: [
                               BoxShadow(
                                 color: subColor2.withOpacity(0.5),
@@ -87,7 +81,7 @@ class RoadMap extends StatelessWidget {
                   width: 65,
                   decoration: BoxDecoration(
                     color: primaryColor,
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    borderRadius: const BorderRadius.all(Radius.circular(5)),
                     boxShadow: [
                       BoxShadow(
                         color: subColor2.withOpacity(0.5),

@@ -17,13 +17,10 @@ class _SettingsPageMobileState extends State<SettingsPageMobile> {
         padding: const EdgeInsets.all(15),
         decoration: const BoxDecoration(
             color: subColor2,
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(25.0),
-                bottomRight: Radius.circular(25.0))),
-        child: Text(
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25.0), bottomRight: Radius.circular(25.0))),
+        child: const Text(
           "HI @USER!",
-          style: const TextStyle(
-              color: secondaryColor, fontWeight: FontWeight.w600, fontSize: 15),
+          style: TextStyle(color: secondaryColor, fontWeight: FontWeight.w600, fontSize: 15),
         ),
       ),
       Padding(
@@ -35,13 +32,10 @@ class _SettingsPageMobileState extends State<SettingsPageMobile> {
             color: secondaryColor,
             borderRadius: BorderRadius.all(Radius.circular(5)),
           ),
-          child: Row(children: [
+          child: const Row(children: [
             Text(
               "Language: ",
-              style: const TextStyle(
-                  color: primaryColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13),
+              style: TextStyle(color: primaryColor, fontWeight: FontWeight.w500, fontSize: 13),
             ),
           ]),
         ),
