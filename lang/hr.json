@@ -1,0 +1,40 @@
+{
+    "home_text" : "P O Č E T N A",
+    "menu_text" : "M E N I",
+    "tables_text" : "S T O L O V I",
+    "loyalty_text" : "L O J A L N O S T",
+    "active_orders_text" : "AKTIVNE NARUDŽBE: ",
+    "order_text" : "N A R U D Ž B A",
+    "loyalty_order_text" : "NARUDŽBA - VJERNOST",
+
+    "search_text" : " Pretraživanje",
+    "create_new_item_text" : "Kreiraj novu artikl.",
+    "edit_item_text" : "Uredi artikl.",
+    "name_text" : "Naziv",
+    "price_text" : "Cijena",
+    "credit_price_text" : "Cijena u bodovima",
+    "discount_text" : "Popust: ",
+    "featured_text" : "Istaknuto",
+    "warning_enter_name" : "Molimo unesite naziv!",
+    "warning_name_in_use" : "Artikl s ovim nazivom već postoji!",
+    "warning_enter_price" : "Molimo unesite cijenu!",
+    "item_delete_text" : "Jeste li sigurni da želite izbrisati ovaj artikl?",
+
+    "active_tables_text" : "AKTIVNI STOLOVI: ",
+    "create_table_text" : "Kreiraj novi stol.",
+    "edit_table_text" : "Uredi stol.",
+    "description_text" : "Opis",
+    "warning_valid_id" : "Molimo unesite ispravan ID!",
+    "warning_id_in_use" : "Stol s ovim IDjem već postoji!",
+    "warning_id_range" : "Molimo unesite ID između 1 - 999!",
+    "warning_description" : "Molimo unesite opis!",
+    "table_delete_text" : "Jeste li sigurni da želite izbrisati ovaj stol?",
+
+    "credits_text" : "BODOVI",
+    "credit_shop_text" : "B O D O V N E   P O G O D N O S T I",
+    "edit_formula_text" : "Uredi formulu.",
+
+    "cancel_text" : "Odustani",
+    "confirm_text" : "Potvrdi",
+    "delete_text" : "Izbriši"
+}

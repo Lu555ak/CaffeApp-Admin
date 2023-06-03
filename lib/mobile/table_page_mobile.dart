@@ -1,3 +1,4 @@
+import 'package:caffe_app/utility/app_localizations.dart';
 import 'package:caffe_app/utility/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,7 +53,7 @@ class _TablePageMobileState extends State<TablePageMobile> {
               ],
             ),
             child: Text(
-              "ACTIVE TABLES: ${Tables().getTableCount()}",
+              AppLocalizations.of(context).translate("active_tables_text") + Tables().getTableCount().toString(),
               style: const TextStyle(color: subColor2, fontWeight: FontWeight.w600, fontSize: 20),
             ),
           ),
@@ -150,7 +151,8 @@ class _TablePageMobileState extends State<TablePageMobile> {
                                   iconData: Icons.delete_rounded,
                                   iconColor: dangerColor,
                                   onTap: () {
-                                    confirmDeleteWindow(context, "Are you sure you want to delete this table?", () {
+                                    confirmDeleteWindow(
+                                        context, AppLocalizations.of(context).translate("table_delete_text"), () {
                                       setState(() {
                                         Tables().removeTable(index);
                                       });
@@ -214,12 +216,13 @@ class _TablePageMobileState extends State<TablePageMobile> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   children: [
-                                    const SizedBox(
+                                    SizedBox(
                                       width: double.infinity,
                                       child: Text(
-                                        "Description: ",
+                                        "${AppLocalizations.of(context).translate("description_text")}: ",
                                         textAlign: TextAlign.left,
-                                        style: TextStyle(color: subColor2, fontWeight: FontWeight.w500, fontSize: 20),
+                                        style: const TextStyle(
+                                            color: subColor2, fontWeight: FontWeight.w500, fontSize: 20),
                                       ),
                                     ),
                                     SizedBox(
@@ -281,7 +284,9 @@ class _TablePageMobileState extends State<TablePageMobile> {
                 child: Column(
                   children: [
                     Text(
-                      (editTable) ? "Edit table." : "Create table.",
+                      (editTable)
+                          ? AppLocalizations.of(context).translate("edit_table_text")
+                          : AppLocalizations.of(context).translate("create_table_text"),
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                     ),
                     Form(
@@ -301,14 +306,14 @@ class _TablePageMobileState extends State<TablePageMobile> {
                         autocorrect: false,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter a valid ID!';
+                            return AppLocalizations.of(context).translate("warning_valid_id");
                           } else if (int.parse(value) < 1 || int.parse(value) > 999) {
-                            return 'Please enter an ID between 1 - 999!';
+                            return AppLocalizations.of(context).translate("warning_id_range");
                           } else if (Tables().idExists(int.parse(value))) {
                             if (editTable && int.parse(value) == Tables().getTable(index).getId()) {
                               return null;
                             } else {
-                              return 'This ID is already in use!';
+                              return AppLocalizations.of(context).translate("warning_id_in_use");
                             }
                           }
                           return null;
@@ -321,15 +326,15 @@ class _TablePageMobileState extends State<TablePageMobile> {
                         keyboardType: TextInputType.text,
                         controller: _tableDescriptionController,
                         textAlign: TextAlign.center,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           enabledBorder: InputBorder.none,
                           focusedBorder: InputBorder.none,
-                          hintText: 'Description',
+                          hintText: AppLocalizations.of(context).translate("warning_description"),
                         ),
                         autocorrect: false,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter a description!';
+                            return AppLocalizations.of(context).translate("warning_id_in_use");
                           }
                           return null;
                         },

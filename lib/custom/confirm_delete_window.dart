@@ -1,3 +1,4 @@
+import 'package:caffe_app/utility/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:caffe_app/utility/constants.dart';
 
@@ -22,9 +23,9 @@ void confirmDeleteWindow(context, String text, Function onPressed) {
                     onPressed();
                     Navigator.pop(context);
                   },
-                  child: const Text(
-                    "Delete",
-                    style: TextStyle(color: secondaryColor),
+                  child: Text(
+                    AppLocalizations.of(context).translate("delete_text"),
+                    style: const TextStyle(color: secondaryColor),
                   ),
                 )
               ],

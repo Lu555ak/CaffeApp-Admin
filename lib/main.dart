@@ -9,6 +9,9 @@ import 'package:caffe_app/mobile/layout_mobile.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:caffe_app/utility/app_localizations.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -27,9 +30,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CaffeApp(
+      supportedLocales: const [Locale("en", "EN"), Locale("hr", "HR")],
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      localeListResolutionCallback: (locales, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locales![0].languageCode &&
+              supportedLocale.countryCode == locales[0].countryCode) {
+            return supportedLocale;
+          }
+        }
+        return supportedLocales.first;
+      },
+      home: const CaffeApp(
         mobileLayout: LayoutMobile(),
         desktopLayout: LayoutDesktop(),
       ),

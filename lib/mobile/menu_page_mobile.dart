@@ -1,3 +1,4 @@
+import 'package:caffe_app/utility/app_localizations.dart';
 import 'package:caffe_app/utility/constants.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -53,16 +54,16 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
             padding: const EdgeInsets.all(15.0),
             child: TextField(
               controller: _searchBarController,
-              decoration: const InputDecoration(
-                labelText: "Search",
-                hintText: "Search",
-                prefixIcon: Icon(Icons.search),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).translate("search_text"),
+                hintText: AppLocalizations.of(context).translate("search_text"),
+                prefixIcon: const Icon(Icons.search),
                 prefixIconColor: subColor2,
-                labelStyle: TextStyle(color: subColor2),
-                enabledBorder: OutlineInputBorder(
+                labelStyle: const TextStyle(color: subColor2),
+                enabledBorder: const OutlineInputBorder(
                     borderSide: BorderSide(width: 2, color: subColor2),
                     borderRadius: BorderRadius.all(Radius.circular(15.0))),
-                focusedBorder: OutlineInputBorder(
+                focusedBorder: const OutlineInputBorder(
                     borderSide: BorderSide(width: 4, color: subColor2),
                     borderRadius: BorderRadius.all(Radius.circular(15.0))),
               ),
@@ -184,7 +185,9 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                       key: _showItemFormKey,
                       child: Column(children: [
                         Text(
-                          (!editMode) ? "Create new item." : "Edit item.",
+                          (!editMode)
+                              ? AppLocalizations.of(context).translate("create_new_item_text")
+                              : AppLocalizations.of(context).translate("edit_item_text"),
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                         ),
                         Padding(
@@ -192,18 +195,18 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                           child: TextFormField(
                             controller: _showItemNameControler,
                             textAlign: TextAlign.left,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               enabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
-                              hintText: 'Item name',
+                              hintText: AppLocalizations.of(context).translate("name_text"),
                             ),
                             autocorrect: false,
                             validator: (value) {
                               if (Menu().nameExists(value ?? "") && editMode == false) {
-                                return 'Item with that name already exists!';
+                                return AppLocalizations.of(context).translate("warning_name_in");
                               }
                               if (value == null || value.isEmpty) {
-                                return 'Please enter a name!';
+                                return AppLocalizations.of(context).translate("warning_enter_name");
                               }
                               return null;
                             },
@@ -218,15 +221,15 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                             keyboardType: const TextInputType.numberWithOptions(decimal: true),
                             controller: _showItemPriceControler,
                             textAlign: TextAlign.left,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               enabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
-                              hintText: 'Price',
+                              hintText: AppLocalizations.of(context).translate("price_text"),
                             ),
                             autocorrect: false,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter a price!';
+                                return AppLocalizations.of(context).translate("warning_enter_price");
                               }
                               return null;
                             },
@@ -241,16 +244,16 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                             keyboardType: const TextInputType.numberWithOptions(decimal: true),
                             controller: _showItemCreditPriceControler,
                             textAlign: TextAlign.left,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               enabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
-                              hintText: 'Credit price (if 0 it will not be used)',
+                              hintText: AppLocalizations.of(context).translate("credit_price_text"),
                             ),
                             autocorrect: false,
                           ),
                         ),
                         Text(
-                          "Discount: ${discountSlider.toInt()}%",
+                          "${AppLocalizations.of(context).translate("discount_text")}${discountSlider.toInt()}%",
                           style: const TextStyle(fontSize: 15),
                         ),
                         Slider(
@@ -278,9 +281,9 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                             activeColor: primaryColor,
                             activeTrackColor: subColor2,
                           ),
-                          title: const Text(
-                            "Featured",
-                            style: TextStyle(color: subColor2, fontSize: 16, fontWeight: FontWeight.w400),
+                          title: Text(
+                            AppLocalizations.of(context).translate("featured_text"),
+                            style: const TextStyle(color: subColor2, fontSize: 16, fontWeight: FontWeight.w400),
                           ),
                         ),
                         Padding(
@@ -327,7 +330,8 @@ class _MenuPageMobileState extends State<MenuPageMobile> {
                                           buttonColor: dangerColor,
                                           iconData: Icons.delete_rounded,
                                           onPress: () {
-                                            confirmDeleteWindow(context, "Are you sure you want to delete this item?",
+                                            confirmDeleteWindow(
+                                                context, AppLocalizations.of(context).translate("item_delete_text"),
                                                 () {
                                               setState(() {
                                                 Menu().removeMenuItemAt(index);

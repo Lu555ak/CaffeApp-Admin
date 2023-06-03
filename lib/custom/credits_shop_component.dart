@@ -1,3 +1,4 @@
+import 'package:caffe_app/utility/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import 'package:caffe_app/utility/constants.dart';
@@ -61,11 +62,11 @@ class CreditsShopComponent extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(children: [
-                  const Align(
+                  Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Price:",
-                      style: TextStyle(color: subColor2, fontSize: 20, fontWeight: FontWeight.w700),
+                      "${AppLocalizations.of(context).translate("price_text")}: ",
+                      style: const TextStyle(color: subColor2, fontSize: 20, fontWeight: FontWeight.w700),
                     ),
                   ),
                   Align(

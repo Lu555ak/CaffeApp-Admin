@@ -1,4 +1,5 @@
 import 'package:caffe_app/models/menu_model.dart';
+import 'package:caffe_app/utility/app_localizations.dart';
 import 'package:caffe_app/utility/constants.dart';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -55,7 +56,7 @@ class _HomePageMobileState extends State<HomePageMobile> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
-                        "ACTIVE ORDERS: $activeOrderCount",
+                        AppLocalizations.of(context).translate("active_orders_text") + activeOrderCount.toString(),
                         style: const TextStyle(color: subColor2, fontWeight: FontWeight.w600, fontSize: 24),
                       ),
                     ),
@@ -138,9 +139,9 @@ class _HomePageMobileState extends State<HomePageMobile> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const Text(
-                    "O R D E R",
-                    style: TextStyle(color: subColor2, fontSize: 25, fontWeight: FontWeight.w700),
+                  Text(
+                    AppLocalizations.of(context).translate("order_text"),
+                    style: const TextStyle(color: subColor2, fontSize: 25, fontWeight: FontWeight.w700),
                   ),
                   const Divider(
                     color: subColor2,
@@ -163,9 +164,9 @@ class _HomePageMobileState extends State<HomePageMobile> {
                   (creditOrder.isNotEmpty)
                       ? Column(
                           children: [
-                            const Text(
-                              "C R E D I T   O R D E R",
-                              style: TextStyle(color: subColor2, fontSize: 25, fontWeight: FontWeight.w700),
+                            Text(
+                              AppLocalizations.of(context).translate("loyalty_order_text"),
+                              style: const TextStyle(color: subColor2, fontSize: 25, fontWeight: FontWeight.w700),
                             ),
                             const Divider(
                               color: subColor2,

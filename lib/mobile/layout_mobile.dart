@@ -1,12 +1,12 @@
+import 'package:caffe_app/utility/app_localizations.dart';
 import 'package:flutter/material.dart';
-//import 'package:caffe_app/custom/menu_drawer.dart';
 import 'package:caffe_app/utility/constants.dart';
 
 import 'package:caffe_app/mobile/home_page_mobile.dart';
 import 'package:caffe_app/mobile/menu_page_mobile.dart';
 
 import 'package:caffe_app/mobile/loyalty_page_mobile.dart';
-import 'package:caffe_app/mobile/settings_page_mobile.dart';
+
 import 'package:caffe_app/mobile/table_page_mobile.dart';
 
 class LayoutMobile extends StatefulWidget {
@@ -22,7 +22,6 @@ class _LayoutMobileState extends State<LayoutMobile> {
     MenuPageMobile(),
     TablePageMobile(),
     LoyaltyPageMobile(),
-    SettingsPageMobile()
   ];
   static int currentPage = 0;
   String appBarText = "H O M E";
@@ -68,10 +67,10 @@ class _LayoutMobileState extends State<LayoutMobile> {
                           Icons.home_rounded,
                           color: primaryColor,
                         ),
-                        title: const Text("H O M E"),
+                        title: Text(AppLocalizations.of(context).translate("home_text")),
                         onTap: () {
                           setState(() {
-                            appBarText = "H O M E";
+                            appBarText = AppLocalizations.of(context).translate("home_text");
                             currentPage = 0;
                             Navigator.pop(context);
                           });
@@ -82,10 +81,10 @@ class _LayoutMobileState extends State<LayoutMobile> {
                           Icons.menu_book_rounded,
                           color: primaryColor,
                         ),
-                        title: const Text("M E N U"),
+                        title: Text(AppLocalizations.of(context).translate("menu_text")),
                         onTap: () {
                           setState(() {
-                            appBarText = "M E N U ";
+                            appBarText = AppLocalizations.of(context).translate("menu_text");
                             currentPage = 1;
                             Navigator.pop(context);
                           });
@@ -96,10 +95,10 @@ class _LayoutMobileState extends State<LayoutMobile> {
                           Icons.table_restaurant_rounded,
                           color: primaryColor,
                         ),
-                        title: const Text("T A B L E S"),
+                        title: Text(AppLocalizations.of(context).translate("tables_text")),
                         onTap: () {
                           setState(() {
-                            appBarText = "T A B L E S";
+                            appBarText = AppLocalizations.of(context).translate("tables_text");
                             currentPage = 2;
                             Navigator.pop(context);
                           });
@@ -110,10 +109,10 @@ class _LayoutMobileState extends State<LayoutMobile> {
                           Icons.loyalty_rounded,
                           color: primaryColor,
                         ),
-                        title: const Text("L O Y A L T Y"),
+                        title: Text(AppLocalizations.of(context).translate("loyalty_text")),
                         onTap: () {
                           setState(() {
-                            appBarText = "L O Y A L T Y";
+                            appBarText = AppLocalizations.of(context).translate("loyalty_text");
                             currentPage = 3;
                             Navigator.pop(context);
                           });

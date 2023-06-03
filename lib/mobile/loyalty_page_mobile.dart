@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:caffe_app/models/menu_model.dart';
+import 'package:caffe_app/utility/app_localizations.dart';
 import 'package:caffe_app/utility/constants.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -46,11 +47,11 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
           onClick: () {
             _formulaEdit();
           }),
-      const Padding(
-          padding: EdgeInsets.only(top: 20),
+      Padding(
+          padding: const EdgeInsets.only(top: 20),
           child: Text(
-            "C R E D I T   S H O P",
-            style: TextStyle(color: subColor2, fontSize: 25, fontWeight: FontWeight.w900),
+            AppLocalizations.of(context).translate("credit_shop_text"),
+            style: const TextStyle(color: subColor2, fontSize: 25, fontWeight: FontWeight.w900),
           )),
       Padding(
         padding: const EdgeInsets.only(right: 20.0, left: 20.0),
@@ -82,9 +83,9 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
               padding: const EdgeInsets.all(25),
               child: SingleChildScrollView(
                 child: Column(children: [
-                  const Text(
-                    "Edit formula.",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  Text(
+                    AppLocalizations.of(context).translate("edit_formula_text"),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
                   Form(
                     key: _showPointFormKey,
@@ -109,7 +110,7 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
                             autocorrect: false,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter a price!';
+                                return AppLocalizations.of(context).translate("warning_enter_price");
                               }
                               return null;
                             },
@@ -137,7 +138,7 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
                             autocorrect: false,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter a price!';
+                                return AppLocalizations.of(context).translate("warning_enter_price");
                               }
                               return null;
                             },

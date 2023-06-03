@@ -1,0 +1,41 @@
+{
+    "home_text" : "H O M E",
+    "menu_text" : "M E N U",
+    "tables_text" : "T A B L E S",
+    "loyalty_text" : "L O Y A L T Y",
+
+    "active_orders_text" : "ACTIVE ORDERS: ",
+    "order_text" : "O R D E R",
+    "loyalty_order_text" : "L O Y A L T Y   O R D E R",
+
+    "search_text" : " Search",
+    "create_new_item_text" : "Create new item.",
+    "edit_item_text" : "Edit item.",
+    "name_text" : "Name",
+    "price_text" : "Price",
+    "credit_price_text" : "Credit price",
+    "discount_text" : "Discount: ",
+    "featured_text" : "Featured",
+    "warning_enter_name" : "Please enter a name!",
+    "warning_name_in use" : "This name is already in use!",
+    "warning_enter_price" : "Please enter a price!",
+    "item_delete_text" : "Are you sure you want to delete this item?",
+
+    "active_tables_text" : "ACTIVE TABLES: ",
+    "create_table_text" : "Create new table.",
+    "edit_table_text" : "Edit table.",
+    "description_text" : "Description",
+    "warning_valid_id" : "Please enter a valid ID!",
+    "warning_id_in_use" : "This ID is already in use!",
+    "warning_id_range" : "Please use and ID between 1 - 999!",
+    "warning_description" : "Please enter a description!",
+    "table_delete_text" : "Are you sure you want to delete this table?",
+
+    "credits_text" : "CREDITS",
+    "credit_shop_text" : "C R E D I T   S H O P",
+    "edit_formula_text" : "Edit formula.",
+
+    "cancel_text" : "Cancel",
+    "confirm_text" : "Confirm",
+    "delete_text" : "Delete"
+}
