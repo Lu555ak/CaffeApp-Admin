@@ -10,10 +10,13 @@ class Menu {
   final List<MenuItem> _menu = List.empty(growable: true);
 
   int get getMenuLength => _menu.length;
+
   MenuItem getMenuItemAt(int index) => _menu[index];
-  MenuItem getMenuItemWithName(String name) =>
-      _menu[_menu.indexWhere((element) => element.getName == name)];
+  MenuItem getMenuItemWithName(String name) => _menu[_menu.indexWhere((element) => element.getName == name)];
+  List<MenuItem> get getCreditMenuItems => _menu.where((element) => element.getCreditPrice > 0).toList();
+
   void removeMenuItemAt(int index) => _menu.removeAt(index);
+
   void addMenuItem(MenuItem menuItem) => _menu.add(menuItem);
 
   bool nameExists(String name) {
@@ -23,10 +26,6 @@ class Menu {
       }
     }
     return false;
-  }
-
-  List<MenuItem> creditMenuItems() {
-    return _menu.where((element) => element.getCreditPrice > 0).toList();
   }
 
   Future saveToDatabase() async {
@@ -48,11 +47,7 @@ class Menu {
     await FirebaseFirestore.instance.collection("menu").get().then((snapshot) {
       for (var menuItem in snapshot.docs) {
         addMenuItem(MenuItem(
-            menuItem["name"],
-            menuItem["price"],
-            menuItem["discount"],
-            menuItem["featured"],
-            menuItem["creditPrice"]));
+            menuItem["name"], menuItem["price"], menuItem["discount"], menuItem["featured"], menuItem["creditPrice"]));
       }
     });
   }
@@ -67,8 +62,7 @@ class MenuItem {
   int _creditPrice;
   final List<String> _categories = [];
 
-  MenuItem(this._name, this._price, this._discount, this._featured,
-      this._creditPrice) {
+  MenuItem(this._name, this._price, this._discount, this._featured, this._creditPrice) {
     _priceDiscount = _price * (1 - _discount / 100);
   }
 
@@ -94,11 +88,6 @@ class MenuItem {
   void removeCategoryAt(int index) => _categories.removeAt(index);
   void addCategory(String category) => _categories.add(category);
 
-  Map<String, dynamic> toMap() => {
-        'name': _name,
-        'price': _price,
-        'discount': _discount,
-        'featured': _featured,
-        'creditPrice': _creditPrice
-      };
+  Map<String, dynamic> toMap() =>
+      {'name': _name, 'price': _price, 'discount': _discount, 'featured': _featured, 'creditPrice': _creditPrice};
 }

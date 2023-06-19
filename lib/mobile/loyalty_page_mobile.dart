@@ -59,9 +59,9 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-          itemCount: Menu().creditMenuItems().length,
+          itemCount: Menu().getCreditMenuItems.length,
           itemBuilder: (context, index) {
-            return CreditsShopComponent(item: Menu().creditMenuItems()[index]);
+            return CreditsShopComponent(item: Menu().getCreditMenuItems[index]);
           },
         ),
       ),
@@ -146,7 +146,7 @@ class _LoyaltyPageMobileState extends State<LoyaltyPageMobile> {
                         ),
                         const Icon(
                           Icons.circle,
-                          color: primaryColor,
+                          color: shinyColor,
                           size: 15,
                         )
                       ]),

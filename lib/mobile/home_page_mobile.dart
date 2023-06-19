@@ -30,7 +30,7 @@ class _HomePageMobileState extends State<HomePageMobile> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-            width: double.infinity,
+            width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: subColor,
@@ -89,6 +89,7 @@ class _HomePageMobileState extends State<HomePageMobile> {
 
                               return ListView.builder(
                                 scrollDirection: Axis.horizontal,
+                                controller: scrollController,
                                 itemCount: activeOrderCount,
                                 itemBuilder: (context, index) {
                                   return Padding(

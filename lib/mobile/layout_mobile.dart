@@ -24,7 +24,7 @@ class _LayoutMobileState extends State<LayoutMobile> {
     LoyaltyPageMobile(),
   ];
   static int currentPage = 0;
-  String appBarText = "H O M E";
+  String appBarText = "P O Č E T N A";
 
   @override
   Widget build(BuildContext context) {
